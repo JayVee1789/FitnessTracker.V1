@@ -1,0 +1,111 @@
+﻿@page "/programme"
+@inject SupabaseService SupabaseService
+@using FitnessTracker.V1.Models
+
+<h3>Créer un programme de musculation</h3>
+
+<div class="mb-3">
+    <label class="form-label">Date de début</label>
+    <input class="form-control" type="date" @bind="dateDebut" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Nom du programme</label>
+    <input class="form-control" @bind="programmeNom" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Liste des exercices</label>
+    <textarea class="form-control" rows="5" @bind="programmeContenu" placeholder="Ex: Lundi: Développé couché..."></textarea>
+</div>
+
+<button class="btn btn-primary" @onclick="AjouterProgramme">Ajouter</button>
+
+<hr />
+
+<h4>Programmes disponibles</h4>
+
+@if (programmes.Count == 0)
+{
+    <p>Aucun programme enregistré.</p>
+}
+else
+{
+    if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @alertClass">@message</div>
+    }
+    <ul class="list-group">
+        @foreach (var p in programmes)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>@p.Nom</strong> - <em>@p.DateDebut.ToString("dd MMM yyyy")</em><br />
+                    <pre>@p.Contenu</pre>
+                </div>
+                <button class="btn btn-sm btn-outline-danger" @onclick="@(() => SupprimerProgramme(p.Id))">🗑</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    string programmeNom = "";
+    string programmeContenu = "";
+    DateTime dateDebut = DateTime.Today;
+    List<ProgrammeModel> programmes = new();
+    string message = "";
+    string alertClass = "";
+    protected override async Task OnInitializedAsync()
+    {
+        programmes = await SupabaseService.GetProgrammesAsync();
+    }
+
+    async Task AjouterProgramme()
+    {
+        var p = new ProgrammeModel
+            {
+                Id = Guid.NewGuid(),
+                Nom = programmeNom,
+                Contenu = programmeContenu,
+                DateDebut = dateDebut
+            };
+       
+        var success = await SupabaseService.AddProgrammeAsync(p);
+       
+        if (success)
+        {
+            message = "✅ Programme enregistré avec succès.";
+            alertClass = "alert-success";
+
+            programmeNom = "";
+            programmeContenu = "";
+            dateDebut = DateTime.Today;
+
+            programmes = await SupabaseService.GetProgrammesAsync();
+        }
+        else
+        {
+            message = "❌ Échec de l'enregistrement.";
+            alertClass = "alert-danger";
+        }
+
+    }
+
+    async Task SupprimerProgramme(Guid id)
+    {
+        var success = await SupabaseService.DeleteProgrammeAsync(id);
+
+        if (success)
+        {
+            programmes = await SupabaseService.GetProgrammesAsync(); // 🔁 recharge
+            message = "✅ Programme supprimé.";
+            alertClass = "alert-warning";
+        }
+        else
+        {
+            message = "❌ Échec de la suppression.";
+            alertClass = "alert-danger";
+        }
+    }
+}

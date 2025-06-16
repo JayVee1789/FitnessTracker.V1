@@ -1,0 +1,126 @@
+﻿@page "/generate-programme"
+@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Services.ProgrammeGeneration
+@using System.Text.Json
+@using static FitnessTracker.V1.Models.Model
+@inject ProgrammeGeneratorService Generator
+@inject HttpClient Http
+@inject SupabaseService SupabaseService
+@inject NavigationManager Nav
+<h3>Programme généré</h3>
+
+@if (plan == null)
+{
+    <p>Aucun programme généré.</p>
+}
+else
+{
+    @foreach (var week in plan.Weeks)
+    {
+        <div class="card my-3">
+            <div class="card-header bg-primary text-white">
+                <strong>Semaine @week.WeekNumber</strong> — Charge: @week.ChargeIncrementPercent%
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Séries:</strong> @week.SeriesWeek |
+                    <strong>Reps:</strong> @week.RepetitionsWeek |
+                    <strong>Repos:</strong> @week.RestTimeWeek s
+                </p>
+
+                @foreach (var day in week.Days.OrderBy(d => d.DayIndex))
+                {
+                    <div class="mb-3">
+                        <h5>Jour @day.DayIndex - @day.TypeProgramme</h5>
+                        @if (day.IsRest)
+                        {
+                            <em>Repos</em>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var ex in day.Exercises)
+                                {
+                                    <li>
+                                        <strong>@ex.ExerciseName</strong>
+                                        <small>
+                                            (@ex.Series x @ex.Repetitions | @ex.RestTimeSeconds s | @ex.Pourcentage1RM% 1RM
+                                            @(ex.IsSuperset ? "| Superset" : ""))
+                                        </small>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <button class="btn btn-primary mt-3" @onclick="() => EnregistrerProgrammeAsync(plan)">
+        Enregistrer ce programme
+    </button>
+}
+
+@code {
+    private WorkoutPlan? plan;
+    private List<ExerciseDefinition> exerciseList = new();
+  
+    protected override async Task OnInitializedAsync()
+    {
+        var exos = new List<ExerciseDefinition>
+        {
+            new() { Id = 1, Name = "Bench Press", Category = "Chest", Equipment = "Barbell", Description = "Compound" },
+            new() { Id = 2, Name = "Pull-Up", Category = "Back", Equipment = "Body Weight", Description = "Compound" },
+            new() { Id = 3, Name = "Squat", Category = "Legs", Equipment = "Barbell", Description = "Compound" },
+            new() { Id = 4, Name = "Overhead Press", Category = "Shoulders", Equipment = "Dumbbell", Description = "Compound" },
+            new() { Id = 5, Name = "Barbell Curl", Category = "Biceps", Equipment = "Barbell", Description = "Single-Joint" },
+            new() { Id = 6, Name = "Triceps Dips", Category = "Triceps", Equipment = "Body Weight", Description = "Single-Joint" }
+        };
+
+        //json
+        // Charger les exercices depuis le fichier JSON
+        try{
+            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("Data/ExercicesListeLocal.json")
+                                  ?? new();
+        }catch(Exception ex)
+        {
+            Console.WriteLine(  ex);
+        }
+        
+
+        var profile = new UserProfile
+            {
+                Age = 28,
+                Level = UserLevel.Intermediaire,
+                Objective = TrainingObjective.Hypertrophy,
+                SeancesPerWeek = 3,
+                ProgramDurationMonths = 1,
+                WantsSuperset = false,
+                BodyweightOnly = false,
+                PathologieMuscle = "",
+                PriorityMuscle = ""
+            };
+
+
+       
+
+        plan = Generator.Generate("TBT", profile, exerciseList);
+    }
+    private async Task EnregistrerProgrammeAsync(WorkoutPlan plan)
+    {
+        var model = new ProgrammeModel
+            {
+                Id = Guid.NewGuid(),
+                Nom = "Programme TBT généré",
+                DateDebut = DateTime.Today,
+                Contenu = JsonSerializer.Serialize(plan)
+            };
+
+        bool ok = await SupabaseService.AddProgrammeAsync(model);
+        if (ok)
+        {
+            Console.WriteLine("Programme enregistré dans Supabase ✅");
+           
+        }
+    }
+}

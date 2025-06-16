@@ -1,0 +1,44 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FitnessTracker</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+       @*  <NavLink class="nav-link" href="graph">
+            <span class="oi oi-graph"></span> Graphiques
+        </NavLink> *@
+       @*  <NavLink class="nav-link" href="/analyse">
+            <span class="oi oi-bar-chart" aria-hidden="true"></span> Analyse
+        </NavLink> *@
+        <NavLink class="nav-link" href="/Exercices">
+            <span class="oi oi-bar-chart" aria-hidden="true"></span> Gestion Exercices
+        </NavLink>
+        <NavLink class="nav-link" href="/generate-programme">
+            <span class="bi bi-list-nested-nav-menu"></span> Générateur
+        </NavLink>
+        <NavLink class="nav-link" href="/view-session">
+            <span class="bi bi-clipboard-check"></span> Voir Séance
+        </NavLink>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

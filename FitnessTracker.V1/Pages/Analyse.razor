@@ -1,0 +1,44 @@
+﻿@page "/analyse"
+@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Services
+@inject PoidsService PoidsService
+
+<h3>Analyse des Performances</h3>
+
+@if (analyse == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <h4>💪 Exercices les plus forts</h4>
+            <ul>
+                @foreach (var ex in analyse.ExercicesFort)
+                {
+                    <li>@ex</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h4>⚠️ Exercices les plus faibles</h4>
+            <ul>
+                @foreach (var ex in analyse.ExercicesFaible)
+                {
+                    <li>@ex</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@code {
+    private PoidsAnalysisResult? analyse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var entries = await PoidsService.GetEntriesAsync();
+        analyse = PoidsAnalyzer.Analyser(entries);
+    }
+}

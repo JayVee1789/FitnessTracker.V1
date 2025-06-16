@@ -1,0 +1,211 @@
+﻿@page "/exercices"
+@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Services
+
+@inject PoidsService PoidsService
+@inject SupabaseService SupabaseService
+
+<h3>Exercices</h3>
+
+@code {
+
+}
+<div class="row mb-3">
+    <div class="col-md-4 mb-2">
+        <label class="form-label">Exercice</label>
+        <select class="form-select" @bind="selectedExercice">
+            @foreach (var ex in exercices)
+            {
+                <option value="@ex">@ex</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-4 mb-2">
+        <label class="form-label">Ajouter un nouvel exercice</label>
+        <input class="form-control" @bind="newExercice" placeholder="Nouveau exercice" />
+    </div>
+
+    <div class="col-md-4 mb-2 d-flex align-items-end">
+        <button class="btn btn-outline-secondary w-100" @onclick="AddExercice">Ajouter</button>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label class="form-label">Supprimer un exercice</label>
+        <div class="input-group">
+            <select class="form-select" @bind="selectedExerciceToDelete">
+                @foreach (var ex in exercices)
+                {
+                    <option value="@ex">@ex</option>
+                }
+            </select>
+            <button class="btn btn-danger" @onclick="DeleteExercice">🗑️</button>
+        </div>
+    </div>
+
+   @*  <div class="col-md-6">
+        <label class="form-label">Supprimer une date</label>
+        <div class="input-group">
+            <select class="form-select" @bind="selectedDateToDelete">
+                @foreach (var date in allDates)
+                {
+                    <option value="@date">@date.ToString("dd MMM yyyy")</option>
+                }
+            </select>
+            <button class="btn btn-danger" @onclick="DeleteDate">🗑️</button>
+        </div>
+    </div> *@
+</div>
+<h5 class="mt-4">Supprimer toutes les entrées d’un exercice</h5>
+<div class="d-flex flex-wrap gap-2">
+    @foreach (var ex in data.Select(e => e.Exercice).Distinct())
+    {
+        <button class="btn btn-sm btn-outline-danger"
+                @onclick="() => DeleteEntriesForExercice(ex)">
+            🗑️ @ex
+        </button>
+    }
+</div>
+@code {
+    List<string> exercices = new();
+    string selectedExercice = "";
+    string newExercice = "";
+    DateTime selectedDate = DateTime.Today;
+    double poids;
+
+    List<PoidsEntry> data = new();
+    List<DateTime> allDates = new();
+
+    string selectedExerciceToDelete = "";
+    DateTime selectedDateToDelete = DateTime.Today;
+
+    string message = "";
+
+    string selectedUnite = "kg"; // valeur par défaut
+
+    protected override async Task OnInitializedAsync()
+    {
+        exercices = await PoidsService.GetExercicesAsync();
+        selectedExercice = exercices.FirstOrDefault() ?? "";
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+    }
+
+    async void AddExercice()
+    {
+        if (!string.IsNullOrWhiteSpace(newExercice) && !exercices.Contains(newExercice))
+        {
+            exercices.Add(newExercice);
+            selectedExercice = newExercice;
+            newExercice = "";
+            await PoidsService.SaveExercicesAsync(exercices);
+        }
+    }
+
+    async Task AddEntry()
+    {
+        double poidsKg = selectedUnite == "lb" ? poids * 0.453592 : poids;
+        var entry = new PoidsEntry
+            {
+                Exercice = selectedExercice,
+                Date = selectedDate,
+                Poids = poids
+            };
+
+        await PoidsService.AddEntryAsync(entry);
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = "Entrée enregistrée ✅";
+    }
+
+    async Task DeleteEntry(string exercice, DateTime date)
+    {
+        await PoidsService.RemoveEntryAsync(exercice, date);
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = $"Supprimé : {exercice} - {date:dd MMM}";
+    }
+
+    async Task DeleteExercice()
+    {
+        await PoidsService.RemoveExerciceAsync(selectedExerciceToDelete);
+        exercices.Remove(selectedExerciceToDelete);
+        await PoidsService.SaveExercicesAsync(exercices);
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = $"Exercice supprimé : {selectedExerciceToDelete}";
+    }
+
+    async Task DeleteDate()
+    {
+        await PoidsService.RemoveDateAsync(selectedDateToDelete);
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = $"Date supprimée : {selectedDateToDelete:dd MMM yyyy}";
+    }
+
+    void UpdateDates()
+    {
+        allDates = data.Select(e => e.Date.Date).Distinct().OrderBy(d => d).ToList();
+    }
+    async Task DeleteEntriesForExercice(string exercice)
+    {
+        await PoidsService.RemoveEntriesForExerciceAsync(exercice);
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = $"Toutes les entrées pour « {exercice} » ont été supprimées.";
+    }
+
+    async Task ExportToSupabase()
+    {
+        var local = await PoidsService.GetEntriesAsync();
+        var remote = await SupabaseService.GetEntriesAsync();
+        int added = 0;
+
+        // Supprimer ce qui n'existe plus en local
+        await SupabaseService.DeleteEntriesNotInAsync(local);
+
+        foreach (var entry in local)
+        {
+            if (!remote.Any(x => x.Exercice == entry.Exercice && x.Date.Date == entry.Date.Date))
+            {
+                await SupabaseService.AddEntryAsync(entry);
+                added++;
+            }
+        }
+
+        message = $"Synchronisation terminée. {added} nouvelle(s) entrée(s) exportée(s).";
+    }
+
+    async Task ImportFromSupabase()
+    {
+        try
+        {
+            var supabaseEntries = await SupabaseService.GetEntriesAsync();
+            await PoidsService.OverwriteEntriesAsync(supabaseEntries);
+            data = await PoidsService.GetEntriesAsync();
+            UpdateDates();
+            message = $"Importé {supabaseEntries.Count} entrées depuis Supabase ✅";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
+    }
+    async Task DeleteById(Guid id)
+    {
+        var entry = data.FirstOrDefault(e => e.Id == id);
+        if (entry is null) return;
+
+        await PoidsService.RemoveByIdAsync(id);
+        await SupabaseService.DeleteByExerciceAndDateAsync(entry.Exercice, entry.Date);
+
+        data = await PoidsService.GetEntriesAsync();
+        UpdateDates();
+        message = "Entrée supprimée (local + Supabase) ✅";
+    }
+
+}
+

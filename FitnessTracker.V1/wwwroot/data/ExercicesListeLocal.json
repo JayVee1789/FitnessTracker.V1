@@ -1,0 +1,499 @@
+[
+  {
+    "Id": 1,
+    "Name": "Incline Bench Presses",
+    "Category": "Chest",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 2,
+    "Name": "BB Curls",
+    "Category": "Biceps",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 3,
+    "Name": "Back Lying Tricep Extensions",
+    "Category": "Triceps",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 4,
+    "Name": "Wide-Grip Dips",
+    "Category": "Back",
+    "Equipment": "Bodyweight",
+    "Description": "Compound"
+  },
+  {
+    "Id": 5,
+    "Name": "Standing Military Presses",
+    "Category": "Deltoids",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 6,
+    "Name": "High-Bar Back Squats",
+    "Category": "Quads/Hamstrings",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 7,
+    "Name": "Pull-Ups ",
+    "Category": "Back",
+    "Equipment": "Bodyweight or Cable Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 8,
+    "Name": "Pull-Downs",
+    "Category": "Back",
+    "Equipment": "Bodyweight or Cable Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 9,
+    "Name": "Side DB Raises",
+    "Category": "Deltoids",
+    "Equipment": "Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 10,
+    "Name": "Hack Squats",
+    "Category": "Quads/Hamstrings",
+    "Equipment": "Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 11,
+    "Name": "Standing Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine or Free Weights",
+    "Description": "Compound"
+  },
+  {
+    "Id": 12,
+    "Name": "Sumo Deadlifts",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 13,
+    "Name": "Traditional Deadlifts",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 14,
+    "Name": "Seated Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 15,
+    "Name": "Power Cleans or Snatches",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 16,
+    "Name": "Donkey Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 17,
+    "Name": "Good Mornings",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 18,
+    "Name": "Bicep Curls",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 19,
+    "Name": "Hammer Curls",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 20,
+    "Name": "Tricep Kickbacks",
+    "Category": "Triceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 21,
+    "Name": "Tricep Press-Downs",
+    "Category": "Triceps",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 22,
+    "Name": "Leg Extensions",
+    "Category": "Quadriceps",
+    "Equipment": "Leg Extension Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 23,
+    "Name": "Hamstring Curls",
+    "Category": "Hamstrings",
+    "Equipment": "Leg Curl Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 24,
+    "Name": "Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Body Weight",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 25,
+    "Name": "Lateral Raises",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 26,
+    "Name": "Front Raises",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 27,
+    "Name": "Flyes",
+    "Category": "Chest",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 28,
+    "Name": "Pec Deck Machine",
+    "Category": "Chest",
+    "Equipment": "Pec Deck Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 29,
+    "Name": "Reverse Flyes",
+    "Category": "Rear Delts",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 30,
+    "Name": "Leg Curls",
+    "Category": "Hamstrings",
+    "Equipment": "Leg Curl Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 31,
+    "Name": "Ab Crunch Machine",
+    "Category": "Abs",
+    "Equipment": "Ab Crunch Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 32,
+    "Name": "Cable Crunches",
+    "Category": "Abs",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 33,
+    "Name": "Cable Kickbacks",
+    "Category": "Glutes",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 34,
+    "Name": "Machine Hip Abductions",
+    "Category": "Abductors",
+    "Equipment": "Abduction Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 35,
+    "Name": "Machine Hip Adductions",
+    "Category": "Adductors",
+    "Equipment": "Adduction Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 36,
+    "Name": "Bench Press",
+    "Category": "Chest",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 37,
+    "Name": "Deadlift",
+    "Category": "Back",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 38,
+    "Name": "Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 39,
+    "Name": "Shoulder Press",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 40,
+    "Name": "Bent Over Rows",
+    "Category": "Back",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 41,
+    "Name": "Pull Ups",
+    "Category": "Back",
+    "Equipment": "Body Weight",
+    "Description": "Compound"
+  },
+  {
+    "Id": 42,
+    "Name": "Dips",
+    "Category": "Chest/Triceps",
+    "Equipment": "Body Weight",
+    "Description": "Compound"
+  },
+  {
+    "Id": 43,
+    "Name": "Leg Press",
+    "Category": "Legs",
+    "Equipment": "Leg Press Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 44,
+    "Name": "Lunges",
+    "Category": "Legs",
+    "Equipment": "Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 45,
+    "Name": "Chin Ups",
+    "Category": "Back/Biceps",
+    "Equipment": "Body Weight",
+    "Description": "Compound"
+  },
+  {
+    "Id": 46,
+    "Name": "Push Ups",
+    "Category": "Chest",
+    "Equipment": "Body Weight",
+    "Description": "Compound"
+  },
+  {
+    "Id": 47,
+    "Name": "Clean and Press",
+    "Category": "Full Body",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 48,
+    "Name": "Rowing",
+    "Category": "Back",
+    "Equipment": "Rowing Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 49,
+    "Name": "T-Bar Rows",
+    "Category": "Back",
+    "Equipment": "T-Bar",
+    "Description": "Compound"
+  },
+  {
+    "Id": 50,
+    "Name": "Farmers Walk",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 51,
+    "Name": "Overhead Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 52,
+    "Name": "Front Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 53,
+    "Name": "Flat Bench Presses",
+    "Category": "Chest",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 54,
+    "Name": "Bulgarian Split Squat",
+    "Category": "Legs",
+    "Equipment": "Dumbbells or Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 55,
+    "Name": "Upright Row",
+    "Category": "Shoulders/Traps",
+    "Equipment": "Barbell or Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 56,
+    "Name": "Preacher Curl",
+    "Category": "Biceps",
+    "Equipment": "Barbell or Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 57,
+    "Name": "Back Extension",
+    "Category": "Lower Back",
+    "Equipment": "Roman Chair or Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 58,
+    "Name": "Goblet Squat",
+    "Category": "Legs",
+    "Equipment": "Dumbbell or Kettlebell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 59,
+    "Name": "Face Pulls",
+    "Category": "Rear Delts/Upper Back",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 60,
+    "Name": "Overhead Tricep Extension",
+    "Category": "Triceps",
+    "Equipment": "Dumbbell or Cable",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 61,
+    "Name": "Seated Row",
+    "Category": "Back",
+    "Equipment": "Cable Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 62,
+    "Name": "Chest Supported Row",
+    "Category": "Back",
+    "Equipment": "Dumbbells or Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 63,
+    "Name": "Cable Lateral Raise",
+    "Category": "Shoulders",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 64,
+    "Name": "Zottman Curl",
+    "Category": "Biceps/Forearms",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 65,
+    "Name": "Landmine Press",
+    "Category": "Shoulders/Chest",
+    "Equipment": "Barbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 66,
+    "Name": "Jefferson Curl",
+    "Category": "Hamstrings/Lower Back",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound"
+  },
+  {
+    "Id": 67,
+    "Name": "Hip Thrust",
+    "Category": "Glutes",
+    "Equipment": "Barbell or Machine",
+    "Description": "Compound"
+  },
+  {
+    "Id": 68,
+    "Name": "Incline Dumbbell Curl",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 69,
+    "Name": "Sissy Squat",
+    "Category": "Quads",
+    "Equipment": "Bodyweight or Machine",
+    "Description": "Single-Joint"
+  },
+  {
+    "Id": 70,
+    "Name": "Arnold Press",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound"
+  },
+  {
+    "Id": 71,
+    "Name": "Cable Fly",
+    "Category": "Chest",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint"
+  }
+]
