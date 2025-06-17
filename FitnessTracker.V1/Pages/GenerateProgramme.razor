@@ -80,7 +80,7 @@ else
         //json
         // Charger les exercices depuis le fichier JSON
         try{
-            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("Data/ExercicesListeLocal.json")
+            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("data/ExercicesListeLocal.json")
                                   ?? new();
         }catch(Exception ex)
         {
