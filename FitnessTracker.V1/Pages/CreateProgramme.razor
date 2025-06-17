@@ -1,0 +1,240 @@
+﻿@page "/create-programme"
+@inject HttpClient Http
+@inject ILocalStorageService LocalStorage
+@inject SupabaseService SupabaseService
+
+@using static FitnessTracker.V1.Models.Model
+@using System.Text.Json
+@using Blazored.LocalStorage
+
+<h3>Créer un programme personnalisé</h3>
+
+<input class="form-control my-2" placeholder="Nom du programme" @bind="programmeName" />
+<div class="alert alert-secondary">
+    <b>Semaine(s) :</b> @plan.Weeks.Count |
+    <b>Total jours :</b> @plan.Weeks.Sum(w => w.Days.Count) |
+    <b>Total exos :</b> @plan.Weeks.Sum(w => w.Days.Sum(d => d.Exercises.Count))
+</div>
+
+<button class="btn btn-primary my-2" @onclick="AddWeek">➕ Ajouter une semaine</button>
+
+@foreach (var week in plan.Weeks.Select((w, wi) => new { w, wi }))
+{
+    <div class="border p-3 mb-3">
+        <h4>Semaine @(@week.wi + 1)</h4>
+        <button class="btn btn-secondary mb-2" @onclick="@(() => AddDay(@week.wi))">➕ Jour</button>
+
+        @foreach (var day in week.w.Days.Select((d, di) => new { d, di }))
+        {
+            <div class="border p-2 mb-2">
+                <h5>Jour @(@day.di + 1)</h5>
+                <button class="btn btn-sm btn-outline-success mb-2" @onclick="@(() => PrepareAddExercise(@week.wi, @day.di))">➕ Exercice</button>
+                @foreach (var ex in day.d.Exercises)
+                {
+                    <div>@ex.ExerciseName — @ex.Series × @ex.Repetitions, @ex.RestTimeSeconds s</div>
+                }
+            </div>
+        }
+    </div>
+}
+
+<hr />
+<h4>Filtres</h4>
+<div class="mb-2">
+    <input class="form-control mb-1" placeholder="Nom" @bind="filterName" />
+    <input class="form-control mb-1" placeholder="Description" @bind="filterDescription" />
+    <input class="form-control mb-1" placeholder="Muscle" @bind="filterMuscle" />
+</div>
+
+<h5>Catégories</h5>
+<button class="btn btn-sm btn-link" @onclick="() => selectedCategories.Clear()">Tout décocher catégories</button>
+
+@foreach (var cat in AllCategories)
+{
+    <label class="me-2">
+        <input type="checkbox" @onchange="e => ToggleFilter(selectedCategories, cat, e)" checked="@selectedCategories.Contains(cat)" />
+        @cat
+    </label>
+
+}
+
+<h5>Équipements</h5>
+<button class="btn btn-sm btn-link" @onclick="() => selectedEquipments.Clear()">Tout décocher Equipments</button>
+
+@foreach (var eq in AllEquipments)
+{
+    <label class="me-2">
+        <input type="checkbox" @onchange="e => ToggleFilter(selectedEquipments, eq, e)" checked="@selectedEquipments.Contains(eq)" />
+        @eq
+    </label>
+}
+
+<h5>Origines</h5>
+<button class="btn btn-sm btn-link" @onclick="() => selectedOrigins.Clear()">Tout décocher Origins</button>
+@foreach (var ori in AllOrigins)
+{
+    <label class="me-2">
+        <input type="checkbox" @onchange="e => ToggleFilter(selectedOrigins, ori, e)" checked="@selectedOrigins.Contains(ori)" />
+        @ori
+    </label>
+}
+
+<h5>Types</h5>
+@foreach (var typ in AllTypes)
+{
+    <button class="btn btn-sm btn-link" @onclick="() => selectedTypes.Clear()">Tout décocher Types</button>
+    <label class="me-2">
+        <input type="checkbox" @onchange="e => ToggleFilter(selectedTypes, typ, e)" checked="@selectedTypes.Contains(typ)" />
+        @typ
+    </label>
+}
+
+<h5>Résultats filtrés : @FilteredExercises.Count()</h5>
+<div style="max-height: 300px; overflow-y: scroll;">
+    @foreach (var ex in FilteredExercises)
+    {
+        <div class="border p-1 mb-1">
+            <b>@ex.Name</b> | @ex.Category | @ex.Equipment
+            <button class="btn btn-sm btn-outline-primary float-end" @onclick="@(() => SelectExercise(ex))">Sélectionner</button>
+        </div>
+    }
+</div>
+
+@if (selected != null)
+{
+    <div class="mt-3">
+        <h5>Ajout de : @selected.Name</h5>
+        Séries : <input type="number" class="form-control" @bind="inputSeries" min="1" />
+        Répétitions : <input type="number" class="form-control" @bind="inputReps" min="1" />
+        Repos (s) : <input type="number" class="form-control" @bind="inputRest" min="0" />
+        <button class="btn btn-success mt-2" @onclick="ConfirmAddExercise">Confirmer l'ajout</button>
+    </div>
+}
+
+<hr />
+<button class="btn btn-warning me-2" @onclick="SaveToLocal">💾 Sauver local</button>
+<button class="btn btn-success" @onclick="OnSaveManualProgramme">☁️ Enregistrer dans Supabase</button>
+
+@if (jsonOut != null)
+{
+    <pre>@jsonOut</pre>
+}
+
+@code {
+    private string programmeName = "Programme Perso";
+    private WorkoutPlan plan = new() { TotalWeeks = 0 };
+    private List<ExerciseDefinition> allExercises = new();
+    private ExerciseDefinition? selected;
+    private int currentWeek, currentDay;
+    private int inputSeries = 3, inputReps = 10, inputRest = 60;
+    private string? jsonOut;
+    private Guid? editingId = null;
+
+    private string filterName = "";
+    private string filterDescription = "";
+    private string filterMuscle = "";
+
+    private HashSet<string> selectedCategories = new();
+    private HashSet<string> selectedEquipments = new();
+    private HashSet<string> selectedOrigins = new();
+    private HashSet<string> selectedTypes = new();
+
+    private IEnumerable<string> AllCategories => allExercises.Select(e => e.Category).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().OrderBy(c => c);
+    private IEnumerable<string> AllEquipments => allExercises.Select(e => e.Equipment).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().OrderBy(c => c);
+    private IEnumerable<string> AllOrigins => allExercises.Select(e => e.Origin).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().OrderBy(c => c)!;
+    private IEnumerable<string> AllTypes => allExercises.Select(e => e.Type).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().OrderBy(c => c)!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Optionnel : simule l'ouverture d'un programme déjà existant
+        var fromStorage = await LocalStorage.GetItemAsync<ProgrammeModel>("editing_plan");
+        if (fromStorage is not null)
+        {
+            editingId = fromStorage.Id;
+            programmeName = fromStorage.Nom;
+            plan = JsonSerializer.Deserialize<WorkoutPlan>(fromStorage.Contenu) ?? new();
+        }
+
+        var version = DateTime.Now.Ticks;
+        allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
+    }
+
+    private void AddWeek()
+    {
+        plan.TotalWeeks++;
+        plan.Weeks.Add(new WorkoutWeek { WeekNumber = plan.TotalWeeks });
+    }
+
+    private void AddDay(int weekIdx)
+    {
+        plan.Weeks[weekIdx].Days.Add(new WorkoutDay
+            {
+                DayIndex = plan.Weeks[weekIdx].Days.Count + 1,
+                TypeProgramme = ProgrammeType.FullBody,
+                Exercises = new List<ExerciseSession>()
+            });
+    }
+
+    private void PrepareAddExercise(int weekIdx, int dayIdx)
+    {
+        currentWeek = weekIdx;
+        currentDay = dayIdx;
+    }
+
+    private void SelectExercise(ExerciseDefinition ex)
+    {
+        selected = ex;
+    }
+
+    private void ConfirmAddExercise()
+    {
+        if (selected == null) return;
+
+        var ex = new ExerciseSession
+            {
+                ExerciseId = selected.Id,
+                ExerciseName = selected.Name,
+                Series = inputSeries,
+                Repetitions = inputReps,
+                RestTimeSeconds = inputRest,
+                IsSuperset = false,
+                Pourcentage1RM = 0
+            };
+
+        plan.Weeks[currentWeek].Days[currentDay].Exercises.Add(ex);
+        selected = null;
+    }
+
+    private void ToggleFilter(HashSet<string> set, string value, ChangeEventArgs e)
+    {
+        if ((bool?)e.Value == true)
+            set.Add(value);
+        else
+            set.Remove(value);
+    }
+
+    private IEnumerable<ExerciseDefinition> FilteredExercises =>
+        allExercises.Where(e =>
+            (string.IsNullOrWhiteSpace(filterName) || e.Name.Contains(filterName, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrWhiteSpace(filterDescription) || e.Description.Contains(filterDescription, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrWhiteSpace(filterMuscle) || (e.Muscle?.Contains(filterMuscle, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+            (selectedCategories.Count == 0 || selectedCategories.Contains(e.Category)) &&
+            (selectedEquipments.Count == 0 || selectedEquipments.Contains(e.Equipment)) &&
+            (selectedOrigins.Count == 0 || (e.Origin != null && selectedOrigins.Contains(e.Origin))) &&
+            (selectedTypes.Count == 0 || (e.Type != null && selectedTypes.Contains(e.Type)))
+        );
+
+    private async Task SaveToLocal()
+    {
+        await LocalStorage.SetItemAsync("custom_plan", plan);
+        jsonOut = JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true });
+    }
+
+    private async Task OnSaveManualProgramme()
+    {
+        var success = await SupabaseService.SaveManualPlanAsync(programmeName, plan);
+        jsonOut = success
+            ? $"✅ Programme manuel enregistré dans Supabase ({programmeName})"
+            : "❌ Échec lors de l'enregistrement dans Supabase.";
+    }
+}

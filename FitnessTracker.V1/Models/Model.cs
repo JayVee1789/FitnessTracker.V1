@@ -38,6 +38,11 @@
             public string Category { get; set; } = "";
             public string Equipment { get; set; } = "";
             public string Description { get; set; } = ""; // "Compound" / "Single-Joint"
+                                                          // Champs additionnels présents dans ton JSON
+            public string? Origin { get; set; }
+            public string? Type { get; set; }      // Certains objets ont ce champ
+            public string? Muscle { get; set; }    // Même chose
+
         }
 
         public class UserProfile

@@ -60,9 +60,9 @@ namespace FitnessTracker.V1.Services
         public async Task<List<string>> GetExercicesAsync()
         {
             return await _localStorage.GetItemAsync<List<string>>(ExercicesKey) ?? new()
-        {
-            "Développé couché", "Dips", "Squat"
-        };
+            {
+                "Développé couché", "Dips", "Squat"
+            };
         }
 
         //  Sauvegarder la liste des exercices

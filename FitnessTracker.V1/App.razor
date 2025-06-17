@@ -8,3 +8,28 @@
         </LayoutView>
     </NotFound>
 </Router>
+@inject IJSRuntime JS
+
+@if (updateAvailable)
+{
+    <div class="alert alert-warning fixed-bottom text-center">
+        🔄 Nouvelle version disponible.
+        <button class="btn btn-sm btn-primary ms-2" @onclick="ReloadApp">Recharger</button>
+    </div>
+}
+
+@code {
+    private bool updateAvailable = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        DotNetObjectReference<App> dotRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("listenForServiceWorkerUpdates", dotRef);
+        await JS.InvokeVoidAsync("navigator.serviceWorker.controller?.postMessage", "check-for-update");
+    }
+
+    [JSInvokable]
+    public void NotifyUpdateAvailable() => updateAvailable = true;
+
+    private async Task ReloadApp() => await JS.InvokeVoidAsync("location.reload");
+}

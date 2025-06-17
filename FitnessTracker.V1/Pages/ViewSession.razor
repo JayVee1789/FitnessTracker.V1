@@ -122,6 +122,7 @@
     private List<ProgrammeModel> Programmes = new();
     private WorkoutPlan? SelectedPlan;
     private Guid SelectedProgrammeId;
+    private string SelectedProgrammeSource = "auto";
     private int SelectedSemaineIndex = 0;
     private int SelectedJourIndex = 1;
     private List<ExerciceJour> Exercises = new();
@@ -130,7 +131,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Programmes = await SupabaseService.GetProgrammesAsync();
+        Programmes = await SupabaseService.GetAllProgrammesAsync();
     }
 
     private async Task OnProgrammeSelected(ChangeEventArgs e)
@@ -139,15 +140,16 @@
         var value = e.Value?.ToString();
         if (Guid.TryParse(value, out var id))
         {
-            SelectedProgrammeId = id;
             var selectedProgramme = Programmes.FirstOrDefault(p => p.Id == id);
 
             if (selectedProgramme is not null)
             {
+                SelectedProgrammeId = id;
+                SelectedProgrammeSource = selectedProgramme.Source;
                 SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(selectedProgramme.Contenu);
                 SelectedSemaineIndex = 0;
                 SelectedJourIndex = 1;
-                ChargerSeance();
+                await ChargerSeance();
             }
         }
     }
@@ -177,17 +179,17 @@
         if (jour == null || jour.IsRest)
         {
             Exercises = new()
-        {
-            new ExerciceJour
             {
-                ExerciseName = "Repos",
-                Series = 0,
-                Repetitions = 0,
-                RestTimeSeconds = 0,
-                Pourcentage1RM = 0,
-                PoidsUtilisé = 0
-            }
-        };
+                new ExerciceJour
+                {
+                    ExerciseName = "Repos",
+                    Series = 0,
+                    Repetitions = 0,
+                    RestTimeSeconds = 0,
+                    Pourcentage1RM = 0,
+                    PoidsUtilisé = 0
+                }
+            };
         }
         else
         {
@@ -207,9 +209,8 @@
             }
         }
 
-        StateHasChanged(); // Rafraîchit l'affichage Blazor
+        StateHasChanged();
     }
-
 
     private void MarquerNonAtteint(ExerciceJour ex)
     {
@@ -247,38 +248,24 @@
 
         if (SelectedProgrammeId != Guid.Empty)
         {
-            var success = await SupabaseService.DeleteProgrammeAsync(SelectedProgrammeId);
+            var success = await SupabaseService.DeleteProgrammeUnifiedAsync(SelectedProgrammeId, SelectedProgrammeSource);
+
             if (success)
             {
-                Programmes = await SupabaseService.GetProgrammesAsync();
+                // Réinitialisation complète
                 SelectedPlan = null;
                 SelectedProgrammeId = Guid.Empty;
+                SelectedProgrammeSource = "auto";
                 Exercises.Clear();
+
+                Programmes = await SupabaseService.GetAllProgrammesAsync();
+
+                // Forcer le rendu
                 StateHasChanged();
             }
         }
     }
-    private async Task SupprimerProgrammeAsync()
-{
-    if (SelectedProgrammeId == Guid.Empty)
-        return;
 
-    bool ok = await SupabaseService.DeleteProgrammeAsync(SelectedProgrammeId);
-
-    if (ok)
-    {
-        Console.WriteLine("Programme supprimé ✅");
-
-        // Reset UI
-        SelectedPlan = null;
-        Exercises.Clear();
-        SelectedProgrammeId = Guid.Empty;
-
-        // Recharger la liste
-        Programmes = await SupabaseService.GetProgrammesAsync();
-        StateHasChanged();
-    }
-}
 
     public class ExerciceJour
     {

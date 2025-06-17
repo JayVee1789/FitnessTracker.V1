@@ -12,5 +12,8 @@ public class ProgrammeModel
     public string Contenu { get; set; } = "";
 
     [JsonPropertyName("date_debut")]
-    public DateTime DateDebut { get; set; }
+    public DateTime DateDebut { get; set; } = DateTime.Today;
+
+    [JsonIgnore]
+    public string Source { get; set; } = "auto"; // "manuel" ou "auto"
 }

@@ -1,8 +1,9 @@
 {
   "name": "FitnessTracker.V1",
-  "short_name": "FitnessTracker.V1",
-  "id": "./",
-  "start_url": "./",
+  "short_name": "FitnessTracker",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#03173d",
