@@ -37,6 +37,7 @@ builder.Services.AddSingleton(sp =>
 
 // HttpClient
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 var host = builder.Build();
 

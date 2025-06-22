@@ -9,3 +9,4 @@ wwwroot\icon-512.png
 wwwroot\index.html
 wwwroot\manifest.webmanifest
 wwwroot\sample-data\weather.json
+wwwroot\sw-utils.js
