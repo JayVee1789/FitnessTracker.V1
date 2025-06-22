@@ -1,0 +1,18 @@
+﻿@page "/logout"
+
+@inject AuthService AuthService
+@inject SupabaseService SupabaseService
+@inject NavigationManager Nav
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.SignOutAsync();
+
+        // 🔒 Supprime le header Authorization
+        SupabaseService.ClearAuthHeaders();
+
+        Console.WriteLine("👋 Déconnexion réussie");
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+}

@@ -12,18 +12,34 @@ public class SupabaseService
     private readonly string _apiKey;
     private readonly string _programmeUrl;
     private readonly string _programmeManuelUrl;
-    public SupabaseService(HttpClient http)
+    private readonly Supabase.Client _supabase;
+    public SupabaseService(HttpClient http, Supabase.Client supabase)
     {
 
         _http = http;
-
+        _supabase = supabase;
         _apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2c2hhcGRsd3p6eXRwbXZnbWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDg5NjEsImV4cCI6MjA2MzY4NDk2MX0.DKx7CvWsfo9b5V6-vShqHXU1eNrvYXYDP26uOtEghCc"; // À récupérer dans Supabase > Project Settings > API > anon key
         _tableUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/entries"; // Voir dans Supabase > API > REST
         _programmeUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/programmes";
         _programmeManuelUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/programmes_manuels";
-        _http.DefaultRequestHeaders.Add("apikey", _apiKey);
-        _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
 
+        _http.DefaultRequestHeaders.Add("apikey", _apiKey);
+    }
+    public void RefreshAuthHeaders()
+    {
+        var token = _supabase.Auth.CurrentSession?.AccessToken;
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            if (_http.DefaultRequestHeaders.Contains("Authorization"))
+                _http.DefaultRequestHeaders.Remove("Authorization");
+
+            _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        }
+        else
+        {
+            Console.WriteLine("❌ Aucun token trouvé. L'utilisateur n'est pas connecté ou la session a expiré.");
+        }
     }
 
     public async Task<List<PoidsEntry>> GetEntriesAsync()
@@ -45,9 +61,14 @@ public class SupabaseService
     public async Task AddEntryAsync(PoidsEntry entry)
     {
 
-        await RemoveByExerciceAndDateAsync(entry.Exercice, entry.Date);
-        var response = await _http.PostAsJsonAsync(_tableUrl, new[] { entry });
-        response.EnsureSuccessStatusCode();
+        var result = await _supabase
+       .From<PoidsEntry>()
+       .Insert(entry);
+
+        if (result.Model is null)
+            Console.WriteLine("❌ Erreur d'insertion Supabase.");
+        else
+            Console.WriteLine("✅ Insertion Supabase réussie.");
 
     }
     public async Task DeleteEntriesNotInAsync(List<PoidsEntry> localEntries)
@@ -85,40 +106,81 @@ public class SupabaseService
     }
     #endregion
 
-    #region PROGRAMME
-    // Récupère les programmes générés automatiquement
+    #region PROGRAMMES UTILISATEUR
+
     public async Task<List<ProgrammeModel>> GetProgrammesAsync()
     {
-        //var programmesAuto = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmeUrl);
-
-        //var programmesManuels = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmeManuelUrl); 
-
-
-
-        //var tous = (programmesAuto ?? new()).Concat(programmesManuels ?? new()).ToList();
-
-        //var result = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmeUrl);
-        //return tous ?? new();
+        RefreshAuthHeaders();
         var result = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmeUrl);
         foreach (var p in result ?? new()) p.Source = "auto";
         return result ?? new();
     }
-    // Récupère les programmes manuels
+
     public async Task<List<ProgrammeModel>> GetProgrammesManuelsAsync()
     {
+        RefreshAuthHeaders();
         var result = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmeManuelUrl);
         foreach (var p in result ?? new()) p.Source = "manuel";
         return result ?? new();
     }
-    
-    // Combine les deux sources
+
     public async Task<List<ProgrammeModel>> GetAllProgrammesAsync()
     {
         var auto = await GetProgrammesAsync();
         var manuels = await GetProgrammesManuelsAsync();
         return auto.Concat(manuels).ToList();
     }
-    // Suppression unifiée selon la source
+
+    public async Task<bool> AddProgrammeAsync(ProgrammeModel p)
+    {
+        // Vérification sécurisée
+        var userId = _supabase.Auth.CurrentUser?.Id;
+        if (string.IsNullOrEmpty(userId))
+        {
+            Console.WriteLine("❌ Aucun utilisateur connecté");
+            return false;
+        }
+
+        p.UserId = userId;
+        Console.WriteLine("Payload JSON →");
+        Console.WriteLine(JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true }));
+        RefreshAuthHeaders();
+
+        var response = await _http.PostAsJsonAsync(_programmeUrl, new[] { p });
+
+        Console.WriteLine("Envoi JSON :\n" + JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine("Code retour : " + response.StatusCode);
+
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> SaveManualPlanAsync(string nom, WorkoutPlan plan)
+    {
+        var userId = _supabase.Auth.CurrentUser?.Id;
+        if (string.IsNullOrEmpty(userId))
+        {
+            Console.WriteLine("❌ Aucun utilisateur connecté");
+            return false;
+        }
+
+        var p = new
+        {
+            id = Guid.NewGuid(),
+            nom = nom,
+            datedebut = DateTime.Today.ToString("yyyy-MM-dd"), // sécurise le format date
+            contenu = JsonSerializer.Serialize(plan), // ✅ on sérialise en texte
+            source = "manuel",
+            user_id = userId
+        };
+
+        var response = await _http.PostAsJsonAsync(_programmeManuelUrl, new[] { p });
+
+        Console.WriteLine("Envoi JSON vers Supabase (manuel) :\n" + JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine("Code retour : " + response.StatusCode);
+
+        return response.IsSuccessStatusCode;
+    }
+
     public async Task<bool> DeleteProgrammeUnifiedAsync(Guid id, string source)
     {
         var url = source == "manuel"
@@ -130,45 +192,6 @@ public class SupabaseService
         return response.IsSuccessStatusCode;
     }
 
-    // Enregistrement manuel dans la table programmes_manuels PROGRAMME
-    public async Task<bool> SaveManualPlanAsync(string nom, WorkoutPlan plan)
-    {
-        var p = new Dictionary<string, object>
-        {
-            ["id"] = Guid.NewGuid(),
-            ["nom"] = nom,
-            ["datedebut"] = DateTime.Today,
-            ["contenu"] = JsonSerializer.Serialize(plan)
-        };
-
-        var response = await _http.PostAsJsonAsync(_programmeManuelUrl, new[] { p });
-
-        var debugJson = JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true });
-        Console.WriteLine("Envoi JSON vers Supabase (manuel) :\n" + debugJson);
-        Console.WriteLine("Code retour : " + response.StatusCode);
-
-        return response.IsSuccessStatusCode;
-    }
-    public async Task<bool> AddProgrammeAsync(ProgrammeModel p)
-    {
-        var response = await _http.PostAsJsonAsync(_programmeUrl, new[] { p });
-
-        var debugJson = JsonSerializer.Serialize(p);
-        Console.WriteLine("Envoi JSON vers Supabase : " + debugJson);
-        Console.WriteLine("Code retour : " + response.StatusCode);
-
-        return response.IsSuccessStatusCode;
-    }
-    public async Task<bool> DeleteProgrammeAsync(Guid id)
-    {
-        var url = $"{_programmeUrl}?id=eq.{id}";
-        var request = new HttpRequestMessage(HttpMethod.Delete, url);
-        var response = await _http.SendAsync(request);
-
-        Console.WriteLine($"[SUPABASE DELETE] {url} → {response.StatusCode}");
-
-        return response.IsSuccessStatusCode;
-    }
     public async Task<bool> UpdateManualProgrammeAsync(Guid id, string nom, WorkoutPlan plan)
     {
         var url = $"{_programmeManuelUrl}?id=eq.{id}";
@@ -180,18 +203,56 @@ public class SupabaseService
         };
 
         var content = new StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
-        var request = new HttpRequestMessage(HttpMethod.Patch, url)
+        var response = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url) { Content = content });
+
+        Console.WriteLine($"[UPDATE MANUEL] {url} → {response.StatusCode}");
+        return response.IsSuccessStatusCode;
+    }
+    public async Task<bool> SaveProgrammeAsync(ProgrammeModel p, bool isManual)
+    {
+        var userId = _supabase.Auth.CurrentUser?.Id;
+        if (string.IsNullOrEmpty(userId))
         {
-            Content = content
+            Console.WriteLine("❌ Aucun utilisateur connecté.");
+            return false;
+        }
+
+        p.UserId = userId;
+        p.Source = isManual ? "manuel" : "auto";
+
+        var url = isManual ? _programmeManuelUrl : _programmeUrl;
+
+        // ✅ Injecte le bon token
+        RefreshAuthHeaders();
+
+        var payload = new
+        {
+            id = p.Id == Guid.Empty ? Guid.NewGuid() : p.Id,
+            nom = p.Nom,
+            date_debut = p.DateDebut.ToString("yyyy-MM-dd"),
+            contenu = p.Contenu,
+            source = p.Source,
+            user_id = Guid.Parse(userId)
         };
 
-        var response = await _http.SendAsync(request);
-        Console.WriteLine($"[UPDATE MANUEL] {url} → {response.StatusCode}");
+        var response = await _http.PostAsJsonAsync(url, new[] { payload });
+
+        Console.WriteLine("➡️ JSON envoyé :\n" + JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine($"➡️ Vers URL : {url}");
+        Console.WriteLine("➡️ Code retour : " + response.StatusCode);
+
         return response.IsSuccessStatusCode;
     }
 
     #endregion
 
-
-
+    public string? GetCurrentUserId()
+    {
+        return _supabase.Auth.CurrentUser?.Id;
+    }
+    public void ClearAuthHeaders()
+    {
+        if (_http.DefaultRequestHeaders.Contains("Authorization"))
+            _http.DefaultRequestHeaders.Remove("Authorization");
+    }
 }

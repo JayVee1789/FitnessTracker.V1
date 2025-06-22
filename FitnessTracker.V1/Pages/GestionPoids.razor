@@ -1,8 +1,9 @@
-﻿@page "/"
+﻿@page "/gestion_poids"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
 @inject PoidsService PoidsService
 @inject SupabaseService SupabaseService
+
 
 <div class="container mt-4">
     <h3 class="mb-4">Journal de Musculation 💪</h3>
@@ -130,7 +131,7 @@
             </tbody>
         </table>
 
-       @*  <h5 class="mt-4">Supprimer toutes les entrées d’un exercice</h5>
+        <h5 class="mt-4">Supprimer toutes les entrées d’un exercice</h5>
         <div class="d-flex flex-wrap gap-2">
             @foreach (var ex in data.Select(e => e.Exercice).Distinct())
             {
@@ -139,7 +140,7 @@
                     🗑️ @ex
                 </button>
             }
-        </div> *@
+        </div>
     }
 </div>
 
@@ -149,7 +150,7 @@
     string newExercice = "";
     DateTime selectedDate = DateTime.Today;
     double poids;
-
+    private readonly Supabase.Client _supabase;
     List<PoidsEntry> data = new();
     List<DateTime> allDates = new();
 
@@ -188,8 +189,14 @@
                 Date = selectedDate,
                 Poids = poids
             };
+        var local = new PoidsEntryLocal
+            {
+                Exercice = entry.Exercice,
+                Date = entry.Date,
+                Poids = entry.Poids
+            };
 
-        await PoidsService.AddEntryAsync(entry);
+        await PoidsService.AddEntryAsync(entry, local);
         data = await PoidsService.GetEntriesAsync();
         UpdateDates();
         message = "Entrée enregistrée ✅";
@@ -233,42 +240,82 @@
         message = $"Toutes les entrées pour « {exercice} » ont été supprimées.";
     }
 
+    // async Task ExportToSupabase()
+    // {
+    //     var local = await PoidsService.GetEntriesAsync();
+    //     var remote = await SupabaseService.GetEntriesAsync();
+    //     int added = 0;
+
+    //     // Supprimer ce qui n'existe plus en local
+    //     await SupabaseService.DeleteEntriesNotInAsync(local);
+
+    //     foreach (var entry in local)
+    //     {
+    //         if (!remote.Any(x => x.Exercice == entry.Exercice && x.Date.Date == entry.Date.Date))
+    //         {
+    //             await SupabaseService.AddEntryAsync(entry);
+    //             added++;
+    //         }
+    //     }
+
+    //     message = $"Synchronisation terminée. {added} nouvelle(s) entrée(s) exportée(s).";
+    // }
     async Task ExportToSupabase()
     {
-        var local = await PoidsService.GetEntriesAsync();
-        var remote = await SupabaseService.GetEntriesAsync();
+        var local = await PoidsService.GetEntriesAsync();          // localStorage
+        var remote = await SupabaseService.GetEntriesAsync();      // Supabase
         int added = 0;
 
-        // Supprimer ce qui n'existe plus en local
+        // Supprimer dans Supabase ce qui n’existe plus localement
         await SupabaseService.DeleteEntriesNotInAsync(local);
 
         foreach (var entry in local)
         {
-            if (!remote.Any(x => x.Exercice == entry.Exercice && x.Date.Date == entry.Date.Date))
+            bool exists = remote.Any(x =>
+                x.Exercice == entry.Exercice && x.Date.Date == entry.Date.Date);
+
+            if (!exists)
             {
+                // injection user_id (optionnel si déjà géré dans SupabaseService)
+                entry.UserId = _supabase.Auth.CurrentUser?.Id ?? "";
                 await SupabaseService.AddEntryAsync(entry);
                 added++;
             }
         }
 
-        message = $"Synchronisation terminée. {added} nouvelle(s) entrée(s) exportée(s).";
+        message = $"✅ Synchronisation terminée. {added} nouvelle(s) entrée(s) exportée(s).";
     }
+    // async Task ImportFromSupabase()
+    // {
+    //     try
+    //     {
+    //         var supabaseEntries = await SupabaseService.GetEntriesAsync();
+    //         await PoidsService.OverwriteEntriesAsync(supabaseEntries);
+    //         data = await PoidsService.GetEntriesAsync();
+    //         UpdateDates();
+    //         message = $"Importé {supabaseEntries.Count} entrées depuis Supabase ✅";
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine(ex.ToString());
+    //     }
+
+    // }
 
     async Task ImportFromSupabase()
     {
         try
         {
-            var supabaseEntries = await SupabaseService.GetEntriesAsync();
-            await PoidsService.OverwriteEntriesAsync(supabaseEntries);
-            data = await PoidsService.GetEntriesAsync();
+            var supabaseEntries = await SupabaseService.GetEntriesAsync();  // côté cloud
+            await PoidsService.OverwriteEntriesAsync(supabaseEntries);      // remplace localement
+            data = await PoidsService.GetEntriesAsync();                    // recharge pour affichage
             UpdateDates();
-            message = $"Importé {supabaseEntries.Count} entrées depuis Supabase ✅";
+            message = $"✅ Importé {supabaseEntries.Count} entrées depuis Supabase";
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.ToString());
+            Console.WriteLine("❌ Erreur lors de l'import : " + ex.Message);
         }
-
     }
     async Task DeleteById(Guid id)
     {

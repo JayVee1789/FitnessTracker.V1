@@ -7,6 +7,8 @@
 @inject SupabaseService SupabaseService
 @inject PoidsService PoidsService
 @inject IJSRuntime JS
+@inject NavigationManager Nav
+@inject AuthService AuthService
 
 <h3>Visualiser une séance de programme</h3>
 
@@ -58,6 +60,11 @@
 @if (Exercises.Any())
 {
     <h5 class="mt-3">Séance du programme sélectionné</h5>
+    <div class="mb-3">
+        <button class="btn btn-outline-primary" @onclick="ToggleUnite">
+            Affichage : @(AfficherEnLb ? "livres (lb)" : "kilos (kg)")
+        </button>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -73,18 +80,33 @@
         <tbody>
             @foreach (var ex in Exercises)
             {
-                <tr>
+                <tr class="@((ex.ObjectifAtteint ? "table-success" : ""))">
                     <td><a href="#" @onclick="() => ProposerRemplacement(ex)">@ex.ExerciseName</a></td>
                     <td>@ex.Series</td>
                     <td>@ex.Repetitions</td>
                     <td>@ex.RestTimeSeconds</td>
                     <td>
                         <input type="number" class="form-control" step="0.5"
-                               @bind="ex.PoidsUtilisé" />
+                        @bind="ex.PoidsUtilisé" />
                     </td>
-                    <td>@ex.Pourcentage1RM%</td>
                     <td>
-                        <button class="btn btn-sm btn-warning" @onclick="() => MarquerNonAtteint(ex)">Non atteint</button>
+                        @{
+                            var objectifKg = ex.PoidsUtilisé * (1 + ex.Pourcentage1RM / 100.0);
+                            var objectifAffiché = ex.IsLb
+                            ? Math.Round(objectifKg / 0.453592, 1) + " lb"
+                            : Math.Round(objectifKg, 1) + " kg";
+                        }
+                        @objectifAffiché
+                    </td>
+                    @* <td>
+                        @{
+                            var obj = ex.IsLb ? Math.Round(ex.Objectif / 0.453592, 1) + " lb"
+                            : Math.Round(ex.Objectif, 1) + " kg";
+                        }
+                        @obj
+                    </td> *@
+                    <td>
+                        <button class="btn btn-sm btn-warning" @onclick="() => MarquerAtteint(ex)">Non atteint</button>
                     </td>
                 </tr>
             }
@@ -117,7 +139,100 @@
         </div>
     </div>
 </div>
+@* <div class="mobile-container px-3 py-4">
+    <h2 class="text-center fw-bold mb-4" style="font-size: 1.5rem;">🎯 Ma Séance</h2>
 
+    <div class="mb-3">
+        <label class="form-label">📅 Programme</label>
+        <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnProgrammeSelected">
+            <option value="">-- Choisir --</option>
+            @foreach (var prog in Programmes)
+            {
+                <option value="@prog.Id">@prog.Nom (@prog.DateDebut.ToShortDateString())</option>
+            }
+        </select>
+    </div>
+
+    @if (SelectedPlanAvailable)
+    {
+        <div class="d-flex gap-2 mb-3">
+            <div class="flex-fill">
+                <label class="form-label">Semaine</label>
+                <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnSemaineChanged">
+                    @for (int i = 0; i < SelectedPlan?.Weeks.Count; i++)
+                    {
+                        <option value="@i">semaine@(i + 1)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="flex-fill">
+                <label class="form-label">Jour</label>
+                <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnJourChanged">
+                    @for (int j = 1; j <= 7; j++)
+                    {
+                        <option value="@j">jour@j</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-outline-danger w-100 rounded-pill py-3 fw-semibold mb-3" data-bs-toggle="modal" data-bs-target="#confirmModal">
+            🗑️ Supprimer le programme
+        </button>
+    }
+
+    @if (Exercises.Any())
+    {
+        <h5 class="fw-bold mt-4 mb-3">📋 Détails de la séance</h5>
+
+        @foreach (var ex in Exercises)
+        {
+            <div class="card shadow-sm mb-3 border-0 rounded-4 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong style="font-size: 1.1rem;" @onclick="() => ProposerRemplacement(ex)" class="text-dark">@ex.ExerciseName</strong>
+                    <button class="btn btn-sm btn-outline-warning rounded-pill" @onclick="() => MarquerNonAtteint(ex)">❌</button>
+                </div>
+                <div class="row text-center">
+                    <div class="col"><div class="small">Séries</div><strong>@ex.Series</strong></div>
+                    <div class="col"><div class="small">Reps</div><strong>@ex.Repetitions</strong></div>
+                    <div class="col"><div class="small">Repos</div><strong>@ex.RestTimeSeconds s</strong></div>
+                    <div class="col">
+                        <div class="small">Poids</div>
+                        <input type="number" class="form-control form-control-sm rounded-pill text-center" step="0.5" @bind="ex.PoidsUtilisé" />
+                    </div>
+                    <div class="col"><div class="small">% 1RM</div><strong>@ex.Pourcentage1RM%</strong></div>
+                </div>
+            </div>
+        }
+    }
+
+    @if (SelectedPlanAvailable)
+    {
+        <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold mt-4" @onclick="SauvegarderSeance">
+            💾 Enregistrer ma séance
+        </button>
+    }
+</div>
+
+<!-- Modal suppression -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header bg-danger text-white rounded-top-4">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                Confirmer la suppression de ce programme ?<br /><small>(Action irréversible)</small>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="ConfirmerSuppression">Oui</button>
+            </div>
+        </div>
+    </div>
+</div> *@
 @code {
     private List<ProgrammeModel> Programmes = new();
     private WorkoutPlan? SelectedPlan;
@@ -126,11 +241,32 @@
     private int SelectedSemaineIndex = 0;
     private int SelectedJourIndex = 1;
     private List<ExerciceJour> Exercises = new();
+    private DateTime SelectedProgrammeDate = DateTime.Today;
+    private bool AfficherEnLb { get; set; } = false;
+
 
     private bool SelectedPlanAvailable => SelectedPlan is not null;
 
     protected override async Task OnInitializedAsync()
     {
+        if (!AuthService.IsAuthenticated)
+        {
+            Nav.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+
+        try
+        {
+            // 🔄 Tente une synchro silencieuse sans casser la suite
+            await PoidsService.SyncFromSupabaseAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erreur de synchro Supabase → localStorage : " + ex.Message);
+            // Optionnel : afficher une alerte ou logger
+        }
+
+        // ✅ Chargement des programmes comme avant
         Programmes = await SupabaseService.GetAllProgrammesAsync();
     }
 
@@ -147,6 +283,8 @@
                 SelectedProgrammeId = id;
                 SelectedProgrammeSource = selectedProgramme.Source;
                 SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(selectedProgramme.Contenu);
+                SelectedProgrammeDate = selectedProgramme.DateDebut;
+
                 SelectedSemaineIndex = 0;
                 SelectedJourIndex = 1;
                 await ChargerSeance();
@@ -166,6 +304,52 @@
         await ChargerSeance();
     }
 
+    // private async Task ChargerSeance()
+    // {
+    //     Exercises.Clear();
+
+    //     if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
+    //         return;
+
+    //     var week = SelectedPlan.Weeks[SelectedSemaineIndex];
+    //     var jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+
+    //     if (jour == null || jour.IsRest)
+    //     {
+    //         Exercises = new()
+    //         {
+    //             new ExerciceJour
+    //             {
+    //                 ExerciseName = "Repos",
+    //                 Series = 0,
+    //                 Repetitions = 0,
+    //                 RestTimeSeconds = 0,
+    //                 Pourcentage1RM = 0,
+    //                 PoidsUtilisé = 0
+    //             }
+    //         };
+    //     }
+    //     else
+    //     {
+    //         foreach (var ex in jour.Exercises)
+    //         {
+    //             var date = SelectedProgrammeDate.AddDays(SelectedSemaineIndex * 7 + (SelectedJourIndex - 1));
+
+    //             double lastPoids = await PoidsService.GetPoidsForExerciceAtDateAsync(ex.ExerciseName, date) ??0;
+    //             Exercises.Add(new ExerciceJour
+    //                 {
+    //                     ExerciseName = ex.ExerciseName,
+    //                     Series = ex.Series,
+    //                     Repetitions = ex.Repetitions,
+    //                     RestTimeSeconds = ex.RestTimeSeconds,
+    //                     Pourcentage1RM = ex.Pourcentage1RM,
+    //                     PoidsUtilisé = lastPoids
+    //                 });
+    //         }
+    //     }
+
+    //     StateHasChanged();
+    // }
     private async Task ChargerSeance()
     {
         Exercises.Clear();
@@ -179,23 +363,35 @@
         if (jour == null || jour.IsRest)
         {
             Exercises = new()
+        {
+            new ExerciceJour
             {
-                new ExerciceJour
-                {
-                    ExerciseName = "Repos",
-                    Series = 0,
-                    Repetitions = 0,
-                    RestTimeSeconds = 0,
-                    Pourcentage1RM = 0,
-                    PoidsUtilisé = 0
-                }
-            };
+                ExerciseName = "Repos",
+                Series = 0,
+                Repetitions = 0,
+                RestTimeSeconds = 0,
+                Pourcentage1RM = 0,
+                PoidsUtilisé = 0
+            }
+        };
         }
         else
         {
+            var date = DateTime.Today;
+            var localPoids = await PoidsService.GetAllLocalPoidsAsync();
+
             foreach (var ex in jour.Exercises)
             {
-                double lastPoids = await PoidsService.GetLastPoidsForExerciceAsync(ex.ExerciseName);
+                // chercher poids correspondant à l’exercice à la bonne date
+                var local = localPoids.FirstOrDefault(p =>
+                    p.Exercice == ex.ExerciseName && p.Date.Date == date.Date);
+
+                double poids = local?.Poids ?? 0;
+                double facteurObjectif = 1 + (ex.Pourcentage1RM / 100.0);
+                double objectif = poids * facteurObjectif;
+                //remettre cette variable dans grace au profil 
+                double coef = 2.5;
+                double pourcentageRm = calculerObjectif(poids, coef);
 
                 Exercises.Add(new ExerciceJour
                     {
@@ -203,8 +399,10 @@
                         Series = ex.Series,
                         Repetitions = ex.Repetitions,
                         RestTimeSeconds = ex.RestTimeSeconds,
-                        Pourcentage1RM = ex.Pourcentage1RM,
-                        PoidsUtilisé = lastPoids
+                        Pourcentage1RM = pourcentageRm,
+                        PoidsUtilisé = poids,
+                        ObjectifAtteint = false
+
                     });
             }
         }
@@ -212,9 +410,16 @@
         StateHasChanged();
     }
 
-    private void MarquerNonAtteint(ExerciceJour ex)
+
+    private void MarquerAtteint(ExerciceJour ex)
     {
-        Console.WriteLine($"NON ATTEINT: {ex.ExerciseName}");
+        // Conversion en kg si saisi en lb
+        double poidsSaisiKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+
+        // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
+        double objectifKg = ex.PoidsUtilisé * (1 + ex.Pourcentage1RM / 100.0);
+
+        ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
     }
 
     private void ProposerRemplacement(ExerciceJour ex)
@@ -235,11 +440,26 @@
                     Poids = ex.PoidsUtilisé
                 };
 
-            await PoidsService.AddEntryAsync(entry);
+            var local = new PoidsEntryLocal
+                {
+                    Exercice = ex.ExerciseName,
+                    Date = DateTime.Today,
+                    Poids = ex.PoidsUtilisé
+                };
+            try
+            {
+                await PoidsService.AddEntryAsync(entry, local);
+            }catch(Exception exerer)
+            {
+
+                Console.WriteLine(exerer);
+            }
+
         }
 
         Console.WriteLine("Performances sauvegardées ✅");
     }
+
 
     private async Task ConfirmerSuppression()
     {
@@ -265,7 +485,14 @@
             }
         }
     }
-
+    private void ToggleUnite()
+    {
+        AfficherEnLb = !AfficherEnLb;
+    }
+    private double calculerObjectif(double poidsUtilisé, double coef)
+    {
+        return poidsUtilisé * coef /100;
+    }
 
     public class ExerciceJour
     {
@@ -275,5 +502,7 @@
         public int RestTimeSeconds { get; set; }
         public double Pourcentage1RM { get; set; }
         public double PoidsUtilisé { get; set; }
+        public bool ObjectifAtteint { get; set; } = false;
+        public bool IsLb { get; set; } = false;
     }
 }

@@ -35,6 +35,7 @@ else
     {
         <div class="alert @alertClass">@message</div>
     }
+
     <ul class="list-group">
         @foreach (var p in programmes)
         {
@@ -43,7 +44,7 @@ else
                     <strong>@p.Nom</strong> - <em>@p.DateDebut.ToString("dd MMM yyyy")</em><br />
                     <pre>@p.Contenu</pre>
                 </div>
-                <button class="btn btn-sm btn-outline-danger" @onclick="@(() => SupprimerProgramme(p.Id))">🗑</button>
+                <button class="btn btn-sm btn-outline-danger" @onclick="@(() => SupprimerProgramme(p.Id, p.Source))">🗑</button>
             </li>
         }
     </ul>
@@ -56,9 +57,10 @@ else
     List<ProgrammeModel> programmes = new();
     string message = "";
     string alertClass = "";
+
     protected override async Task OnInitializedAsync()
     {
-        programmes = await SupabaseService.GetProgrammesAsync();
+        programmes = await SupabaseService.GetAllProgrammesAsync(); // ou juste GetProgrammesAsync() si manuel uniquement
     }
 
     async Task AjouterProgramme()
@@ -69,10 +71,11 @@ else
                 Nom = programmeNom,
                 Contenu = programmeContenu,
                 DateDebut = dateDebut
+            // userId et source sont gérés dans SupabaseService
             };
-       
+
         var success = await SupabaseService.AddProgrammeAsync(p);
-       
+
         if (success)
         {
             message = "✅ Programme enregistré avec succès.";
@@ -82,23 +85,22 @@ else
             programmeContenu = "";
             dateDebut = DateTime.Today;
 
-            programmes = await SupabaseService.GetProgrammesAsync();
+            programmes = await SupabaseService.GetAllProgrammesAsync();
         }
         else
         {
             message = "❌ Échec de l'enregistrement.";
             alertClass = "alert-danger";
         }
-
     }
 
-    async Task SupprimerProgramme(Guid id)
+    async Task SupprimerProgramme(Guid id, string source)
     {
-        var success = await SupabaseService.DeleteProgrammeAsync(id);
+        var success = await SupabaseService.DeleteProgrammeUnifiedAsync(id, source);
 
         if (success)
         {
-            programmes = await SupabaseService.GetProgrammesAsync(); // 🔁 recharge
+            programmes = await SupabaseService.GetAllProgrammesAsync();
             message = "✅ Programme supprimé.";
             alertClass = "alert-warning";
         }

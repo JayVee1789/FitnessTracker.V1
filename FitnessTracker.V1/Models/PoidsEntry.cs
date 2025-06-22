@@ -1,10 +1,28 @@
-﻿namespace FitnessTracker.V1.Models
+﻿using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using System.Text.Json.Serialization;
+
+[Table("entries")]
+public class PoidsEntry : BaseModel
 {
-    public class PoidsEntry
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string Exercice { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
-        public double Poids { get; set; }
-    }
+    [PrimaryKey("id", false)]
+    [Column("id")]
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [Column("exercice")]
+    [JsonPropertyName("exercice")]
+    public string Exercice { get; set; } = string.Empty;
+
+    [Column("date")]
+    [JsonPropertyName("date")]
+    public DateTime Date { get; set; }
+
+    [Column("poids")]
+    [JsonPropertyName("poids")]
+    public double Poids { get; set; }
+
+    [Column("user_id")]
+    [JsonPropertyName("user_id")]
+    public string UserId { get; set; } = "";
 }

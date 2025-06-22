@@ -1,0 +1,29 @@
+﻿@page "/mot-de-passe-oublie"
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<h3> Réinitialiser mon mot de passe</h3>
+
+<div class="mb-3">
+    <input type="email" class="form-control" placeholder="Email" @bind="email" />
+</div>
+
+<button class="btn btn-primary" @onclick="SendResetLink">Envoyer le lien</button>
+
+@if (!string.IsNullOrWhiteSpace(message))
+{
+    <div class="alert alert-info mt-3">@message</div>
+}
+
+@code {
+    private string email = "";
+    private string message = "";
+
+    private async Task SendResetLink()
+    {
+        var ok = await AuthService.SendPasswordResetEmailAsync(email);
+        message = ok
+            ? "✅ Email de réinitialisation envoyé. Vérifie ta boîte mail."
+            : "❌ Une erreur est survenue. Vérifie ton email.";
+    }
+}

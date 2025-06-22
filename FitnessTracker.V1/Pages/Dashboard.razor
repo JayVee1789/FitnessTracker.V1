@@ -1,0 +1,32 @@
+﻿@page "/dashboard"
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<h3>📊 Tableau de bord Coach/Admin</h3>
+
+@if (!authorized)
+{
+    <div class="alert alert-danger">⛔ Accès refusé</div>
+}
+else
+{
+    <p>Bienvenue sur votre interface coach.</p>
+    <ul>
+        <li><a href="/users">👥 Gérer les utilisateurs</a></li>
+        <li><a href="/create-custom-programme">📝 Créer un programme spécifique</a></li>
+        <li><a href="/analyse">📈 Analyse performances</a></li>
+    </ul>
+}
+
+@code {
+    bool authorized = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        authorized = await AuthService.IsAdminAsync();
+        if (!authorized)
+        {
+            Nav.NavigateTo("/");
+        }
+    }
+}

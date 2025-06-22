@@ -112,8 +112,13 @@
                 Date = selectedDate,
                 Poids = poids
             };
-
-        await PoidsService.AddEntryAsync(entry);
+        var entryLocal = new PoidsEntryLocal
+            {
+                Exercice = selectedExercice,
+                Date = selectedDate,
+                Poids = poids
+            };
+        await PoidsService.AddEntryAsync(entry, entryLocal);
         data = await PoidsService.GetEntriesAsync();
         UpdateDates();
         message = "Entrée enregistrée ✅";

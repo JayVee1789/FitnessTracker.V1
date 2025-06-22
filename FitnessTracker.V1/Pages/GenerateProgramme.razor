@@ -1,17 +1,19 @@
 ﻿@page "/generate-programme"
 @using FitnessTracker.V1.Models
-@using FitnessTracker.V1.Services.ProgrammeGeneration
-@using System.Text.Json
-@using static FitnessTracker.V1.Models.Model
+
 @inject ProgrammeGeneratorService Generator
 @inject HttpClient Http
 @inject SupabaseService SupabaseService
 @inject NavigationManager Nav
+@inject AuthService AuthService
+@inject Supabase.Client Supabase
+@inject ProfileService profileService
+
 <h3>Programme généré</h3>
 
 @if (plan == null)
 {
-    <p>Aucun programme généré.</p>
+    <p><em>Chargement du programme...</em></p>
 }
 else
 {
@@ -64,18 +66,29 @@ else
 @code {
     private WorkoutPlan? plan;
     private List<ExerciseDefinition> exerciseList = new();
-  
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("🔥 OnInitialized() appelé");
+    }
     protected override async Task OnInitializedAsync()
     {
-        var exos = new List<ExerciseDefinition>
-        {
-            new() { Id = 1, Name = "Bench Press", Category = "Chest", Equipment = "Barbell", Description = "Compound" },
-            new() { Id = 2, Name = "Pull-Up", Category = "Back", Equipment = "Body Weight", Description = "Compound" },
-            new() { Id = 3, Name = "Squat", Category = "Legs", Equipment = "Barbell", Description = "Compound" },
-            new() { Id = 4, Name = "Overhead Press", Category = "Shoulders", Equipment = "Dumbbell", Description = "Compound" },
-            new() { Id = 5, Name = "Barbell Curl", Category = "Biceps", Equipment = "Barbell", Description = "Single-Joint" },
-            new() { Id = 6, Name = "Triceps Dips", Category = "Triceps", Equipment = "Body Weight", Description = "Single-Joint" }
-        };
+        Console.WriteLine("🛠️ OnInitializedAsync lancé");
+        // var user = Supabase.Auth.CurrentUser;
+        // if (user is null)
+        // {
+        //     Console.WriteLine("❌ Utilisateur non connecté, redirection");
+        //     Nav.NavigateTo("/login");
+        //     return;
+        // }
+        // var exos = new List<ExerciseDefinition>
+        // {
+        //     new() { Id = 1, Name = "Bench Press", Category = "Chest", Equipment = "Barbell", Description = "Compound" },
+        //     new() { Id = 2, Name = "Pull-Up", Category = "Back", Equipment = "Body Weight", Description = "Compound" },
+        //     new() { Id = 3, Name = "Squat", Category = "Legs", Equipment = "Barbell", Description = "Compound" },
+        //     new() { Id = 4, Name = "Overhead Press", Category = "Shoulders", Equipment = "Dumbbell", Description = "Compound" },
+        //     new() { Id = 5, Name = "Barbell Curl", Category = "Biceps", Equipment = "Barbell", Description = "Single-Joint" },
+        //     new() { Id = 6, Name = "Triceps Dips", Category = "Triceps", Equipment = "Body Weight", Description = "Single-Joint" }
+        // };
 
         //json
         // Charger les exercices depuis le fichier JSON
@@ -85,42 +98,53 @@ else
         }catch(Exception ex)
         {
             Console.WriteLine(  ex);
+            Console.WriteLine("Erreur chargement JSON exercices : " + ex.Message);
         }
         
 
-        var profile = new UserProfile
-            {
-                Age = 28,
-                Level = UserLevel.Intermediaire,
-                Objective = TrainingObjective.Hypertrophy,
-                SeancesPerWeek = 3,
-                ProgramDurationMonths = 1,
-                WantsSuperset = false,
-                BodyweightOnly = false,
-                PathologieMuscle = "",
-                PriorityMuscle = ""
-            };
+        // var profile = new UserProfile
+        //     {
+        //         Age = 28,
+        //         Level = UserLevel.Intermediaire,
+        //         Objective = TrainingObjective.Hypertrophy,
+        //         SeancesPerWeek = 3,
+        //         ProgramDurationMonths = 1,
+        //         WantsSuperset = false,
+        //         BodyweightOnly = false,
+        //         PathologieMuscle = "",
+        //         PriorityMuscle = ""
+        //     };
 
-
+         var profile = await profileService.GetOrCreateUserProfileAsync();
        
 
         plan = Generator.Generate("TBT", profile, exerciseList);
     }
+
     private async Task EnregistrerProgrammeAsync(WorkoutPlan plan)
     {
+        
+        if (!AuthService.IsAuthenticated)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+       
+
         var model = new ProgrammeModel
             {
                 Id = Guid.NewGuid(),
                 Nom = "Programme TBT généré",
                 DateDebut = DateTime.Today,
                 Contenu = JsonSerializer.Serialize(plan)
+               
             };
 
-        bool ok = await SupabaseService.AddProgrammeAsync(model);
+        bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
         if (ok)
         {
-            Console.WriteLine("Programme enregistré dans Supabase ✅");
-           
+            Console.WriteLine("✅ Programme généré enregistré dans Supabase");
+            Nav.NavigateTo("/view-session");
         }
     }
 }

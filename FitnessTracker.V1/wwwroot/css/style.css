@@ -1,0 +1,34 @@
+﻿.mobile-container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+select.form-select,
+input.form-control {
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+}
+
+.card {
+    border-radius: 1.5rem !important;
+}
+
+button.btn {
+    font-size: 1rem;
+}
+
+h2, h5 {
+    font-family: 'Helvetica Neue', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+@media (min-width: 481px) {
+    .mobile-container {
+        max-width: 600px;
+    }
+}

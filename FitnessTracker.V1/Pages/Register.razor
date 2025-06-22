@@ -1,0 +1,105 @@
+﻿@page "/register"
+@inject Supabase.Client Supabase
+@inject NavigationManager Nav
+
+<h3>📝 Créer un compte</h3>
+
+@if (!registered)
+{
+    <div class="mb-3">
+        <input placeholder="Email" class="form-control" @bind="email" />
+    </div>
+    <div class="mb-3">
+        <input placeholder="Mot de passe" type="password" class="form-control" @bind="password" />
+    </div>
+    
+    <button class="btn btn-success" @onclick="RegisterUser">Créer mon compte</button>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger mt-2">@error</div>
+    }
+
+    <p class="mt-3">
+        Déjà inscrit ? <a href="/login" class="link-primary">Se connecter</a>
+    </p>
+}
+else
+{
+    <div class="alert alert-success">
+        ✅ Compte créé avec succès ! Redirection vers votre profil...
+    </div>
+}
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string role = "";
+    private bool registered = false;
+    private string error = "";
+
+    private async Task RegisterUser()
+    {
+        error = "";
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            error = "❌ L'email est requis.";
+            return;
+        }
+
+        if (!IsValidEmail(email))
+        {
+            error = "❌ Format d'email invalide.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+        {
+            error = "❌ Le mot de passe doit contenir au moins 6 caractères.";
+            return;
+        }
+
+        try
+        {
+            var session = await Supabase.Auth.SignUp(email, password);
+            if (session?.User is not null)
+            {
+                // Enregistrer dans la table user_profiles
+                var profile = new SupabaseUserProfile
+                    {
+                        Id = session.User.Id,
+                        Email = email,
+                        Role = "user"
+                    };
+
+                await Supabase.From<SupabaseUserProfile>().Insert(profile);
+
+                registered = true;
+                await Task.Delay(1000);
+                Nav.NavigateTo("/mon-profil");
+            }
+            else
+            {
+                error = "❌ Échec de l'inscription. Veuillez réessayer.";
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"❌ Erreur : {ex.Message}";
+        }
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+}

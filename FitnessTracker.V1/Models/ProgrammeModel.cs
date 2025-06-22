@@ -8,12 +8,15 @@ public class ProgrammeModel
     [JsonPropertyName("nom")]
     public string Nom { get; set; } = "";
 
+    [JsonPropertyName("date_debut")]
+    public DateTime DateDebut { get; set; }
+
     [JsonPropertyName("contenu")]
     public string Contenu { get; set; } = "";
 
-    [JsonPropertyName("date_debut")]
-    public DateTime DateDebut { get; set; } = DateTime.Today;
+    [JsonPropertyName("user_id")]
+    public string UserId { get; set; } = "";
 
-    [JsonIgnore]
-    public string Source { get; set; } = "auto"; // "manuel" ou "auto"
+    [JsonPropertyName("source")]
+    public string Source { get; set; } = "auto";
 }

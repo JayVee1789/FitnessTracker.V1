@@ -1,0 +1,174 @@
+﻿@page "/mon-profil"
+@inject Supabase.Client Supabase
+@inject NavigationManager Nav
+@inject AuthService AuthService
+
+
+<h3 class="mb-4">👤 Mon profil sportif</h3>
+
+@if (isLoading)
+{
+    <div class="alert alert-info">Chargement de votre profil...</div>
+}
+else if (profile is null)
+{
+    
+    <div class="alert alert-danger">Erreur : impossible de charger ou créer un profil utilisateur.</div>
+}
+else
+{
+    <EditForm Model="profile" OnValidSubmit="SauvegarderProfil">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Âge</label>
+                <InputNumber class="form-control" @bind-Value="profile.Age" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Niveau</label>
+                <InputSelect class="form-select" @bind-Value="profile.Level">
+                    <option value="Debutant">Débutant</option>
+                    <option value="Intermediaire">Intermédiaire</option>
+                    <option value="Avance">Avancé</option>
+                </InputSelect>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Objectif</label>
+                <InputSelect class="form-select" @bind-Value="profile.Objective">
+                    <option value="Force">Force</option>
+                    <option value="Endurance">Endurance</option>
+                    <option value="Hypertrophy">Hypertrophie</option>
+                </InputSelect>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Séances / semaine</label>
+                <InputNumber class="form-control" @bind-Value="profile.SeancesPerWeek" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Durée du programme (mois)</label>
+                <InputNumber class="form-control" @bind-Value="profile.ProgramDurationMonths" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="form-check">
+                    <InputCheckbox class="form-check-input" @bind-Value="profile.WantsSuperset" id="superset" />
+                    <label class="form-check-label" for="superset">Utiliser des supersets</label>
+                </div>
+
+                <div class="form-check mt-2">
+                    <InputCheckbox class="form-check-input" @bind-Value="profile.BodyweightOnly" id="poidscorps" />
+                    <label class="form-check-label" for="poidscorps">Poids du corps uniquement</label>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Pathologie musculaire</label>
+                <InputText class="form-control" @bind-Value="profile.PathologieMuscle" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Muscle prioritaire</label>
+                <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
+            </div>
+        </div>
+
+        <button class="btn btn-success mt-3">💾 Sauvegarder le profil</button>
+
+        @if (message is not null)
+        {
+            <div class="alert alert-success mt-3">@message</div>
+        }
+    </EditForm>
+        <h5 class="mt-4">🔐 Changer mon mot de passe</h5>
+
+        <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Nouveau mot de passe" @bind="newPassword" />
+        </div>
+
+        <button class="btn btn-warning" @onclick="ChangePassword">Mettre à jour le mot de passe</button>
+
+        @if (!string.IsNullOrEmpty(passwordMessage))
+        {
+            <div class="alert alert-info mt-2">@passwordMessage</div>
+        }
+
+}
+
+@code {
+    private SportProfileModel? profile;
+    private string? message;
+    private bool isLoading = true;
+    protected override async Task OnInitializedAsync()
+    {
+        var user = Supabase.Auth.CurrentUser;
+        if (user is null)
+        {
+            Nav.NavigateTo("/login", true);
+            return;
+        }
+
+        try
+        {
+            var results = await Supabase
+                .From<SportProfileModel>()
+                .Where(x => x.Id == user.Id)
+                .Get();
+
+            profile = results.Models.FirstOrDefault();
+
+            if (profile == null)
+            {
+                profile = new SportProfileModel
+                    {
+                        Id = user.Id,
+                        Age = 25,
+                        Level = "Debutant",
+                        Objective = "Hypertrophy",
+                        SeancesPerWeek = 3,
+                        ProgramDurationMonths = 3,
+                        WantsSuperset = false,
+                        BodyweightOnly = false,
+                        PathologieMuscle = "",
+                        PriorityMuscle = ""
+                    };
+                // 🆕 Enregistrement immédiat du profil vierge
+                await Supabase.From<SportProfileModel>().Upsert(profile);
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Erreur lors du chargement du profil : " + ex.Message);
+        }
+
+        isLoading = false;
+    }
+
+
+    private async Task SauvegarderProfil()
+    {
+        if (profile is null) return;
+
+        await Supabase.From<SportProfileModel>().Upsert(profile);
+        message = "✅ Profil sauvegardé avec succès.";
+    }
+    private string newPassword = "";
+    private string passwordMessage = "";
+
+    private async Task ChangePassword()
+    {
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+        {
+            passwordMessage = "❌ Le mot de passe doit contenir au moins 6 caractères.";
+            return;
+        }
+
+        var success = await AuthService.UpdatePasswordAsync(newPassword);
+        passwordMessage = success
+            ? "✅ Mot de passe mis à jour avec succès."
+            : "❌ Une erreur est survenue lors de la mise à jour.";
+    }
+}

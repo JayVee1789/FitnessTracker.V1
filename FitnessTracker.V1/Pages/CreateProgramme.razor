@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject ILocalStorageService LocalStorage
 @inject SupabaseService SupabaseService
-
+@inject NavigationManager Nav
 @using static FitnessTracker.V1.Models.Model
 @using System.Text.Json
 @using Blazored.LocalStorage
@@ -232,9 +232,19 @@
 
     private async Task OnSaveManualProgramme()
     {
-        var success = await SupabaseService.SaveManualPlanAsync(programmeName, plan);
-        jsonOut = success
-            ? $"✅ Programme manuel enregistré dans Supabase ({programmeName})"
-            : "❌ Échec lors de l'enregistrement dans Supabase.";
+        var model = new ProgrammeModel
+            {
+                Id = Guid.NewGuid(),
+                Nom = programmeName,
+                DateDebut = DateTime.Today,
+                Contenu = JsonSerializer.Serialize(plan) // ✅ texte JSON
+            };
+
+        bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: true);
+        if (ok)
+        {
+            Console.WriteLine("✅ Programme manuel enregistré dans Supabase");
+            Nav.NavigateTo("/view-session");
+        }
     }
 }

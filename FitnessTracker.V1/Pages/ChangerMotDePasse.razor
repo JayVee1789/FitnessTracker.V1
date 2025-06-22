@@ -1,0 +1,42 @@
+﻿@page "/changer-mot-de-passe"
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<h3>🔒 Changer mon mot de passe</h3>
+
+@if (!AuthService.IsAuthenticated)
+{
+    <div class="alert alert-warning">🔐 Vous devez être connecté.</div>
+}
+else
+{
+    <div class="mb-3">
+        <input type="password" class="form-control" placeholder="Nouveau mot de passe" @bind="newPassword" />
+    </div>
+
+    <button class="btn btn-success" @onclick="ChangePassword">Mettre à jour</button>
+
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert alert-info mt-3">@message</div>
+    }
+}
+
+@code {
+    private string newPassword = "";
+    private string message = "";
+
+    private async Task ChangePassword()
+    {
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+        {
+            message = "❌ Mot de passe trop court.";
+            return;
+        }
+
+        var ok = await AuthService.UpdatePasswordAsync(newPassword);
+        message = ok
+            ? "✅ Mot de passe mis à jour."
+            : "❌ Une erreur est survenue.";
+    }
+}
