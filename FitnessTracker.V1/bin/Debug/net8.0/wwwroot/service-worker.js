@@ -1,4 +1,4 @@
-/* Manifest version: C0HLV6q+ */
+/* Manifest version: L48H4K5U */
 // In development, always fetch from the network and do not enable offline support.
 // This is because caching would make development more difficult (changes would not
 // be reflected on the first load after each change).
@@ -17,11 +17,4 @@ self.addEventListener('message', async event => {
         }
     }
 });
-self.addEventListener('message', async event => {
-    if (event.data === 'check-for-update') {
-        const allClients = await self.clients.matchAll({ type: 'window' });
-        for (const client of allClients) {
-            client.postMessage({ type: 'update-available' });
-        }
-    }
-});
+

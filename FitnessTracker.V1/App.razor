@@ -1,4 +1,4 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@* <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
@@ -32,4 +32,60 @@
     public void NotifyUpdateAvailable() => updateAvailable = true;
 
     private async Task ReloadApp() => await JS.InvokeVoidAsync("location.reload");
+} *@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Page introuvable.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@if (updateAvailable)
+{
+    <div class="alert alert-warning fixed-bottom text-center">
+        🔄 Nouvelle version disponible.
+        <button class="btn btn-sm btn-primary ms-2" @onclick="ReloadApp">Recharger</button>
+    </div>
+}
+
+@code {
+    private bool updateAvailable = false;
+    private DotNetObjectReference<App>? dotRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("listenForServiceWorkerUpdates", dotRef);
+
+            // Envoie le message au SW après un petit délai pour s'assurer qu'il est actif
+            await Task.Delay(500);
+            await JS.InvokeVoidAsync("navigator.serviceWorker.controller?.postMessage", "check-for-update");
+        }
+    }
+
+    [JSInvokable]
+    public void NotifyUpdateAvailable()
+    {
+        updateAvailable = true;
+        StateHasChanged();
+    }
+
+    private async Task ReloadApp()
+    {
+        await JS.InvokeVoidAsync("location.reload");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        dotRef?.Dispose();
+    }
 }

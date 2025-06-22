@@ -16,11 +16,4 @@ self.addEventListener('message', async event => {
         }
     }
 });
-self.addEventListener('message', async event => {
-    if (event.data === 'check-for-update') {
-        const allClients = await self.clients.matchAll({ type: 'window' });
-        for (const client of allClients) {
-            client.postMessage({ type: 'update-available' });
-        }
-    }
-});
+
