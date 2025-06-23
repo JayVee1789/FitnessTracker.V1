@@ -38,6 +38,18 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
+
+    <script>
+        window.listenForServiceWorkerUpdates = function (dotNetObj) {
+            if (navigator.serviceWorker) {
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data?.type === 'update-available') {
+                        dotNetObj.invokeMethodAsync('NotifyUpdateAvailable');
+                    }
+                });
+            }
+        };
+    </script>
     <script>
         window.showModal = (id) => {
             const modalElement = document.getElementById(id);
@@ -49,17 +61,6 @@
             const modalElement = document.getElementById(id);
             const modal = bootstrap.Modal.getInstance(modalElement);
             modal?.hide();
-        };
-    </script>
-    <script>
-        window.listenForServiceWorkerUpdates = function (dotNetObj) {
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.addEventListener('message', (event) => {
-                    if (event.data?.type === 'update-available') {
-                        dotNetObj.invokeMethodAsync('NotifyUpdateAvailable');
-                    }
-                });
-            }
         };
     </script>
 </body>

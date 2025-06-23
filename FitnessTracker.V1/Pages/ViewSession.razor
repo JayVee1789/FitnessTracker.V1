@@ -81,18 +81,29 @@
             @foreach (var ex in Exercises)
             {
                 <tr class="@((ex.ObjectifAtteint ? "table-success" : ""))">
-                    <td><a href="#" @onclick="() => ProposerRemplacement(ex)">@ex.ExerciseName</a></td>
+                    @* <td><a href="#" @onclick="() => ProposerRemplacement(ex)">@ex.ExerciseName</a></td> *@
+                    <td>
+                        <a href="#"
+                           class="text-decoration-none"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalRemplacement"
+                           @onclick="() => ProposerRemplacement(ex)">
+                            @ex.ExerciseName
+                        </a>
+                    </td>
                     <td>@ex.Series</td>
                     <td>@ex.Repetitions</td>
                     <td>@ex.RestTimeSeconds</td>
-                    <td>
-                        <input type="number" class="form-control" step="0.5"
-                        @bind="ex.PoidsUtilisé" />
-                    </td>
+                    <input type="number"
+                    class="form-control"
+                    step="0.5"
+                    @bind="ex.PoidsAffiche" />
+
+
                     <td>
                         @{
                             var objectifKg = ex.PoidsUtilisé * (1 + ex.Pourcentage1RM / 100.0);
-                            var objectifAffiché = ex.IsLb
+                            var objectifAffiché = AfficherEnLb
                             ? Math.Round(objectifKg / 0.453592, 1) + " lb"
                             : Math.Round(objectifKg, 1) + " kg";
                         }
@@ -139,100 +150,71 @@
         </div>
     </div>
 </div>
-@* <div class="mobile-container px-3 py-4">
-    <h2 class="text-center fw-bold mb-4" style="font-size: 1.5rem;">🎯 Ma Séance</h2>
 
-    <div class="mb-3">
-        <label class="form-label">📅 Programme</label>
-        <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnProgrammeSelected">
-            <option value="">-- Choisir --</option>
-            @foreach (var prog in Programmes)
-            {
-                <option value="@prog.Id">@prog.Nom (@prog.DateDebut.ToShortDateString())</option>
-            }
-        </select>
-    </div>
 
-    @if (SelectedPlanAvailable)
-    {
-        <div class="d-flex gap-2 mb-3">
-            <div class="flex-fill">
-                <label class="form-label">Semaine</label>
-                <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnSemaineChanged">
-                    @for (int i = 0; i < SelectedPlan?.Weeks.Count; i++)
-                    {
-                        <option value="@i">semaine@(i + 1)</option>
-                    }
-                </select>
-            </div>
 
-            <div class="flex-fill">
-                <label class="form-label">Jour</label>
-                <select class="form-select rounded-pill py-2 shadow-sm" @onchange="OnJourChanged">
-                    @for (int j = 1; j <= 7; j++)
-                    {
-                        <option value="@j">jour@j</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <button class="btn btn-outline-danger w-100 rounded-pill py-3 fw-semibold mb-3" data-bs-toggle="modal" data-bs-target="#confirmModal">
-            🗑️ Supprimer le programme
-        </button>
-    }
-
-    @if (Exercises.Any())
-    {
-        <h5 class="fw-bold mt-4 mb-3">📋 Détails de la séance</h5>
-
-        @foreach (var ex in Exercises)
-        {
-            <div class="card shadow-sm mb-3 border-0 rounded-4 p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong style="font-size: 1.1rem;" @onclick="() => ProposerRemplacement(ex)" class="text-dark">@ex.ExerciseName</strong>
-                    <button class="btn btn-sm btn-outline-warning rounded-pill" @onclick="() => MarquerNonAtteint(ex)">❌</button>
-                </div>
-                <div class="row text-center">
-                    <div class="col"><div class="small">Séries</div><strong>@ex.Series</strong></div>
-                    <div class="col"><div class="small">Reps</div><strong>@ex.Repetitions</strong></div>
-                    <div class="col"><div class="small">Repos</div><strong>@ex.RestTimeSeconds s</strong></div>
-                    <div class="col">
-                        <div class="small">Poids</div>
-                        <input type="number" class="form-control form-control-sm rounded-pill text-center" step="0.5" @bind="ex.PoidsUtilisé" />
-                    </div>
-                    <div class="col"><div class="small">% 1RM</div><strong>@ex.Pourcentage1RM%</strong></div>
-                </div>
-            </div>
-        }
-    }
-
-    @if (SelectedPlanAvailable)
-    {
-        <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold mt-4" @onclick="SauvegarderSeance">
-            💾 Enregistrer ma séance
-        </button>
-    }
-</div>
-
-<!-- Modal suppression -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="modalRemplacement" tabindex="-1" aria-labelledby="modalRemplacementLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 shadow">
-            <div class="modal-header bg-danger text-white rounded-top-4">
-                <h5 class="modal-title">Confirmation</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalRemplacementLabel">🔁 Remplacer l'exercice</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
-            <div class="modal-body text-center">
-                Confirmer la suppression de ce programme ?<br /><small>(Action irréversible)</small>
-            </div>
-            <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="ConfirmerSuppression">Oui</button>
+            <div class="modal-body">
+                @if (ExerciceCible is not null)
+                {
+                    <p>Exercice actuel : <strong>@ExerciceCible.ExerciseName</strong></p>
+                    <p>Suggestions :</p>
+                    @foreach (var s in Suggestions)
+                    {
+                        <button class="btn btn-outline-primary w-100 mb-2" @onclick="@(() => RemplacerExercice(s))">
+                            🔁 @s
+                        </button>
+
+                    }
+                }
             </div>
         </div>
     </div>
 </div> *@
+<!-- Modal de remplacement -->
+<!-- Modal de remplacement sans JS -->
+<!-- Modal de remplacement -->
+<div class="modal fade" id="modalRemplacement" tabindex="-1" aria-labelledby="modalRemplacementLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalRemplacementLabel">Remplacer l'exercice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                @if (ExerciceCible is not null)
+                {
+                    <p>Exercice actuel : <strong>@ExerciceCible.ExerciseName</strong></p>
+                    <p>Suggestions :</p>
+                    @foreach (var s in Suggestions)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mb-2 px-2">
+                            <span>@s</span>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-success"
+                                    data-bs-dismiss="modal"
+                                    @onclick="() => ConfirmerRemplacement(s)">
+                                ✅ Sélectionner
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 @code {
     private List<ProgrammeModel> Programmes = new();
     private WorkoutPlan? SelectedPlan;
@@ -242,7 +224,12 @@
     private int SelectedJourIndex = 1;
     private List<ExerciceJour> Exercises = new();
     private DateTime SelectedProgrammeDate = DateTime.Today;
-    private bool AfficherEnLb { get; set; } = false;
+    public static bool AfficherEnLb { get; set; } = false;
+    private ExerciceJour? ExerciceCible = null;
+    private List<string> Suggestions = new();
+
+    private string GetInputId(ExerciceJour ex) => $"{ex.ExerciseName}_{Guid.NewGuid()}";
+
 
 
     private bool SelectedPlanAvailable => SelectedPlan is not null;
@@ -350,6 +337,7 @@
 
     //     StateHasChanged();
     // }
+
     private async Task ChargerSeance()
     {
         Exercises.Clear();
@@ -363,17 +351,17 @@
         if (jour == null || jour.IsRest)
         {
             Exercises = new()
-        {
-            new ExerciceJour
             {
-                ExerciseName = "Repos",
-                Series = 0,
-                Repetitions = 0,
-                RestTimeSeconds = 0,
-                Pourcentage1RM = 0,
-                PoidsUtilisé = 0
-            }
-        };
+                new ExerciceJour
+                {
+                    ExerciseName = "Repos",
+                    Series = 0,
+                    Repetitions = 0,
+                    RestTimeSeconds = 0,
+                    Pourcentage1RM = 0,
+                    PoidsUtilisé = 0
+                }
+            };
         }
         else
         {
@@ -421,30 +409,79 @@
 
         ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
     }
+    private void UpdatePoids(ChangeEventArgs e, ExerciceJour ex)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double val))
+        {
+            // Toujours stocker en kg
+            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
+        }
+    }
 
     private void ProposerRemplacement(ExerciceJour ex)
     {
-        Console.WriteLine($"REMPLACEMENT demandé pour : {ex.ExerciseName}");
+        ExerciceCible = ex;
+
+        var tous = new List<string>
+    {
+        "Pompes", "Tractions", "Développé militaire", "Rowing barre", "Curl biceps", "Hip Thrust"
+    };
+
+        Suggestions = tous
+            .Where(e => e != ex.ExerciseName)
+            .OrderBy(_ => Guid.NewGuid())
+            .Take(2)
+            .ToList();
+
+        // Pas besoin de JS ici, le bouton dans le tableau ouvre le modal
     }
+
+
+    private void ConfirmerRemplacement(string nouveau)
+    {
+        if (ExerciceCible is null) return;
+
+        ExerciceCible.ExerciseName = nouveau;
+        ExerciceCible = null;
+
+        StateHasChanged();
+    }
+
+
+    private async Task RemplacerExercice(string nouveau)
+    {
+        if (ExerciceCible is null)
+            return;
+
+        ExerciceCible.ExerciseName = nouveau;
+        ExerciceCible = null;
+
+        // await JS.InvokeVoidAsync("hideModal", "modalRemplacement");
+        // 👉 Pas de await → compatible Hot Reload
+        JS.InvokeVoidAsync("hideModal", "modalRemplacement").AsTask();
+        StateHasChanged();
+    }
+
+
 
     private async Task SauvegarderSeance()
     {
         foreach (var ex in Exercises)
         {
             if (ex.ExerciseName == "Repos") continue;
-
+            var poidsEnKg = AfficherEnLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
             var entry = new PoidsEntry
                 {
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
-                    Poids = ex.PoidsUtilisé
+                    Poids = poidsEnKg
                 };
 
             var local = new PoidsEntryLocal
                 {
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
-                    Poids = ex.PoidsUtilisé
+                    Poids = poidsEnKg
                 };
             try
             {
@@ -485,13 +522,50 @@
             }
         }
     }
-    private void ToggleUnite()
+    private double ConvertToDisplayUnit(double poidsKg) =>
+    AfficherEnLb ? Math.Round(poidsKg / 0.453592, 1) : poidsKg;
+
+    private double ConvertToKg(double valeurAffichee) =>
+        AfficherEnLb ? Math.Round(valeurAffichee * 0.453592, 2) : valeurAffichee;
+
+    private void OnPoidsChanged(string? valueStr, ExerciceJour ex)
+    {
+        if (double.TryParse(valueStr, out double val))
+        {
+            ex.PoidsUtilisé = ConvertToKg(val);
+        }
+    }
+    private double GetDisplayPoids(ExerciceJour ex)
+    {
+        return AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
+    }
+
+    private void SetDisplayPoids(ChangeEventArgs e, ExerciceJour ex)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double val))
+        {
+            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
+        }
+    }
+
+
+    private async void ToggleUnite()
     {
         AfficherEnLb = !AfficherEnLb;
+       
     }
+
     private double calculerObjectif(double poidsUtilisé, double coef)
     {
         return poidsUtilisé * coef /100;
+    }
+    private double GetPoidsAffiché(ExerciceJour ex) =>
+    AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
+
+    private void SetPoidsAffiché(ExerciceJour ex, string? val)
+    {
+        if (double.TryParse(val, out double result))
+            ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
     }
 
     public class ExerciceJour
@@ -504,5 +578,11 @@
         public double PoidsUtilisé { get; set; }
         public bool ObjectifAtteint { get; set; } = false;
         public bool IsLb { get; set; } = false;
+        public bool RefreshFlag { get; set; } = false;
+        public double PoidsAffiche
+        {
+            get => ViewSession.AfficherEnLb ? Math.Round(PoidsUtilisé / 0.453592, 1) : PoidsUtilisé;
+            set => PoidsUtilisé = ViewSession.AfficherEnLb ? value * 0.453592 : value;
+        }
     }
 }
