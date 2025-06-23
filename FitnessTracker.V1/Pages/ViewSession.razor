@@ -131,7 +131,12 @@
         Enregistrer les performances
     </button>
 }
-
+@if (SelectedPlanAvailable)
+{
+    <button class="btn btn-outline-success mt-2" @onclick="SauvegarderProgrammeModifié">
+        💾 Sauvegarder les modifications du programme
+    </button>
+}
 <!-- Modal de confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -417,6 +422,34 @@
             ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
         }
     }
+    private async Task SauvegarderProgrammeModifié()
+    {
+        if (SelectedPlan is null || SelectedProgrammeId == Guid.Empty)
+            return;
+
+        try
+        {
+            var programme = Programmes.FirstOrDefault(p => p.Id == SelectedProgrammeId);
+            if (programme is not null)
+            {
+                programme.Contenu = JsonSerializer.Serialize(SelectedPlan);
+                var success = await SupabaseService.UpdateProgrammeUnifiedAsync(programme);
+
+                if (success)
+                {
+                    Console.WriteLine("✅ Programme mis à jour avec succès.");
+                }
+                else
+                {
+                    Console.WriteLine("❌ Erreur lors de la mise à jour du programme.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Exception durant la mise à jour du programme : {ex.Message}");
+        }
+    }
 
     private void ProposerRemplacement(ExerciceJour ex)
     {
@@ -437,16 +470,39 @@
     }
 
 
+    // private void ConfirmerRemplacement(string nouveau)
+    // {
+    //     if (ExerciceCible is null) return;
+
+    //     ExerciceCible.ExerciseName = nouveau;
+    //     ExerciceCible = null;
+
+    //     StateHasChanged();
+    // }
+
     private void ConfirmerRemplacement(string nouveau)
     {
-        if (ExerciceCible is null) return;
+        if (ExerciceCible is null || SelectedPlan is null) return;
 
+        //  Mémoriser l'ancien nom AVANT le remplacement
+        string ancienNom = ExerciceCible.ExerciseName;
+
+        //  Remplacer dans la séance affichée
         ExerciceCible.ExerciseName = nouveau;
-        ExerciceCible = null;
 
+        //  Remplacer aussi dans le plan du programme (WorkoutPlan)
+        var semaine = SelectedPlan.Weeks.ElementAtOrDefault(SelectedSemaineIndex);
+        var jour = semaine?.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+
+        var exOriginal = jour?.Exercises.FirstOrDefault(e => e.ExerciseName == ancienNom);
+        if (exOriginal is not null)
+        {
+            exOriginal.ExerciseName = nouveau;
+        }
+
+        ExerciceCible = null;
         StateHasChanged();
     }
-
 
     private async Task RemplacerExercice(string nouveau)
     {

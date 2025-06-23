@@ -243,6 +243,24 @@ public class SupabaseService
 
         return response.IsSuccessStatusCode;
     }
+    public async Task<bool> UpdateProgrammeUnifiedAsync(ProgrammeModel programme)
+    {
+        try
+        {
+            var response = await _supabase
+                .From<ProgrammeModel>()
+                .Where(x => x.Id == programme.Id)
+                .Set(x => x.Contenu, programme.Contenu)
+                .Update();
+
+            return response.Models.Any(); // succès si au moins 1 modèle mis à jour
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Erreur update Supabase : " + ex.Message);
+            return false;
+        }
+    }
 
     #endregion
 

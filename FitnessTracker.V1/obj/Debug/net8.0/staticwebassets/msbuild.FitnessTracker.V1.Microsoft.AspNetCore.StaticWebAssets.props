@@ -138,8 +138,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>f9uvjujlxy</Fingerprint>
-      <Integrity>DbpQaq68ZSb5IoPosBErM1QWBfsbTxpJqhU0REi6wP4=</Integrity>
+      <Fingerprint>x4k78471u3</Fingerprint>
+      <Integrity>san+agfaBCYm2Ii/7au8wimn92tRZWxp5Uqa30qbJlc=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\icon-192.png'))</OriginalItemSpec>
@@ -156,8 +156,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>kjimucelzx</Fingerprint>
-      <Integrity>oEo6d+KqX5fjxTiZk/w9NB3Mi0+ycS5yLwCKwr4IkbA=</Integrity>
+      <Fingerprint>42m6yidtub</Fingerprint>
+      <Integrity>LK8Gl6ou8WUnimQREuHR9WR4H/nrf/ETiM7sfA1NyQA=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\icon-512.png'))</OriginalItemSpec>

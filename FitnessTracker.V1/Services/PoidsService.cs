@@ -251,6 +251,18 @@ namespace FitnessTracker.V1.Services
             await _localStorage.SetItemAsync(key, local);
         }
 
-        
+        //public async Task SaveProgrammeLocallyAsync(ProgrammeModel programme)
+        //{
+        //    try
+        //    {
+        //        var json = JsonSerializer.Serialize(programme);
+        //        await SecureStorage.Default.SetAsync($"programme_{programme.Id}", json);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("❌ Erreur enregistrement local programme : " + ex.Message);
+        //    }
+        //}
+
     }
 }

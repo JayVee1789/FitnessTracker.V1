@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using Supabase.Postgrest.Models;
+using System.Text.Json.Serialization;
 
-public class ProgrammeModel
+public class ProgrammeModel : BaseModel
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
