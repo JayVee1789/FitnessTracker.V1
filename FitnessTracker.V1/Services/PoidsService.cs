@@ -250,6 +250,10 @@ namespace FitnessTracker.V1.Services
 
             await _localStorage.SetItemAsync(key, local);
         }
+        public async Task SupprimerDepuisSupabaseAsync(string exercice, DateTime date)
+        {
+            await _supabase.RemoveByExerciceAndDateAsync(exercice, date);
+        }
 
         //public async Task SaveProgrammeLocallyAsync(ProgrammeModel programme)
         //{
@@ -263,6 +267,18 @@ namespace FitnessTracker.V1.Services
         //        Console.WriteLine("❌ Erreur enregistrement local programme : " + ex.Message);
         //    }
         //}
+        public async Task SaveEntryUnifiedAsync(PoidsEntry remote, PoidsEntryLocal local)
+        {
+            try
+            {
+                await SupprimerDepuisSupabaseAsync(remote.Exercice, remote.Date);
+                await AddEntryAsync(remote, local);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Erreur SaveEntryUnifiedAsync : " + ex.Message);
+            }
+        }
 
     }
 }

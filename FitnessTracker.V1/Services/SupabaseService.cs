@@ -1,4 +1,5 @@
-﻿using FitnessTracker.V1.Models;
+﻿using Blazored.LocalStorage;
+using FitnessTracker.V1.Models;
 
 using System.Diagnostics;
 using System.Net.Http.Json;
@@ -13,7 +14,10 @@ public class SupabaseService
     private readonly string _programmeUrl;
     private readonly string _programmeManuelUrl;
     private readonly Supabase.Client _supabase;
-    public SupabaseService(HttpClient http, Supabase.Client supabase)
+    private readonly ILocalStorageService LocalStorage;
+
+
+    public SupabaseService(HttpClient http, Supabase.Client supabase, ILocalStorageService localStorage)
     {
 
         _http = http;
@@ -22,8 +26,8 @@ public class SupabaseService
         _tableUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/entries"; // Voir dans Supabase > API > REST
         _programmeUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/programmes";
         _programmeManuelUrl = "https://zvshapdlwzzytpmvgmib.supabase.co/rest/v1/programmes_manuels";
-
         _http.DefaultRequestHeaders.Add("apikey", _apiKey);
+        LocalStorage = localStorage;
     }
     public void RefreshAuthHeaders()
     {
@@ -42,19 +46,45 @@ public class SupabaseService
         }
     }
 
+    //public async Task<List<PoidsEntry>> GetEntriesAsync()
+    //{
+    //  var response  = new List<PoidsEntry>();
+    //    try
+    //    {
+    //        response = await _http.GetFromJsonAsync<List<PoidsEntry>>(_tableUrl);
+
+    //    }catch(Exception ex)
+    //    {
+    //        Console.WriteLine(ex);
+    //    }
+    //    return response ?? new();
+
+    //}
     public async Task<List<PoidsEntry>> GetEntriesAsync()
     {
-      var response  = new List<PoidsEntry>();
+        var userId = _supabase.Auth.CurrentUser?.Id;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            Console.WriteLine("❌ Aucun utilisateur connecté → GetEntriesAsync retourne une liste vide.");
+            return new();
+        }
+
         try
         {
-            response = await _http.GetFromJsonAsync<List<PoidsEntry>>(_tableUrl);
-           
-        }catch(Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-        return response ?? new();
+            var result = await _supabase
+                .From<PoidsEntry>()
+                .Where(x => x.UserId == userId)
+                .Get();
 
+            Console.WriteLine($"✅ {result.Models.Count} entrées récupérées pour l'utilisateur {userId}");
+            return result.Models;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Erreur récupération Supabase : " + ex.Message);
+            return new();
+        }
     }
 
     #region ENTRY (POIDS)
@@ -131,6 +161,71 @@ public class SupabaseService
         return auto.Concat(manuels).ToList();
     }
 
+    //public async Task<bool> SaveProgrammeUnifiedAsync(ProgrammeModel programme)
+    //{
+    //    // 🔐 Vérifie que l'utilisateur est connecté
+    //    var userId = _supabase.Auth.CurrentUser?.Id;
+    //    if (string.IsNullOrWhiteSpace(userId))
+    //    {
+    //        Console.WriteLine("❌ Aucun utilisateur connecté.");
+    //        return false;
+    //    }
+
+    //    programme.UserId = userId;
+
+    //    // 1️⃣ ⬇️ Enregistrement local (clé programmes_local)
+    //    try
+    //    {
+    //        var localProgrammes = await LocalStorage.GetItemAsync<List<ProgrammeModel>>("programmes_local") ?? new();
+
+    //        // supprime s'il existe déjà
+    //        localProgrammes.RemoveAll(p => p.Id == programme.Id);
+
+    //        // ajoute ou remplace
+    //        localProgrammes.Add(programme);
+
+    //        await LocalStorage.SetItemAsync("programmes_local", localProgrammes);
+
+    //        Console.WriteLine("✅ Programme enregistré localement.");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine("❌ Erreur lors de l'enregistrement local : " + ex.Message);
+    //        return false;
+    //    }
+
+    //    // 2️⃣ ☁️ Enregistrement Supabase
+    //    try
+    //    {
+    //        RefreshAuthHeaders();
+
+    //        var url = programme.Source == "manuel" ? _programmeManuelUrl : _programmeUrl;
+
+    //        var payload = new
+    //        {
+    //            id = programme.Id == Guid.Empty ? Guid.NewGuid() : programme.Id,
+    //            nom = programme.Nom,
+    //            date_debut = programme.DateDebut.ToString("yyyy-MM-dd"),
+    //            contenu = programme.Contenu,
+    //            source = programme.Source,
+    //            user_id = programme.UserId
+    //        };
+
+    //        var response = await _http.PostAsJsonAsync(url, new[] { payload });
+
+    //        Console.WriteLine($"➡️ Envoi vers Supabase ({programme.Source}) → {response.StatusCode}");
+
+    //        return response.IsSuccessStatusCode;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine("❌ Erreur lors de la sauvegarde Supabase : " + ex.Message);
+    //        return false;
+    //    }
+    //}
+
+
+
     public async Task<bool> AddProgrammeAsync(ProgrammeModel p)
     {
         // Vérification sécurisée
@@ -154,32 +249,52 @@ public class SupabaseService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SaveManualPlanAsync(string nom, WorkoutPlan plan)
+    private ProgrammeModelLocal ConvertToLocal(ProgrammeModel remote) => new()
     {
-        var userId = _supabase.Auth.CurrentUser?.Id;
-        if (string.IsNullOrEmpty(userId))
-        {
-            Console.WriteLine("❌ Aucun utilisateur connecté");
-            return false;
-        }
+        Id = remote.Id,
+        Nom = remote.Nom,
+        DateDebut = remote.DateDebut,
+        Contenu = remote.Contenu,
+        Source = remote.Source
+    };
 
-        var p = new
-        {
-            id = Guid.NewGuid(),
-            nom = nom,
-            datedebut = DateTime.Today.ToString("yyyy-MM-dd"), // sécurise le format date
-            contenu = JsonSerializer.Serialize(plan), // ✅ on sérialise en texte
-            source = "manuel",
-            user_id = userId
-        };
+    private ProgrammeModel ConvertToRemote(ProgrammeModelLocal local, string userId) => new()
+    {
+        Id = local.Id,
+        Nom = local.Nom,
+        DateDebut = local.DateDebut,
+        Contenu = local.Contenu,
+        Source = local.Source,
+        UserId = userId
+    };
 
-        var response = await _http.PostAsJsonAsync(_programmeManuelUrl, new[] { p });
 
-        Console.WriteLine("Envoi JSON vers Supabase (manuel) :\n" + JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true }));
-        Console.WriteLine("Code retour : " + response.StatusCode);
+    //public async Task<bool> SaveManualPlanAsync(string nom, WorkoutPlan plan)
+    //{
+    //    var userId = _supabase.Auth.CurrentUser?.Id;
+    //    if (string.IsNullOrEmpty(userId))
+    //    {
+    //        Console.WriteLine("❌ Aucun utilisateur connecté");
+    //        return false;
+    //    }
 
-        return response.IsSuccessStatusCode;
-    }
+    //    var p = new
+    //    {
+    //        id = Guid.NewGuid(),
+    //        nom = nom,
+    //        datedebut = DateTime.Today.ToString("yyyy-MM-dd"), // sécurise le format date
+    //        contenu = JsonSerializer.Serialize(plan), // ✅ on sérialise en texte
+    //        source = "manuel",
+    //        user_id = userId
+    //    };
+
+    //    var response = await _http.PostAsJsonAsync(_programmeManuelUrl, new[] { p });
+
+    //    Console.WriteLine("Envoi JSON vers Supabase (manuel) :\n" + JsonSerializer.Serialize(p, new JsonSerializerOptions { WriteIndented = true }));
+    //    Console.WriteLine("Code retour : " + response.StatusCode);
+
+    //    return response.IsSuccessStatusCode;
+    //}
 
     public async Task<bool> DeleteProgrammeUnifiedAsync(Guid id, string source)
     {
@@ -192,22 +307,23 @@ public class SupabaseService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> UpdateManualProgrammeAsync(Guid id, string nom, WorkoutPlan plan)
-    {
-        var url = $"{_programmeManuelUrl}?id=eq.{id}";
-        var payload = new Dictionary<string, object>
-        {
-            ["nom"] = nom,
-            ["datedebut"] = DateTime.Today,
-            ["contenu"] = JsonSerializer.Serialize(plan)
-        };
+    //public async Task<bool> UpdateManualProgrammeAsync(Guid id, string nom, WorkoutPlan plan)
+    //{
+    //    var url = $"{_programmeManuelUrl}?id=eq.{id}";
+    //    var payload = new Dictionary<string, object>
+    //    {
+    //        ["nom"] = nom,
+    //        ["datedebut"] = DateTime.Today,
+    //        ["contenu"] = JsonSerializer.Serialize(plan)
+    //    };
 
-        var content = new StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
-        var response = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url) { Content = content });
+    //    var content = new StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
+    //    var response = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url) { Content = content });
 
-        Console.WriteLine($"[UPDATE MANUEL] {url} → {response.StatusCode}");
-        return response.IsSuccessStatusCode;
-    }
+    //    Console.WriteLine($"[UPDATE MANUEL] {url} → {response.StatusCode}");
+    //    return response.IsSuccessStatusCode;
+    ////}
+    
     public async Task<bool> SaveProgrammeAsync(ProgrammeModel p, bool isManual)
     {
         var userId = _supabase.Auth.CurrentUser?.Id;
@@ -243,23 +359,28 @@ public class SupabaseService
 
         return response.IsSuccessStatusCode;
     }
+    
     public async Task<bool> UpdateProgrammeUnifiedAsync(ProgrammeModel programme)
     {
-        try
-        {
-            var response = await _supabase
-                .From<ProgrammeModel>()
-                .Where(x => x.Id == programme.Id)
-                .Set(x => x.Contenu, programme.Contenu)
-                .Update();
+        RefreshAuthHeaders();
 
-            return response.Models.Any(); // succès si au moins 1 modèle mis à jour
-        }
-        catch (Exception ex)
+        var url = programme.Source == "manuel"
+            ? $"{_programmeManuelUrl}?id=eq.{programme.Id}"
+            : $"{_programmeUrl}?id=eq.{programme.Id}";
+
+        var payload = new Dictionary<string, object>
         {
-            Console.WriteLine("❌ Erreur update Supabase : " + ex.Message);
-            return false;
-        }
+            ["nom"] = programme.Nom,
+            ["date_debut"] = programme.DateDebut.ToString("yyyy-MM-dd"),
+            ["contenu"] = programme.Contenu
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
+
+        var response = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url) { Content = content });
+
+        Console.WriteLine($"[PATCH programme] {url} → {response.StatusCode}");
+        return response.IsSuccessStatusCode;
     }
 
     #endregion

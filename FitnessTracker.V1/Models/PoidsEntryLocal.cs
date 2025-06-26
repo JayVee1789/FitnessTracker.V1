@@ -7,5 +7,6 @@
         public DateTime Date { get; set; }
         public double Poids { get; set; }
         public string UserId { get; set; } = "";
+        public bool EnLb { get; set; } = false;
     }
 }

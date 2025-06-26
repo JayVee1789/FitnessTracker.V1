@@ -25,4 +25,9 @@ public class PoidsEntry : BaseModel
     [Column("user_id")]
     [JsonPropertyName("user_id")]
     public string UserId { get; set; } = "";
+
+    [Column("en_lb")]
+    [JsonPropertyName("en_lb")]
+    public bool EnLb { get; set; } = false;
+
 }

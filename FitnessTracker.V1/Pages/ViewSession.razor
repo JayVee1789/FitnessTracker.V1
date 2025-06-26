@@ -9,7 +9,7 @@
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 @inject AuthService AuthService
-
+@inject HttpClient Http
 <h3>Visualiser une séance de programme</h3>
 
 <div class="row mb-3">
@@ -84,28 +84,34 @@
                     @* <td><a href="#" @onclick="() => ProposerRemplacement(ex)">@ex.ExerciseName</a></td> *@
                     <td>
                         <a href="#"
-                           class="text-decoration-none"
-                           data-bs-toggle="modal"
-                           data-bs-target="#modalRemplacement"
-                           @onclick="() => ProposerRemplacement(ex)">
+                        class="text-decoration-none"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalRemplacement"
+                        @onclick="() => ProposerRemplacement(ex)">
                             @ex.ExerciseName
                         </a>
                     </td>
                     <td>@ex.Series</td>
                     <td>@ex.Repetitions</td>
                     <td>@ex.RestTimeSeconds</td>
-                    <input type="number"
-                    class="form-control"
-                    step="0.5"
-                    @bind="ex.PoidsAffiche" />
-
-
                     <td>
                         @{
-                            var objectifKg = ex.PoidsUtilisé * (1 + ex.Pourcentage1RM / 100.0);
+                            var poidsAffiche = ex.IsLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
+                            var suffix = ex.IsLb ? "lb" : "kg";
+                        }
+                        <input type="number"
+                        class="form-control"
+                        step="0.5"
+                        @bind="ex.PoidsAffiche"
+                        @key="AfficherEnLb.ToString() + ex.ExerciseName" />
+                        <small class="text-muted">@suffix</small>
+                    </td>
+                    <td>
+                        @{
+                            var objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
                             var objectifAffiché = AfficherEnLb
-                            ? Math.Round(objectifKg / 0.453592, 1) + " lb"
-                            : Math.Round(objectifKg, 1) + " kg";
+                            ? Math.Round(ex.Objectif / 0.453592, 1) + " lb"
+                            : Math.Round(ex.Objectif, 1) + " kg";
                         }
                         @objectifAffiché
                     </td>
@@ -131,6 +137,7 @@
         Enregistrer les performances
     </button>
 }
+<br />
 @if (SelectedPlanAvailable)
 {
     <button class="btn btn-outline-success mt-2" @onclick="SauvegarderProgrammeModifié">
@@ -202,9 +209,9 @@
                         <div class="d-flex justify-content-between align-items-center mb-2 px-2">
                             <span>@s</span>
                             <button type="button"
-                                    class="btn btn-sm btn-outline-success"
-                                    data-bs-dismiss="modal"
-                                    @onclick="() => ConfirmerRemplacement(s)">
+                            class="btn btn-sm btn-outline-success"
+                            data-bs-dismiss="modal"
+                            @onclick="() => ConfirmerRemplacement(s)">
                                 ✅ Sélectionner
                             </button>
                         </div>
@@ -214,11 +221,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 
 @code {
     private List<ProgrammeModel> Programmes = new();
@@ -232,11 +234,9 @@
     public static bool AfficherEnLb { get; set; } = false;
     private ExerciceJour? ExerciceCible = null;
     private List<string> Suggestions = new();
-
+    private string? userId;
     private string GetInputId(ExerciceJour ex) => $"{ex.ExerciseName}_{Guid.NewGuid()}";
-
-
-
+    List<ExerciseDefinition> allExercises = new();
     private bool SelectedPlanAvailable => SelectedPlan is not null;
 
     protected override async Task OnInitializedAsync()
@@ -249,8 +249,13 @@
 
         try
         {
+            userId = SupabaseService.GetCurrentUserId();
+            Console.WriteLine("🔑 Utilisateur actuel : " + userId);
             // 🔄 Tente une synchro silencieuse sans casser la suite
-            await PoidsService.SyncFromSupabaseAsync();
+            // await PoidsService.SyncFromSupabaseAsync();
+            var supabaseEntries = await SupabaseService.GetEntriesAsync();
+            await PoidsService.OverwriteEntriesAsync(supabaseEntries);
+            Console.WriteLine($"✅ Synchro initiale : {supabaseEntries.Count} entrées chargées.");
         }
         catch (Exception ex)
         {
@@ -363,8 +368,11 @@
                     Series = 0,
                     Repetitions = 0,
                     RestTimeSeconds = 0,
+                    Objectif =0,
                     Pourcentage1RM = 0,
-                    PoidsUtilisé = 0
+                    PoidsUtilisé = 0,
+                    ObjectifAtteint = false,
+                    IsLb = false
                 }
             };
         }
@@ -392,9 +400,11 @@
                         Series = ex.Series,
                         Repetitions = ex.Repetitions,
                         RestTimeSeconds = ex.RestTimeSeconds,
+                        Objectif = calculerObjectif(poids, coef),
                         Pourcentage1RM = pourcentageRm,
                         PoidsUtilisé = poids,
-                        ObjectifAtteint = false
+                        ObjectifAtteint = false,
+                        IsLb = AfficherEnLb // ✅ ajout important ici
 
                     });
             }
@@ -410,7 +420,7 @@
         double poidsSaisiKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
 
         // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
-        double objectifKg = ex.PoidsUtilisé * (1 + ex.Pourcentage1RM / 100.0);
+        double objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
 
         ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
     }
@@ -451,22 +461,54 @@
         }
     }
 
-    private void ProposerRemplacement(ExerciceJour ex)
+    // private async Task ProposerRemplacement(ExerciceJour ex)
+    // {
+    //     ExerciceCible = ex;
+    //     List<ExerciseDefinition> allExercises = new();
+
+
+    //     var version = DateTime.Now.Ticks;
+    //     allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
+
+    //     var tous = new List<string>
+    //     {
+    //         "Pompes", "Tractions", "Développé militaire", "Rowing barre", "Curl biceps", "Hip Thrust"
+    //     };
+
+    //     Suggestions = tous
+    //         .Where(e => e != ex.ExerciseName)
+    //         .OrderBy(_ => Guid.NewGuid())
+    //         .Take(2)
+    //         .ToList();
+
+    //     // Pas besoin de JS ici, le bouton dans le tableau ouvre le modal
+    // }
+    private async Task ProposerRemplacement(ExerciceJour ex)
     {
         ExerciceCible = ex;
+        var version = DateTime.Now.Ticks;
+        allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
+        var original = allExercises.FirstOrDefault(e => e.Name == ex.ExerciseName);
+        if (original == null)
+        {
+            Console.WriteLine("⚠️ Exercice source introuvable dans la base.");
+            Suggestions = new(); return;
+        }
 
-        var tous = new List<string>
-    {
-        "Pompes", "Tractions", "Développé militaire", "Rowing barre", "Curl biceps", "Hip Thrust"
-    };
+        string baseCategory = original.Category?.Split('/').FirstOrDefault()?.Trim() ?? "";
 
-        Suggestions = tous
-            .Where(e => e != ex.ExerciseName)
+        Suggestions = allExercises
+            .Where(e =>
+                e.Name != original.Name &&
+                e.Origin == original.Origin &&
+                e.Description == original.Description &&
+                e.Category.StartsWith(baseCategory, StringComparison.OrdinalIgnoreCase))
             .OrderBy(_ => Guid.NewGuid())
+            .Select(e => e.Name)
             .Take(2)
             .ToList();
 
-        // Pas besoin de JS ici, le bouton dans le tableau ouvre le modal
+        Console.WriteLine($"🔁 Suggestions trouvées pour {original.Name} : {string.Join(", ", Suggestions)}");
     }
 
 
@@ -480,7 +522,7 @@
     //     StateHasChanged();
     // }
 
-    private void ConfirmerRemplacement(string nouveau)
+    private async Task ConfirmerRemplacement(string nouveau)
     {
         if (ExerciceCible is null || SelectedPlan is null) return;
 
@@ -500,6 +542,18 @@
             exOriginal.ExerciseName = nouveau;
         }
 
+        try
+        {
+            // ✅ Sauvegarder le programme modifié après remplacement
+            await SauvegarderProgrammeModifié();
+            Console.WriteLine("✅ Programme mis à jour après remplacement.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+
         ExerciceCible = null;
         StateHasChanged();
     }
@@ -518,40 +572,94 @@
         StateHasChanged();
     }
 
+    // private async Task SauvegarderSeance()
+    // {
+    //     foreach (var ex in Exercises)
+    //     {
+    //         if (ex.ExerciseName == "Repos") continue;
+
+    //         var poidsKg = AfficherEnLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+
+    //         var entry = new PoidsEntry
+    //             {
+    //                 Exercice = ex.ExerciseName,
+    //                 Date = DateTime.Today,
+    //                 Poids = poidsKg
+    //             };
+
+    //         var local = new PoidsEntryLocal
+    //             {
+    //                 Exercice = ex.ExerciseName,
+    //                 Date = DateTime.Today,
+    //                 Poids = poidsKg
+    //             };
+
+    //         try
+    //         {
+    //             await PoidsService.SupprimerDepuisSupabaseAsync(ex.ExerciseName, DateTime.Today);
+    //             await PoidsService.AddEntryAsync(entry, local);
+    //             Console.WriteLine($" Entrée ajoutée : {entry.Exercice} - {entry.Poids} kg");
+    //         }
+    //         catch (Exception exerer)
+    //         {
+    //             Console.WriteLine("❌ Exception capturée dans SauvegarderSeance");
+    //             Console.WriteLine("❌ Erreur sauvegarde : " + exerer.Message);
+    //         }
+    //     }
+    //     // 🔄 Sauvegarder les éventuelles modifications du programme
+    //     await SauvegarderProgrammeModifié();
+    //     Console.WriteLine("✅ Programme sauvegardées");
 
 
+    //     Console.WriteLine("✅ Performances sauvegardées sans doublon ni erreur d'unité");
+    // }
     private async Task SauvegarderSeance()
     {
         foreach (var ex in Exercises)
         {
             if (ex.ExerciseName == "Repos") continue;
-            var poidsEnKg = AfficherEnLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+
+            // ⚠️ Utiliser IsLb (pas AfficherEnLb)
+            var poidsKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+
             var entry = new PoidsEntry
                 {
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
-                    Poids = poidsEnKg
+                    Poids = poidsKg,
+                    UserId = userId,
+                    EnLb  = ex.IsLb
                 };
 
             var local = new PoidsEntryLocal
                 {
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
-                    Poids = poidsEnKg
+                    Poids = poidsKg,
+                    UserId = userId,
+                    EnLb = ex.IsLb
                 };
+
             try
             {
-                await PoidsService.AddEntryAsync(entry, local);
-            }catch(Exception exerer)
-            {
-
-                Console.WriteLine(exerer);
+                // 🔁 méthode unifiée pour gérer doublons + synchro
+                await PoidsService.SaveEntryUnifiedAsync(entry, local);
+                Console.WriteLine($"✅ Entrée sauvegardée : {entry.Exercice} - {entry.Poids} kg");
             }
-
+            catch (Exception exerer)
+            {
+                Console.WriteLine("❌ Erreur sauvegarde : " + exerer.Message);
+            }
         }
 
-        Console.WriteLine("Performances sauvegardées ✅");
+        // 🔄 Sauvegarde le programme aussi
+        await SauvegarderProgrammeModifié();
+        Console.WriteLine("✅ Séance et programme sauvegardés avec succès.");
     }
+
+    private string message = ""; // Affichage du message de succès ou erreur
+
+
 
 
     private async Task ConfirmerSuppression()
@@ -578,6 +686,7 @@
             }
         }
     }
+
     private double ConvertToDisplayUnit(double poidsKg) =>
     AfficherEnLb ? Math.Round(poidsKg / 0.453592, 1) : poidsKg;
 
@@ -591,6 +700,7 @@
             ex.PoidsUtilisé = ConvertToKg(val);
         }
     }
+
     private double GetDisplayPoids(ExerciceJour ex)
     {
         return AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
@@ -604,17 +714,27 @@
         }
     }
 
-
     private async void ToggleUnite()
     {
         AfficherEnLb = !AfficherEnLb;
-       
+
     }
 
+    /// <summary>
+    /// Ajoute un pourcentage au poids de départ.
+    /// Exemple : poids = 100, pourcentage = 2.5  → 102.5
+    /// </summary>
+    /// <param name="poids">Le poids de départ (double).</param>
+    /// <param name="pourcentage">Le pourcentage à appliquer (double).</param>
+    /// <returns>Le nouveau poids avec le pourcentage ajouté.</returns>
     private double calculerObjectif(double poidsUtilisé, double coef)
     {
-        return poidsUtilisé * coef /100;
+        // 1 + (pourcentage / 100) donne le facteur multiplicatif
+        double resultat = poidsUtilisé * (1 + coef / 100.0);
+        return Math.Round(resultat, 1, MidpointRounding.AwayFromZero);// MidpointRounding.AwayFromZero      ↑
+        // assure 1.25 → 1.3 plutôt que 1.2 si jamais vous êtes à mi‐chemin.
     }
+
     private double GetPoidsAffiché(ExerciceJour ex) =>
     AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
 
@@ -624,6 +744,7 @@
             ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
     }
 
+
     public class ExerciceJour
     {
         public string ExerciseName { get; set; } = "";
@@ -632,13 +753,18 @@
         public int RestTimeSeconds { get; set; }
         public double Pourcentage1RM { get; set; }
         public double PoidsUtilisé { get; set; }
+        public double Objectif { get; set; }
         public bool ObjectifAtteint { get; set; } = false;
         public bool IsLb { get; set; } = false;
         public bool RefreshFlag { get; set; } = false;
         public double PoidsAffiche
         {
-            get => ViewSession.AfficherEnLb ? Math.Round(PoidsUtilisé / 0.453592, 1) : PoidsUtilisé;
-            set => PoidsUtilisé = ViewSession.AfficherEnLb ? value * 0.453592 : value;
+            get => ViewSession.AfficherEnLb
+            ? Math.Round(PoidsUtilisé / 0.453592, 1)
+            : Math.Round(PoidsUtilisé, 1);
+            set => PoidsUtilisé = ViewSession.AfficherEnLb
+                ? Math.Round(value * 0.453592, 2)
+                : Math.Round(value, 1);
         }
     }
 }
