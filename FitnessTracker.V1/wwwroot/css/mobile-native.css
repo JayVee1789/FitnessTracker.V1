@@ -1,0 +1,56 @@
+﻿/* ===== Variables thème ===== */
+:root {
+    --clr-primary: #0066ff;
+    --clr-surface: #f8f9fa;
+    --radius: 14px;
+}
+
+body, button, input, select {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", sans-serif;
+}
+
+/* ===== Barre du haut ===== */
+.navbar.bg-primary {
+    background: var(--clr-primary) !important;
+    border-bottom-left-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+}
+
+/* ===== Offcanvas ===== */
+.offcanvas {
+    max-width: 250px;
+    border-top-right-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+}
+
+/* ===== Bottom Navigation (mobile) ===== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--clr-surface);
+    border-top: 1px solid rgba(0,0,0,.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1030; /* au-dessus du contenu */
+}
+
+.bottom-item {
+    color: #6c757d;
+    text-align: center;
+    flex: 1;
+}
+
+    .bottom-item.active, .bottom-item:hover {
+        color: var(--clr-primary);
+    }
+
+    .bottom-item span {
+        display: block;
+        font-size: 0.65rem;
+        line-height: 1;
+        margin-top: 2px;
+    }
