@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\appsettings.Development.json"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Production.json",
+      "PackagePath": "staticwebassets\\appsettings.Production.json"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.json",
       "PackagePath": "staticwebassets\\appsettings.json"
     },

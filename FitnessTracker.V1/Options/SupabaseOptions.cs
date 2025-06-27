@@ -2,16 +2,16 @@
 {
     public class SupabaseOptions
     {
-        public string Url { get; init; } = string.Empty;      // https://<id>.supabase.co
-        public string AnonKey { get; init; } = string.Empty;  // clé ‘anon’ (NE PAS versionner)
+        public string Url { get; set; } = default!;
+        public string AnonKey { get; set; } = default!;
 
-        public TablesConfig Tables { get; init; } = new();
+        public TablesSection Tables { get; set; } = new();
 
-        public class TablesConfig
+        public class TablesSection
         {
-            public string Entries { get; init; } = "entries";
-            public string Programmes { get; init; } = "programmes";
-            public string ProgrammesManuels { get; init; } = "programmes_manuels";
+            public string Entries { get; set; } = "entries";
+            public string Programmes { get; set; } = "programmes";
+            public string ProgrammesManuels { get; set; } = "programmes_manuels";
         }
     }
 }

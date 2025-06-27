@@ -22,7 +22,9 @@
 {
     <div class="border p-3 mb-3">
         <h4>Semaine @(@week.wi + 1)</h4>
-        <button class="btn btn-secondary mb-2" @onclick="@(() => AddDay(@week.wi))">➕ Jour</button>
+
+        <button class="btn btn-secondary me-2 mb-2" @onclick="@(() => AddDay(@week.wi))">➕ Jour</button>
+        <button class="btn btn-warning mb-2" @onclick="@(() => DuplicateWeek(@week.wi))">📑 Dupliquer la semaine</button>
 
         @foreach (var day in week.w.Days.Select((d, di) => new { d, di }))
         {
@@ -48,19 +50,16 @@
 
 <h5>Catégories</h5>
 <button class="btn btn-sm btn-link" @onclick="() => selectedCategories.Clear()">Tout décocher catégories</button>
-
 @foreach (var cat in AllCategories)
 {
     <label class="me-2">
         <input type="checkbox" @onchange="e => ToggleFilter(selectedCategories, cat, e)" checked="@selectedCategories.Contains(cat)" />
         @cat
     </label>
-
 }
 
 <h5>Équipements</h5>
-<button class="btn btn-sm btn-link" @onclick="() => selectedEquipments.Clear()">Tout décocher Equipments</button>
-
+<button class="btn btn-sm btn-link" @onclick="() => selectedEquipments.Clear()">Tout décocher Equipements</button>
 @foreach (var eq in AllEquipments)
 {
     <label class="me-2">
@@ -80,9 +79,9 @@
 }
 
 <h5>Types</h5>
+<button class="btn btn-sm btn-link" @onclick="() => selectedTypes.Clear()">Tout décocher Types</button>
 @foreach (var typ in AllTypes)
 {
-    <button class="btn btn-sm btn-link" @onclick="() => selectedTypes.Clear()">Tout décocher Types</button>
     <label class="me-2">
         <input type="checkbox" @onchange="e => ToggleFilter(selectedTypes, typ, e)" checked="@selectedTypes.Contains(typ)" />
         @typ
@@ -146,7 +145,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Optionnel : simule l'ouverture d'un programme déjà existant
         var fromStorage = await LocalStorage.GetItemAsync<ProgrammeModel>("editing_plan");
         if (fromStorage is not null)
         {
@@ -165,6 +163,41 @@
         plan.Weeks.Add(new WorkoutWeek { WeekNumber = plan.TotalWeeks });
     }
 
+    private void DuplicateWeek(int weekIdx)
+    {
+        if (weekIdx < 0 || weekIdx >= plan.Weeks.Count) return;
+
+        var source = plan.Weeks[weekIdx];
+
+        // Création d'une copie profonde
+        var newWeek = new WorkoutWeek
+            {
+                WeekNumber = plan.TotalWeeks + 1,
+                ChargeIncrementPercent = source.ChargeIncrementPercent,
+                SeriesWeek = source.SeriesWeek,
+                RepetitionsWeek = source.RepetitionsWeek,
+                RestTimeWeek = source.RestTimeWeek,
+                Days = source.Days.Select(d => new WorkoutDay
+                {
+                    DayIndex = d.DayIndex,
+                    TypeProgramme = d.TypeProgramme,
+                    Exercises = d.Exercises.Select(e => new ExerciseSession
+                    {
+                        ExerciseId = e.ExerciseId,
+                        ExerciseName = e.ExerciseName,
+                        Series = e.Series,
+                        Repetitions = e.Repetitions,
+                        RestTimeSeconds = e.RestTimeSeconds,
+                        IsSuperset = e.IsSuperset,
+                        Pourcentage1RM = e.Pourcentage1RM
+                    }).ToList()
+                }).ToList()
+            };
+
+        plan.TotalWeeks++;
+        plan.Weeks.Add(newWeek);
+    }
+
     private void AddDay(int weekIdx)
     {
         plan.Weeks[weekIdx].Days.Add(new WorkoutDay
@@ -181,10 +214,7 @@
         currentDay = dayIdx;
     }
 
-    private void SelectExercise(ExerciseDefinition ex)
-    {
-        selected = ex;
-    }
+    private void SelectExercise(ExerciseDefinition ex) => selected = ex;
 
     private void ConfirmAddExercise()
     {
@@ -207,10 +237,8 @@
 
     private void ToggleFilter(HashSet<string> set, string value, ChangeEventArgs e)
     {
-        if ((bool?)e.Value == true)
-            set.Add(value);
-        else
-            set.Remove(value);
+        if ((bool?)e.Value == true) set.Add(value);
+        else set.Remove(value);
     }
 
     private IEnumerable<ExerciseDefinition> FilteredExercises =>
@@ -237,7 +265,7 @@
                 Id = Guid.NewGuid(),
                 Nom = programmeName,
                 DateDebut = DateTime.Today,
-                Contenu = JsonSerializer.Serialize(plan) // ✅ texte JSON
+                Contenu = JsonSerializer.Serialize(plan)
             };
 
         bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: true);
