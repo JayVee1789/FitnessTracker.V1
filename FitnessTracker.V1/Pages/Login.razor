@@ -2,7 +2,7 @@
 
 
 @inject AuthService AuthService
-@inject SupabaseService SupabaseService
+@inject SupabaseService2 SupabaseService
 @inject NavigationManager Nav
 
 <h3>Connexion</h3>
@@ -43,7 +43,7 @@
             SupabaseService.RefreshAuthHeaders();
 
             Console.WriteLine("✅ Connexion réussie");
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/view-session");
         }
         else
         {

@@ -48,6 +48,7 @@
         public class UserProfile
         {
             public int Age { get; set; }
+            public string Sexe { get; set; } = "";           // 👈 NOUVEAU
             public UserLevel Level { get; set; }
             public TrainingObjective Objective { get; set; }
             public int SeancesPerWeek { get; set; }

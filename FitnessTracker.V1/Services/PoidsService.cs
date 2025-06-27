@@ -10,10 +10,10 @@ namespace FitnessTracker.V1.Services
         private const string ExercicesKey = "exercise_list";
 
         private readonly ILocalStorageService _localStorage;
-        private readonly SupabaseService _supabase;
+        private readonly SupabaseService2 _supabase;
         private const string PoidsKeysListKey = "poids_keys_list";
 
-        public PoidsService(ILocalStorageService localStorage, SupabaseService supabase)
+        public PoidsService(ILocalStorageService localStorage, SupabaseService2 supabase)
         {
             _localStorage = localStorage;
             _supabase = supabase;

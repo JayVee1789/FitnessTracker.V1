@@ -1,21 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Components
 @inject AuthService AuthService
 
-<!-- ===== NAV MENU avec dropdowns ===== -->
 <nav class="@CssClass nav-scrollable pt-3">
 
-    <!-- ==== HOME ======================================================= -->
+    <!-- HOME -->
     <div class="nav-item px-3">
-        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <NavLink class="nav-link text-dark" href="" Match="NavLinkMatch.All">
             <i class="bi bi-house"></i> Home
         </NavLink>
     </div>
 
-    @* ==== GROUPE « Utilisateur » ==================================== *@
+    @* ===== GROUPE « Utilisateur » ===== *@
     @if (role == "user")
     {
         <div class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
                data-bs-toggle="collapse" href="#menuUser" role="button"
                aria-expanded="false" aria-controls="menuUser">
                 <span><i class="bi bi-person-circle"></i> Utilisateur</span>
@@ -23,20 +22,20 @@
             </a>
 
             <div class="collapse ps-3" id="menuUser">
-                <NavLink class="nav-link" href="/analyse">Analyse</NavLink>
-                <NavLink class="nav-link" href="/generate-programme">Générateur</NavLink>
-                <NavLink class="nav-link" href="/view-session">Voir Séance</NavLink>
-                <NavLink class="nav-link" href="/mon-profil">Mon profil</NavLink>
-                <NavLink class="nav-link" href="/create-programme">Créer programme</NavLink>
+                <NavLink class="nav-link text-dark" href="/analyse">Analyse</NavLink>
+                <NavLink class="nav-link text-dark" href="/generate-programme">Générateur</NavLink>
+                <NavLink class="nav-link text-dark" href="/view-session">Voir Séance</NavLink>
+                <NavLink class="nav-link text-dark" href="/mon-profil">Mon profil</NavLink>
+                <NavLink class="nav-link text-dark" href="/create-programme">Créer programme</NavLink>
             </div>
         </div>
     }
 
-    @* ==== GROUPE « Gestion (coach/admin) » =========================== *@
+    @* ===== GROUPE « Gestion » ===== *@
     @if (role == "admin" || role == "coach")
     {
         <div class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
                data-bs-toggle="collapse" href="#menuGestion" role="button"
                aria-expanded="false" aria-controls="menuGestion">
                 <span><i class="bi bi-tools"></i> Gestion</span>
@@ -44,18 +43,18 @@
             </a>
 
             <div class="collapse ps-3" id="menuGestion">
-                <NavLink class="nav-link" href="/dashboard">Tableau de bord</NavLink>
-                <NavLink class="nav-link" href="/Exercices">Gestion Exercices</NavLink>
-                <NavLink class="nav-link" href="/gestion_poids">Gestion poids</NavLink>
+                <NavLink class="nav-link text-dark" href="/dashboard">Tableau de bord</NavLink>
+                <NavLink class="nav-link text-dark" href="/Exercices">Gestion Exercices</NavLink>
+                <NavLink class="nav-link text-dark" href="/gestion_poids">Gestion poids</NavLink>
             </div>
         </div>
     }
 
-    @* ==== GROUPE « Admin » =========================================== *@
+    @* ===== GROUPE « Admin » ===== *@
     @if (role == "admin")
     {
         <div class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
                data-bs-toggle="collapse" href="#menuAdminOnly" role="button"
                aria-expanded="false" aria-controls="menuAdminOnly">
                 <span><i class="bi bi-shield-lock"></i> Admin</span>
@@ -63,25 +62,25 @@
             </a>
 
             <div class="collapse ps-3" id="menuAdminOnly">
-                <NavLink class="nav-link" href="/gestion-utilisateurs">Gérer utilisateurs</NavLink>
-                <NavLink class="nav-link" href="/dashboard">Tableau de bord</NavLink>
+                <NavLink class="nav-link text-dark" href="/gestion-utilisateurs">Gérer utilisateurs</NavLink>
+                <NavLink class="nav-link text-dark" href="/dashboard">Tableau de bord</NavLink>
             </div>
         </div>
     }
 
-    <!-- ==== Connexion / Déconnexion =================================== -->
+    <!-- Connexion / Déconnexion -->
     <hr class="my-3" />
 
     <div class="nav-item px-3">
         @if (AuthService.IsAuthenticated)
         {
-            <NavLink class="nav-link text-danger" href="/logout">
+            <NavLink class="nav-link text-dark text-danger" href="/logout">
                 <i class="bi bi-box-arrow-right"></i> Déconnexion
             </NavLink>
         }
         else
         {
-            <NavLink class="nav-link text-success" href="/login">
+            <NavLink class="nav-link text-dark" href="/login">
                 <i class="bi bi-box-arrow-in-right"></i> Connexion
             </NavLink>
         }
@@ -94,8 +93,5 @@
     private string role = "user";
 
     protected override async Task OnInitializedAsync()
-    {
-        // Récupère le rôle pour afficher les bons liens
-        role = await AuthService.GetCurrentUserRoleAsync();
-    }
+        => role = await AuthService.GetCurrentUserRoleAsync();
 }

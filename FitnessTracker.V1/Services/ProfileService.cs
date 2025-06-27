@@ -30,6 +30,7 @@ public class ProfileService
             {
                 Id = user.Id,
                 Age = 28,
+                Sexe = "Homme",              // 👈 NOUVEAU
                 Level = "Intermediaire",
                 Objective = "Hypertrophy",
                 SeancesPerWeek = 3,
@@ -47,6 +48,7 @@ public class ProfileService
         return new UserProfile
         {
             Age = record.Age,
+            Sexe = record.Sexe,
             Level = Enum.Parse<UserLevel>(record.Level),
             Objective = Enum.Parse<TrainingObjective>(record.Objective),
             SeancesPerWeek = record.SeancesPerWeek,

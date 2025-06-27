@@ -1,10 +1,24 @@
-﻿/* ===== Variables thème ===== */
+﻿/* ==============================================================
+   mobile-native.css  –  Styles « app mobile » pour FitnessTracker
+   ============================================================== */
+
+/* ===== Variables thème ===== */
 :root {
     --clr-primary: #0066ff;
     --clr-surface: #f8f9fa;
     --radius: 14px;
+    --top-bar-h: 56px; /* hauteur de la barre du haut  */
+    --bottom-bar-h: 56px; /* hauteur de la bottom-nav (mobile) */
 }
 
+/* Sur desktop on n’a pas la bottom-bar */
+@media (min-width: 768px) {
+    :root {
+        --bottom-bar-h: 0px;
+    }
+}
+
+/* ===== Typographie système ===== */
 body, button, input, select {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", sans-serif;
 }
@@ -23,13 +37,21 @@ body, button, input, select {
     border-bottom-right-radius: var(--radius);
 }
 
+/* Sidebar & offcanvas : scroll interne propre */
+.offcanvas-body,
+aside.overflow-auto {
+    overflow-y: auto;
+    min-height: 0;
+    overscroll-behavior: contain;
+}
+
 /* ===== Bottom Navigation (mobile) ===== */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 56px;
+    height: var(--bottom-bar-h);
     background: var(--clr-surface);
     border-top: 1px solid rgba(0,0,0,.1);
     display: flex;
@@ -38,13 +60,15 @@ body, button, input, select {
     z-index: 1030; /* au-dessus du contenu */
 }
 
+/* Items de la bottom-nav */
 .bottom-item {
     color: #6c757d;
     text-align: center;
     flex: 1;
 }
 
-    .bottom-item.active, .bottom-item:hover {
+    .bottom-item.active,
+    .bottom-item:hover {
         color: var(--clr-primary);
     }
 
@@ -54,3 +78,25 @@ body, button, input, select {
         line-height: 1;
         margin-top: 2px;
     }
+
+/* ===== Liens du NavMenu (optionnel) ===== */
+.app-nav-link {
+    color: var(--nav-link-color, #212529) !important;
+    text-decoration: none;
+}
+
+    .app-nav-link:hover,
+    .app-nav-link.active {
+        opacity: .85; /* petit feedback visuel */
+    }
+
+/* ===== Zone principale ===== */
+.app-main {
+    flex: 1 1 auto; /* occupe l’espace restant dans le flex parent */
+    /* Hauteur exacte = viewport − barre haut − barre bas */
+    height: calc(100dvh - var(--top-bar-h) - var(--bottom-bar-h));
+    overflow-y: auto;
+    overscroll-behavior: contain; /* pas de rebond du body sur mobile */
+    padding: 1rem 1rem calc(var(--bottom-bar-h) + 1rem) 1rem;
+    min-height: 0; /* indispensable dans un flex */
+}

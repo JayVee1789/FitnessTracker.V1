@@ -4,76 +4,82 @@
 <div class="d-flex flex-column min-vh-100">
 
     <!-- ░▒▓  BARRE DU HAUT  ▓▒░ -->
-    <nav class="navbar navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-dark bg-primary shadow-sm" style="--bs-navbar-padding-y:.4rem;">
         <div class="container-fluid">
 
-            <!-- Burger mobile -->
+            <!-- Burger (mobile) -->
             <button class="btn btn-primary d-md-none"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNav"
-                    aria-controls="offcanvasNav"
                     aria-label="Menu">
                 <i class="bi bi-list fs-3"></i>
             </button>
 
             <span class="navbar-brand ms-2">FitnessTracker</span>
 
-            <!-- Connexion / Déconnexion (affiché desktop) -->
-            @if (AuthService.IsAuthenticated)
-            {
-                <a class="btn btn-outline-light btn-sm d-none d-md-inline" href="/logout">
-                    <i class="bi bi-box-arrow-right"></i>
-                </a>
-            }
-            else
-            {
-                <a class="btn btn-outline-light btn-sm d-none d-md-inline" href="/login">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                </a>
-            }
+            <!-- Connexion / Déconnexion (toujours visible) -->
+            <div class="ms-auto">
+                @if (AuthService.IsAuthenticated)
+                {
+                    <a class="btn btn-outline-light btn-sm" href="/logout">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-light btn-sm" href="/login">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </a>
+                }
+            </div>
         </div>
     </nav>
 
-    <!-- ░▒▓  OFFCANVAS (mobile)  ▓▒░ -->
+    <!-- ░▒▓  OFFCANVAS NAV (mobile) ▓▒░ -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav">
         <div class="offcanvas-header bg-primary text-white">
             <h5 class="offcanvas-title">Menu</h5>
             <button type="button" class="btn-close btn-close-white"
                     data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0">
+        <div class="offcanvas-body p-0 overflow-auto" style="min-height:0;">
             <NavMenu />
         </div>
     </div>
 
     <!-- ░▒▓  GRILLE  ▓▒░ -->
-    <div class="d-flex flex-grow-1">
+    <div class="d-flex flex-grow-1" style="min-height:0;">
 
         <!-- Sidebar fixe (desktop) -->
-        <aside class="d-none d-md-block bg-light border-end" style="width:260px;">
+        <aside class="d-none d-md-flex flex-column bg-light border-end overflow-auto"
+               style="width:260px;min-height:0;">
             <NavMenu />
         </aside>
 
-        <!-- Contenu -->
-        <main class="flex-fill overflow-auto px-3 py-4">
+        <!-- Contenu principal -->
+        <main class="app-main"
+              style="min-height:0;">
             @Body
         </main>
     </div>
 
-    <!-- ░▒▓  BOTTOM NAV (mobile) ▓▒░ -->
-    <nav class="bottom-nav d-md-none">
-        <NavLink href="/" Match="NavLinkMatch.All" class="bottom-item">
-            <i class="bi bi-house fs-5"></i><span class="small">Home</span>
-        </NavLink>
-        <NavLink href="/analyse" class="bottom-item">
-            <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>
-        </NavLink>
-        <NavLink href="/generate-programme" class="bottom-item">
-            <i class="bi bi-stars fs-5"></i><span class="small">Générateur</span>
-        </NavLink>
-        <NavLink href="/mon-profil" class="bottom-item">
-            <i class="bi bi-person fs-5"></i><span class="small">Profil</span>
-        </NavLink>
-    </nav>
+    <!-- ░▒▓  BOTTOM NAV (mobile, seulement si connecté) ▓▒░ -->
+    @if (AuthService.IsAuthenticated)
+    {
+        <nav class="bottom-nav d-md-none">
+            <NavLink href="/view-session" Match="NavLinkMatch.All" class="bottom-item">
+                <i class="bi bi-house fs-5"></i><span class="small">Home</span>
+            </NavLink>
+            <NavLink href="/analyse" class="bottom-item">
+                <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>
+            </NavLink>
+            <NavLink href="/generate-programme" class="bottom-item">
+                <i class="bi bi-stars fs-5"></i><span class="small">Creer programme</span>
+            </NavLink>
+            <NavLink href="/mon-profil" class="bottom-item">
+                <i class="bi bi-person fs-5"></i><span class="small">Profil</span>
+            </NavLink>
+        </nav>
+    }
 </div>
