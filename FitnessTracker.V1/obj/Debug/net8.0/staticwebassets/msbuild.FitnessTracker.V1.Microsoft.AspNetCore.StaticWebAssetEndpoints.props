@@ -1,5 +1,11 @@
 ﻿<Project>
   <ItemGroup>
+    <StaticWebAssetEndpoint Include="appsettings.4evegs9u72.json">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\appsettings.json'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"4evegs9u72"},{"Name":"integrity","Value":"sha256-bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA\u002B/y27pjmYOFl8="},{"Name":"label","Value":"appsettings.json"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"451"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA\u002B/y27pjmYOFl8=\u0022"},{"Name":"Last-Modified","Value":"Fri, 27 Jun 2025 21:50:13 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="appsettings.Development.4lk8778dkf.json">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\appsettings.Development.json'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
@@ -12,17 +18,11 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"449"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E=\u0022"},{"Name":"Last-Modified","Value":"Fri, 27 Jun 2025 16:10:37 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="appsettings.eo73iac5ck.json">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\appsettings.json'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"eo73iac5ck"},{"Name":"integrity","Value":"sha256-ngMiNpuClV8ZpsdYEUMIzt8i4vOuMN8vIA9YOFBVJNM="},{"Name":"label","Value":"appsettings.json"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"243"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022ngMiNpuClV8ZpsdYEUMIzt8i4vOuMN8vIA9YOFBVJNM=\u0022"},{"Name":"Last-Modified","Value":"Fri, 27 Jun 2025 15:58:54 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="appsettings.json">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\appsettings.json'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-ngMiNpuClV8ZpsdYEUMIzt8i4vOuMN8vIA9YOFBVJNM="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"243"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022ngMiNpuClV8ZpsdYEUMIzt8i4vOuMN8vIA9YOFBVJNM=\u0022"},{"Name":"Last-Modified","Value":"Fri, 27 Jun 2025 15:58:54 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA\u002B/y27pjmYOFl8="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"451"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA\u002B/y27pjmYOFl8=\u0022"},{"Name":"Last-Modified","Value":"Fri, 27 Jun 2025 21:50:13 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="appsettings.Production.json">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\appsettings.Production.json'))</AssetFile>
