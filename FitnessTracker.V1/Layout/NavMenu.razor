@@ -1,82 +1,101 @@
 ﻿@using Microsoft.AspNetCore.Components
 @inject AuthService AuthService
 
-<ul class="list-group list-group-flush">
+<!-- ===== NAV MENU avec dropdowns ===== -->
+<nav class="@CssClass nav-scrollable pt-3">
 
-    <!-- HOME -->
-    <li class="list-group-item">
-        <NavLink class="text-decoration-none" href="" Match="NavLinkMatch.All">
-            <i class="bi bi-house me-2"></i> Home
+    <!-- ==== HOME ======================================================= -->
+    <div class="nav-item px-3">
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <i class="bi bi-house"></i> Home
         </NavLink>
-    </li>
+    </div>
 
+    @* ==== GROUPE « Utilisateur » ==================================== *@
     @if (role == "user")
     {
-        <li class="list-group-item">
-            <a class="d-flex justify-content-between align-items-center"
-               data-bs-toggle="collapse" href="#userGrp">
-                <span><i class="bi bi-person-circle me-2"></i> Utilisateur</span>
+        <div class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+               data-bs-toggle="collapse" href="#menuUser" role="button"
+               aria-expanded="false" aria-controls="menuUser">
+                <span><i class="bi bi-person-circle"></i> Utilisateur</span>
                 <i class="bi bi-chevron-down small"></i>
             </a>
-            <div class="collapse ms-4" id="userGrp">
-                <NavLink class="d-block py-1" href="/analyse">Analyse</NavLink>
-                <NavLink class="d-block py-1" href="/generate-programme">Générateur</NavLink>
-                <NavLink class="d-block py-1" href="/view-session">Voir Séance</NavLink>
-                <NavLink class="d-block py-1" href="/create-programme">Créer programme</NavLink>
+
+            <div class="collapse ps-3" id="menuUser">
+                <NavLink class="nav-link" href="/analyse">Analyse</NavLink>
+                <NavLink class="nav-link" href="/generate-programme">Générateur</NavLink>
+                <NavLink class="nav-link" href="/view-session">Voir Séance</NavLink>
+                <NavLink class="nav-link" href="/mon-profil">Mon profil</NavLink>
+                <NavLink class="nav-link" href="/create-programme">Créer programme</NavLink>
             </div>
-        </li>
+        </div>
     }
 
+    @* ==== GROUPE « Gestion (coach/admin) » =========================== *@
     @if (role == "admin" || role == "coach")
     {
-        <li class="list-group-item">
-            <a class="d-flex justify-content-between align-items-center"
-               data-bs-toggle="collapse" href="#gestionGrp">
-                <span><i class="bi bi-tools me-2"></i> Gestion</span>
+        <div class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+               data-bs-toggle="collapse" href="#menuGestion" role="button"
+               aria-expanded="false" aria-controls="menuGestion">
+                <span><i class="bi bi-tools"></i> Gestion</span>
                 <i class="bi bi-chevron-down small"></i>
             </a>
-            <div class="collapse ms-4" id="gestionGrp">
-                <NavLink class="d-block py-1" href="/dashboard">Tableau de bord</NavLink>
-                <NavLink class="d-block py-1" href="/Exercices">Exercices</NavLink>
-                <NavLink class="d-block py-1" href="/gestion_poids">Poids</NavLink>
+
+            <div class="collapse ps-3" id="menuGestion">
+                <NavLink class="nav-link" href="/dashboard">Tableau de bord</NavLink>
+                <NavLink class="nav-link" href="/Exercices">Gestion Exercices</NavLink>
+                <NavLink class="nav-link" href="/gestion_poids">Gestion poids</NavLink>
             </div>
-        </li>
+        </div>
     }
 
+    @* ==== GROUPE « Admin » =========================================== *@
     @if (role == "admin")
     {
-        <li class="list-group-item">
-            <a class="d-flex justify-content-between align-items-center"
-               data-bs-toggle="collapse" href="#adminGrp">
-                <span><i class="bi bi-shield-lock me-2"></i> Admin</span>
+        <div class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle"
+               data-bs-toggle="collapse" href="#menuAdminOnly" role="button"
+               aria-expanded="false" aria-controls="menuAdminOnly">
+                <span><i class="bi bi-shield-lock"></i> Admin</span>
                 <i class="bi bi-chevron-down small"></i>
             </a>
-            <div class="collapse ms-4" id="adminGrp">
-                <NavLink class="d-block py-1" href="/gestion-utilisateurs">Utilisateurs</NavLink>
+
+            <div class="collapse ps-3" id="menuAdminOnly">
+                <NavLink class="nav-link" href="/gestion-utilisateurs">Gérer utilisateurs</NavLink>
+                <NavLink class="nav-link" href="/dashboard">Tableau de bord</NavLink>
             </div>
-        </li>
+        </div>
     }
 
-    <li class="list-group-item border-top">
+    <!-- ==== Connexion / Déconnexion =================================== -->
+    <hr class="my-3" />
+
+    <div class="nav-item px-3">
         @if (AuthService.IsAuthenticated)
         {
-            <NavLink class="text-danger text-decoration-none" href="/logout">
-                <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+            <NavLink class="nav-link text-danger" href="/logout">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
             </NavLink>
         }
         else
         {
-            <NavLink class="text-success text-decoration-none" href="/login">
-                <i class="bi bi-box-arrow-in-right me-2"></i> Connexion
+            <NavLink class="nav-link text-success" href="/login">
+                <i class="bi bi-box-arrow-in-right"></i> Connexion
             </NavLink>
         }
-    </li>
-</ul>
+    </div>
+</nav>
 
 @code {
     [Parameter] public string? CssClass { get; set; }
+
     private string role = "user";
 
     protected override async Task OnInitializedAsync()
-        => role = await AuthService.GetCurrentUserRoleAsync();
+    {
+        // Récupère le rôle pour afficher les bons liens
+        role = await AuthService.GetCurrentUserRoleAsync();
+    }
 }

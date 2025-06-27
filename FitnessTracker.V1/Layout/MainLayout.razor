@@ -4,10 +4,10 @@
 <div class="d-flex flex-column min-vh-100">
 
     <!-- ░▒▓  BARRE DU HAUT  ▓▒░ -->
-    <nav class="navbar navbar-dark bg-primary shadow-sm" style="height:var(--top-bar-h);">
+    <nav class="navbar navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
 
-            <!-- Burger (mobile) -->
+            <!-- Burger mobile -->
             <button class="btn btn-primary d-md-none"
                     type="button"
                     data-bs-toggle="offcanvas"
@@ -19,7 +19,7 @@
 
             <span class="navbar-brand ms-2">FitnessTracker</span>
 
-            <!-- Connexion / Déconnexion (desktop uniquement) -->
+            <!-- Connexion / Déconnexion (affiché desktop) -->
             @if (AuthService.IsAuthenticated)
             {
                 <a class="btn btn-outline-light btn-sm d-none d-md-inline" href="/logout">
@@ -35,30 +35,28 @@
         </div>
     </nav>
 
-    <!-- ░▒▓  OFFCANVAS NAV (mobile)  ▓▒░ -->
+    <!-- ░▒▓  OFFCANVAS (mobile)  ▓▒░ -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav">
-        <div class="offcanvas-header bg-primary text-white" style="height:var(--top-bar-h);">
+        <div class="offcanvas-header bg-primary text-white">
             <h5 class="offcanvas-title">Menu</h5>
             <button type="button" class="btn-close btn-close-white"
                     data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0 overflow-auto">
-            <NavMenu class="mobile-nav" />
+        <div class="offcanvas-body p-0">
+            <NavMenu />
         </div>
     </div>
 
     <!-- ░▒▓  GRILLE  ▓▒░ -->
     <div class="d-flex flex-grow-1">
 
-        <!-- Sidebar (desktop) -->
-        <aside class="d-none d-md-flex flex-column bg-light border-end overflow-auto"
-               style="width:260px;">
+        <!-- Sidebar fixe (desktop) -->
+        <aside class="d-none d-md-block bg-light border-end" style="width:260px;">
             <NavMenu />
         </aside>
 
-        <!-- Contenu principal -->
-        <main class="flex-fill px-3 py-4 overflow-y-auto"
-              style="padding-bottom:calc(var(--bottom-bar-h) + 1rem);">
+        <!-- Contenu -->
+        <main class="flex-fill overflow-auto px-3 py-4">
             @Body
         </main>
     </div>
@@ -72,7 +70,7 @@
             <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>
         </NavLink>
         <NavLink href="/generate-programme" class="bottom-item">
-            <i class="bi bi-stars fs-5"></i><span class="small">Gen.</span>
+            <i class="bi bi-stars fs-5"></i><span class="small">Générateur</span>
         </NavLink>
         <NavLink href="/mon-profil" class="bottom-item">
             <i class="bi bi-person fs-5"></i><span class="small">Profil</span>
