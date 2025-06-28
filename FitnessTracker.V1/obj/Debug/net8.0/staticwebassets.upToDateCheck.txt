@@ -1,6 +1,4 @@
-wwwroot\appsettings.Development.json
 wwwroot\appsettings.json
-wwwroot\appsettings.Production.json
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map

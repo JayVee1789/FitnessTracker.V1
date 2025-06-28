@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "n6CjEltV7Di3s6RuVZd1NR4YCzGTHeOgYWWbQZQhb8Y=",
+  "Hash": "l2Ub5fjMaATPnUpLBUxYATS84t2dBDYT46exh6RMYz8=",
   "Source": "FitnessTracker.V1",
   "BasePath": "/",
   "Mode": "Root",
@@ -31,8 +31,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "manifest",
-      "Fingerprint": "6pvqkry4ss",
-      "Integrity": "+iK4k73lM0xSmALXrQqTn0HzP3qNcIwiE6JKXBPCaxM=",
+      "Fingerprint": "1smj25kqi9",
+      "Integrity": "ETC8gpDzxTASm2jiEwtlEEkHNRNOlLv6E51QnZAFrlo=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "obj\\Debug\\net8.0\\blazor.boot.json"
@@ -241,8 +241,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "symbol",
-      "Fingerprint": "we5xo5dttx",
-      "Integrity": "qPU1qDRdIC8szF+VUU/oicAAKxOF+bKkGvQdpSl8ZM0=",
+      "Fingerprint": "uy3mr3a99r",
+      "Integrity": "antgnaNesTzSIFu9NLQlx1yDbbl0jEykuCqyOLBXWws=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "obj\\Debug\\net8.0\\FitnessTracker.V1.pdb"
@@ -262,8 +262,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "runtime",
-      "Fingerprint": "b6z35cfdn4",
-      "Integrity": "LSarwvvdV5DSP2X7c+654JtZvXnzn2n2DtW/ktmQpLg=",
+      "Fingerprint": "1xyj1wocf3",
+      "Integrity": "hdhbxFu3kVEyGbkBaa4ioKS0N40gpuECRw3uwkgiOTU=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\webcil\\FitnessTracker.V1.wasm"
@@ -6674,7 +6674,7 @@
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Runtime.Serialization.Formatters.wasm"
     },
     {
-      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-b6z35cfdn4.gz",
+      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-1xyj1wocf3.gz",
       "SourceId": "FitnessTracker.V1",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\",
@@ -6688,8 +6688,8 @@
       "RelatedAsset": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\FitnessTracker.V1.wasm",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "z6qmj4it5e",
-      "Integrity": "5e6UGjSRq03C/Yo/eSiJ7fzwvPLxuP8Ha41UikSlML4=",
+      "Fingerprint": "qg81hle6e6",
+      "Integrity": "GmZCr9qoi98lCIg5Uz2So3lN+Za/V20pCGqhro2Yv+w=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\FitnessTracker.V1.wasm"
@@ -7220,7 +7220,7 @@
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\Microsoft.IdentityModel.Abstractions.wasm"
     },
     {
-      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-6pvqkry4ss.gz",
+      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-1smj25kqi9.gz",
       "SourceId": "FitnessTracker.V1",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\",
@@ -7234,8 +7234,8 @@
       "RelatedAsset": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.boot.json",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "1wum27256w",
-      "Integrity": "H5zWbvCffLyVrRH1INg/I454XyeA0eUM189GR33q4mo=",
+      "Fingerprint": "xob5h21c3z",
+      "Integrity": "jyw6TQ9y25m62l1ublXFSEvfnuTlx3wiDUbh+19fKaA=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.boot.json"
@@ -8585,7 +8585,7 @@
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\Microsoft.Win32.Primitives.wasm"
     },
     {
-      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-we5xo5dttx.gz",
+      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-uy3mr3a99r.gz",
       "SourceId": "FitnessTracker.V1",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\",
@@ -8599,8 +8599,8 @@
       "RelatedAsset": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\FitnessTracker.V1.pdb",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "unkrjhgxg2",
-      "Integrity": "Wrg+l/b/shc7K5bAk31X0OB4C7uc3lAOUbjndM5xFM4=",
+      "Fingerprint": "mrvv4d2nnc",
+      "Integrity": "bpVroPer3cm2WsOSJNJ+BzGiIyJFRRuP9F5Yse872oo=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\bin\\Debug\\net8.0\\wwwroot\\_framework\\FitnessTracker.V1.pdb"
@@ -9607,8 +9607,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "BlazorServiceWorker",
       "AssetTraitValue": "ServiceWorkerJs",
-      "Fingerprint": "8dw1ecbt87",
-      "Integrity": "5Dex9KNrafryLkxkzhJT4DWFhygRpZpMOhO4di5ApoE=",
+      "Fingerprint": "vqun8yw2td",
+      "Integrity": "mbQIpyibIvO1ddzi8REXssk0YBKyNdto7fZ8u34VDz4=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "wwwroot\\service-worker.js"
@@ -9628,32 +9628,11 @@
       "RelatedAsset": "",
       "AssetTraitName": "BlazorServiceWorker",
       "AssetTraitValue": "ServiceWorkerManifest",
-      "Fingerprint": "xebkdx5a7f",
-      "Integrity": "yZfndZJtwKI4mD5atPH6Y+ytlYYhYdWDc8sQ9Dx1r5w=",
+      "Fingerprint": "aqykls24ms",
+      "Integrity": "Ls5/e4OQMAaxcPsW4WUNtJd5aGOlw7MvqmJvxHQmT2A=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "obj\\Debug\\net8.0\\service-worker\\service-worker-assets.js.build"
-    },
-    {
-      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Development.json",
-      "SourceId": "FitnessTracker.V1",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "appsettings.Development#[.{fingerprint}]?.json",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "WasmResource",
-      "AssetTraitValue": "settings",
-      "Fingerprint": "4lk8778dkf",
-      "Integrity": "OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E=",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\appsettings.Development.json"
     },
     {
       "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.json",
@@ -9675,27 +9654,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\appsettings.json"
-    },
-    {
-      "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Production.json",
-      "SourceId": "FitnessTracker.V1",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "appsettings.Production#[.{fingerprint}]?.json",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "WasmResource",
-      "AssetTraitValue": "settings",
-      "Fingerprint": "v1ugsmm8lf",
-      "Integrity": "IxBi8cK8jFdSv4K6LLuhoSfN5mN/6/CHG1IP0s8LGr0=",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\appsettings.Production.json"
     },
     {
       "Identity": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\app.css",
@@ -9991,7 +9949,46 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"+iK4k73lM0xSmALXrQqTn0HzP3qNcIwiE6JKXBPCaxM=\""
+          "Value": "\"ETC8gpDzxTASm2jiEwtlEEkHNRNOlLv6E51QnZAFrlo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 28 Jun 2025 01:16:24 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ETC8gpDzxTASm2jiEwtlEEkHNRNOlLv6E51QnZAFrlo="
+        }
+      ]
+    },
+    {
+      "Route": "_framework/blazor.boot.json",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-1smj25kqi9.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000101801894"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9822"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"jyw6TQ9y25m62l1ublXFSEvfnuTlx3wiDUbh+19fKaA=\""
         },
         {
           "Name": "Last-Modified",
@@ -10000,45 +9997,6 @@
         {
           "Name": "Cache-Control",
           "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-+iK4k73lM0xSmALXrQqTn0HzP3qNcIwiE6JKXBPCaxM="
-        }
-      ]
-    },
-    {
-      "Route": "_framework/blazor.boot.json",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-6pvqkry4ss.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.000101522843"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "9849"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"H5zWbvCffLyVrRH1INg/I454XyeA0eUM189GR33q4mo=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:40:45 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
         },
         {
           "Name": "Content-Encoding",
@@ -10054,19 +10012,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"+iK4k73lM0xSmALXrQqTn0HzP3qNcIwiE6JKXBPCaxM=\""
+          "Value": "W/\"ETC8gpDzxTASm2jiEwtlEEkHNRNOlLv6E51QnZAFrlo=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-+iK4k73lM0xSmALXrQqTn0HzP3qNcIwiE6JKXBPCaxM="
+          "Value": "sha256-ETC8gpDzxTASm2jiEwtlEEkHNRNOlLv6E51QnZAFrlo="
         }
       ]
     },
     {
       "Route": "_framework/blazor.boot.json.gz",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-6pvqkry4ss.gz",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\hqswnw7wg4-1smj25kqi9.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -10075,7 +10033,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "9849"
+          "Value": "9822"
         },
         {
           "Name": "Content-Type",
@@ -10083,11 +10041,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"H5zWbvCffLyVrRH1INg/I454XyeA0eUM189GR33q4mo=\""
+          "Value": "\"jyw6TQ9y25m62l1ublXFSEvfnuTlx3wiDUbh+19fKaA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:40:45 GMT"
+          "Value": "Fri, 27 Jun 2025 21:50:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10105,7 +10063,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-H5zWbvCffLyVrRH1INg/I454XyeA0eUM189GR33q4mo="
+          "Value": "sha256-jyw6TQ9y25m62l1ublXFSEvfnuTlx3wiDUbh+19fKaA="
         }
       ]
     },
@@ -11361,7 +11319,46 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"qPU1qDRdIC8szF+VUU/oicAAKxOF+bKkGvQdpSl8ZM0=\""
+          "Value": "\"antgnaNesTzSIFu9NLQlx1yDbbl0jEykuCqyOLBXWws=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 28 Jun 2025 01:16:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-antgnaNesTzSIFu9NLQlx1yDbbl0jEykuCqyOLBXWws="
+        }
+      ]
+    },
+    {
+      "Route": "_framework/FitnessTracker.V1.pdb",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-uy3mr3a99r.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000011759034"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "85040"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bpVroPer3cm2WsOSJNJ+BzGiIyJFRRuP9F5Yse872oo=\""
         },
         {
           "Name": "Last-Modified",
@@ -11370,45 +11367,6 @@
         {
           "Name": "Cache-Control",
           "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-qPU1qDRdIC8szF+VUU/oicAAKxOF+bKkGvQdpSl8ZM0="
-        }
-      ]
-    },
-    {
-      "Route": "_framework/FitnessTracker.V1.pdb",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-we5xo5dttx.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.000011758343"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "85045"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Wrg+l/b/shc7K5bAk31X0OB4C7uc3lAOUbjndM5xFM4=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:40:45 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
         },
         {
           "Name": "Content-Encoding",
@@ -11424,19 +11382,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"qPU1qDRdIC8szF+VUU/oicAAKxOF+bKkGvQdpSl8ZM0=\""
+          "Value": "W/\"antgnaNesTzSIFu9NLQlx1yDbbl0jEykuCqyOLBXWws=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-qPU1qDRdIC8szF+VUU/oicAAKxOF+bKkGvQdpSl8ZM0="
+          "Value": "sha256-antgnaNesTzSIFu9NLQlx1yDbbl0jEykuCqyOLBXWws="
         }
       ]
     },
     {
       "Route": "_framework/FitnessTracker.V1.pdb.gz",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-we5xo5dttx.gz",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\u4pa4pv044-uy3mr3a99r.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -11445,7 +11403,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "85045"
+          "Value": "85040"
         },
         {
           "Name": "Content-Type",
@@ -11453,11 +11411,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Wrg+l/b/shc7K5bAk31X0OB4C7uc3lAOUbjndM5xFM4=\""
+          "Value": "\"bpVroPer3cm2WsOSJNJ+BzGiIyJFRRuP9F5Yse872oo=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:40:45 GMT"
+          "Value": "Fri, 27 Jun 2025 21:50:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -11475,7 +11433,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-Wrg+l/b/shc7K5bAk31X0OB4C7uc3lAOUbjndM5xFM4="
+          "Value": "sha256-bpVroPer3cm2WsOSJNJ+BzGiIyJFRRuP9F5Yse872oo="
         }
       ]
     },
@@ -11498,11 +11456,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"LSarwvvdV5DSP2X7c+654JtZvXnzn2n2DtW/ktmQpLg=\""
+          "Value": "\"hdhbxFu3kVEyGbkBaa4ioKS0N40gpuECRw3uwkgiOTU=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:40:45 GMT"
+          "Value": "Sat, 28 Jun 2025 01:16:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -11512,18 +11470,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-LSarwvvdV5DSP2X7c+654JtZvXnzn2n2DtW/ktmQpLg="
+          "Value": "sha256-hdhbxFu3kVEyGbkBaa4ioKS0N40gpuECRw3uwkgiOTU="
         }
       ]
     },
     {
       "Route": "_framework/FitnessTracker.V1.wasm",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-b6z35cfdn4.gz",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-1xyj1wocf3.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000011534424"
+          "Quality": "0.000011534558"
         }
       ],
       "ResponseHeaders": [
@@ -11533,11 +11491,11 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "86696"
+          "Value": "86695"
         },
         {
           "Name": "ETag",
-          "Value": "\"5e6UGjSRq03C/Yo/eSiJ7fzwvPLxuP8Ha41UikSlML4=\""
+          "Value": "\"GmZCr9qoi98lCIg5Uz2So3lN+Za/V20pCGqhro2Yv+w=\""
         },
         {
           "Name": "Last-Modified",
@@ -11561,19 +11519,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"LSarwvvdV5DSP2X7c+654JtZvXnzn2n2DtW/ktmQpLg=\""
+          "Value": "W/\"hdhbxFu3kVEyGbkBaa4ioKS0N40gpuECRw3uwkgiOTU=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-LSarwvvdV5DSP2X7c+654JtZvXnzn2n2DtW/ktmQpLg="
+          "Value": "sha256-hdhbxFu3kVEyGbkBaa4ioKS0N40gpuECRw3uwkgiOTU="
         }
       ]
     },
     {
       "Route": "_framework/FitnessTracker.V1.wasm.gz",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-b6z35cfdn4.gz",
+      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\obj\\Debug\\net8.0\\compressed\\d72ztarqsa-1xyj1wocf3.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -11582,7 +11540,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "86696"
+          "Value": "86695"
         },
         {
           "Name": "Content-Type",
@@ -11590,7 +11548,7 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"5e6UGjSRq03C/Yo/eSiJ7fzwvPLxuP8Ha41UikSlML4=\""
+          "Value": "\"GmZCr9qoi98lCIg5Uz2So3lN+Za/V20pCGqhro2Yv+w=\""
         },
         {
           "Name": "Last-Modified",
@@ -11612,7 +11570,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-5e6UGjSRq03C/Yo/eSiJ7fzwvPLxuP8Ha41UikSlML4="
+          "Value": "sha256-GmZCr9qoi98lCIg5Uz2So3lN+Za/V20pCGqhro2Yv+w="
         }
       ]
     },
@@ -41094,7 +41052,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:50:13 GMT"
+          "Value": "Sat, 28 Jun 2025 01:15:59 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -41113,88 +41071,6 @@
         {
           "Name": "integrity",
           "Value": "sha256-bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA+/y27pjmYOFl8="
-        }
-      ]
-    },
-    {
-      "Route": "appsettings.Development.4lk8778dkf.json",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Development.json",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "449"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/json"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 16:10:37 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "4lk8778dkf"
-        },
-        {
-          "Name": "label",
-          "Value": "appsettings.Development.json"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E="
-        }
-      ]
-    },
-    {
-      "Route": "appsettings.Development.json",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Development.json",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "449"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/json"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 16:10:37 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-OL0Vq8PjCFhODdoc59AqUK6/N8gjl1cDwHCeqAYWq7E="
         }
       ]
     },
@@ -41221,7 +41097,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:50:13 GMT"
+          "Value": "Sat, 28 Jun 2025 01:15:59 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -41232,88 +41108,6 @@
         {
           "Name": "integrity",
           "Value": "sha256-bKaQn0lY7qBTHV25CP/ZN/A4RvMEkA+/y27pjmYOFl8="
-        }
-      ]
-    },
-    {
-      "Route": "appsettings.Production.json",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Production.json",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "98"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/json"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"IxBi8cK8jFdSv4K6LLuhoSfN5mN/6/CHG1IP0s8LGr0=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 17:31:34 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-IxBi8cK8jFdSv4K6LLuhoSfN5mN/6/CHG1IP0s8LGr0="
-        }
-      ]
-    },
-    {
-      "Route": "appsettings.Production.v1ugsmm8lf.json",
-      "AssetFile": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\appsettings.Production.json",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "98"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/json"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"IxBi8cK8jFdSv4K6LLuhoSfN5mN/6/CHG1IP0s8LGr0=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 17:31:34 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "v1ugsmm8lf"
-        },
-        {
-          "Name": "label",
-          "Value": "appsettings.Production.json"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-IxBi8cK8jFdSv4K6LLuhoSfN5mN/6/CHG1IP0s8LGr0="
         }
       ]
     },
@@ -42484,7 +42278,7 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"5Dex9KNrafryLkxkzhJT4DWFhygRpZpMOhO4di5ApoE=\""
+          "Value": "\"mbQIpyibIvO1ddzi8REXssk0YBKyNdto7fZ8u34VDz4=\""
         },
         {
           "Name": "Last-Modified",
@@ -42498,7 +42292,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-5Dex9KNrafryLkxkzhJT4DWFhygRpZpMOhO4di5ApoE="
+          "Value": "sha256-mbQIpyibIvO1ddzi8REXssk0YBKyNdto7fZ8u34VDz4="
         }
       ]
     },
@@ -42513,7 +42307,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "34608"
+          "Value": "34349"
         },
         {
           "Name": "Content-Type",
@@ -42521,11 +42315,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"yZfndZJtwKI4mD5atPH6Y+ytlYYhYdWDc8sQ9Dx1r5w=\""
+          "Value": "\"Ls5/e4OQMAaxcPsW4WUNtJd5aGOlw7MvqmJvxHQmT2A=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 27 Jun 2025 21:50:16 GMT"
+          "Value": "Sat, 28 Jun 2025 01:16:24 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -42535,7 +42329,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-yZfndZJtwKI4mD5atPH6Y+ytlYYhYdWDc8sQ9Dx1r5w="
+          "Value": "sha256-Ls5/e4OQMAaxcPsW4WUNtJd5aGOlw7MvqmJvxHQmT2A="
         }
       ]
     },
