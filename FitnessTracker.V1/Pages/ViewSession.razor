@@ -10,11 +10,15 @@
 @inject NavigationManager Nav
 @inject AuthService AuthService
 @inject HttpClient Http
+
 <h3>Visualiser une séance de programme</h3>
 
-<div class="row mb-3">
-    <div class="col-md-4">
-        <label>Programme :</label>
+<!-- -------------------------------------------------------------
+     SECTION 1 : Sélecteurs Programme / Semaine / Jour
+-------------------------------------------------------------- -->
+<div class="row gy-2 gx-3 mb-4">
+    <div class="col-12 col-md-4">
+        <label class="form-label">Programme :</label>
         <select class="form-select" @onchange="OnProgrammeSelected">
             <option value="">-- Sélectionner --</option>
             @foreach (var prog in Programmes)
@@ -26,8 +30,8 @@
 
     @if (SelectedPlanAvailable)
     {
-        <div class="col-md-4">
-            <label>Semaine :</label>
+        <div class="col-6 col-md-4">
+            <label class="form-label">Semaine :</label>
             <select class="form-select" @onchange="OnSemaineChanged">
                 @for (int i = 0; i < SelectedPlan?.Weeks.Count; i++)
                 {
@@ -36,8 +40,8 @@
             </select>
         </div>
 
-        <div class="col-md-4">
-            <label>Jour :</label>
+        <div class="col-6 col-md-4">
+            <label class="form-label">Jour :</label>
             <select class="form-select" @onchange="OnJourChanged">
                 @for (int j = 1; j <= 7; j++)
                 {
@@ -50,168 +54,139 @@
 
 @if (SelectedPlanAvailable)
 {
-    <div class="mb-3">
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">
-            Supprimer ce programme
-        </button>
-    </div>
+    <button class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#confirmModal">
+        Supprimer ce programme
+    </button>
 }
 
+<!-- -------------------------------------------------------------
+     SECTION 2 : Bouton kg / lb + Cartes exercices
+-------------------------------------------------------------- -->
 @if (Exercises.Any())
 {
-    <h5 class="mt-3">Séance du programme sélectionné</h5>
-    <div class="mb-3">
-        <button class="btn btn-outline-primary" @onclick="ToggleUnite">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+        <h5 class="m-0">Séance du programme sélectionné</h5>
+        <button class="btn btn-sm btn-outline-primary" @onclick="ToggleUnite">
             Affichage : @(AfficherEnLb ? "livres (lb)" : "kilos (kg)")
         </button>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Exercice</th>
-                <th>Séries</th>
-                <th>Reps</th>
-                <th>Repos (s)</th>
-                <th>Poids</th>
-                <th>% 1RM</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ex in Exercises)
-            {
-                <tr class="@((ex.ObjectifAtteint ? "table-success" : ""))">
-                    @* <td><a href="#" @onclick="() => ProposerRemplacement(ex)">@ex.ExerciseName</a></td> *@
-                    <td>
+
+    <!-- Grille responsive -->
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        @foreach (var ex in Exercises)
+        {
+            @* Marquage “réussi” sur la bordure *@
+            var borderClass = ex.ObjectifAtteint ? "border-success" : "";
+
+            <div class="col">
+                <div class="card h-100 @borderClass">
+                    <!-- HEADER -->
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">@ex.ExerciseName</span>
+
                         <a href="#"
-                        class="text-decoration-none"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalRemplacement"
-                        @onclick="() => ProposerRemplacement(ex)">
-                            @ex.ExerciseName
+                           class="btn btn-sm btn-link text-decoration-none"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalRemplacement"
+                           @onclick="() => ProposerRemplacement(ex)">
+                            changer
                         </a>
-                    </td>
-                    <td>@ex.Series</td>
-                    <td>@ex.Repetitions</td>
-                    <td>@ex.RestTimeSeconds</td>
-                    <td>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="card-body small">
+                        <p class="mb-2">
+                            <strong>@ex.Series × @ex.Repetitions</strong> &mdash;
+                            Repos&nbsp;: @ex.RestTimeSeconds&nbsp;s
+                        </p>
+
+                        @* -------- Poids + suffixe ---------- *@
                         @{
-                            var poidsAffiche = ex.IsLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
                             var suffix = ex.IsLb ? "lb" : "kg";
                         }
-                        <input type="number"
-                        class="form-control"
-                        step="0.5"
-                        @bind="ex.PoidsAffiche"
-                        @key="AfficherEnLb.ToString() + ex.ExerciseName" />
-                        <small class="text-muted">@suffix</small>
-                    </td>
-                    <td>
-                        @{
-                            var objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
-                            var objectifAffiché = AfficherEnLb
-                            ? Math.Round(ex.Objectif / 0.453592, 1) + " lb"
-                            : Math.Round(ex.Objectif, 1) + " kg";
-                        }
-                        @objectifAffiché
-                    </td>
-                    @* <td>
-                        @{
-                            var obj = ex.IsLb ? Math.Round(ex.Objectif / 0.453592, 1) + " lb"
-                            : Math.Round(ex.Objectif, 1) + " kg";
-                        }
-                        @obj
-                    </td> *@
-                    <td>
-                        <button class="btn btn-sm btn-warning" @onclick="() => MarquerAtteint(ex)">Non atteint</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <input type="number"
+                                   class="form-control form-control-sm flex-grow-1"
+                                   style="max-width:120px"
+                                   step="0.5"
+                                   @bind="ex.PoidsAffiche"
+                                   @key="AfficherEnLb.ToString() + ex.ExerciseName" />
+                            <span class="text-muted">@suffix</span>
+
+                            @if (ex.Pourcentage1RM > 0)
+                            {
+                                <span class="badge rounded-pill bg-info">@ex.Pourcentage1RM% 1RM</span>
+                            }
+                        </div>
+
+                        <button class="btn btn-sm btn-outline-success w-100"
+                                @onclick="() => MarquerAtteint(ex)">
+                            @((ex.ObjectifAtteint ? "Objectif atteint ✅" : "Marquer atteint"))
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 
+<!-- -------------------------------------------------------------
+     SECTION 3 : Actions globales
+-------------------------------------------------------------- -->
 @if (SelectedPlanAvailable)
 {
-    <button class="btn btn-success" @onclick="SauvegarderSeance">
+    <button class="btn btn-success mt-4 me-2" @onclick="SauvegarderSeance">
         Enregistrer les performances
     </button>
-}
-<br />
-@if (SelectedPlanAvailable)
-{
-    <button class="btn btn-outline-success mt-2" @onclick="SauvegarderProgrammeModifié">
+
+    <button class="btn btn-outline-success mt-4" @onclick="SauvegarderProgrammeModifié">
         💾 Sauvegarder les modifications du programme
     </button>
 }
-<!-- Modal de confirmation -->
+
+<!-- -------------------------------------------------------------
+     SECTION 4 : Modales (confirmation suppression + remplacement)
+-------------------------------------------------------------- -->
+<!-- Modal confirmation suppression -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="confirmModalLabel">Confirmer la suppression</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Êtes-vous sûr de vouloir supprimer ce programme ? Cette action est irréversible.
+                Êtes-vous sûr de vouloir supprimer ce programme&nbsp;?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmerSuppression">Oui, supprimer</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-danger" @onclick="ConfirmerSuppression">Oui, supprimer</button>
             </div>
         </div>
     </div>
 </div>
 
-
-
-@* <div class="modal fade" id="modalRemplacement" tabindex="-1" aria-labelledby="modalRemplacementLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalRemplacementLabel">🔁 Remplacer l'exercice</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-                @if (ExerciceCible is not null)
-                {
-                    <p>Exercice actuel : <strong>@ExerciceCible.ExerciseName</strong></p>
-                    <p>Suggestions :</p>
-                    @foreach (var s in Suggestions)
-                    {
-                        <button class="btn btn-outline-primary w-100 mb-2" @onclick="@(() => RemplacerExercice(s))">
-                            🔁 @s
-                        </button>
-
-                    }
-                }
-            </div>
-        </div>
-    </div>
-</div> *@
-<!-- Modal de remplacement -->
-<!-- Modal de remplacement sans JS -->
-<!-- Modal de remplacement -->
+<!-- Modal remplacement exercice -->
 <div class="modal fade" id="modalRemplacement" tabindex="-1" aria-labelledby="modalRemplacementLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="modalRemplacementLabel">Remplacer l'exercice</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 @if (ExerciceCible is not null)
                 {
-                    <p>Exercice actuel : <strong>@ExerciceCible.ExerciseName</strong></p>
-                    <p>Suggestions :</p>
+                    <p>Exercice actuel&nbsp;: <strong>@ExerciceCible.ExerciseName</strong></p>
+                    <p class="mb-2">Suggestions&nbsp;:</p>
                     @foreach (var s in Suggestions)
                     {
                         <div class="d-flex justify-content-between align-items-center mb-2 px-2">
                             <span>@s</span>
-                            <button type="button"
-                            class="btn btn-sm btn-outline-success"
-                            data-bs-dismiss="modal"
-                            @onclick="() => ConfirmerRemplacement(s)">
+                            <button class="btn btn-sm btn-outline-success"
+                                    data-bs-dismiss="modal"
+                                    @onclick="() => ConfirmerRemplacement(s)">
                                 ✅ Sélectionner
                             </button>
                         </div>
@@ -221,6 +196,12 @@
         </div>
     </div>
 </div>
+
+@* -------------------------------------------------------------
+   SECTION 5 : Code C# (inchangé sauf suffix & mobile tweaks)
+------------------------------------------------------------- *@
+
+
 
 @code {
     private List<ProgrammeModel> Programmes = new();

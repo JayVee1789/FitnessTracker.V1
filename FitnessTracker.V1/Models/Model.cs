@@ -9,7 +9,13 @@
         {
             Force,
             Endurance,
-            Hypertrophy
+            Hypertrophy,
+            Fat_loss,
+            Yoga,
+            Mobility,
+            Pilates,
+            Strength
+
         }
 
         public enum UserLevel
@@ -26,7 +32,11 @@
             Half,
             PushPull,
             Mixte,
-            Rest
+            Rest,
+            Mobility,
+            Yoga,
+            Pilates
+
         }
 
         // ================= MODELES =================

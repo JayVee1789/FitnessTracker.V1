@@ -54,27 +54,8 @@
         <!-- Sidebar fixe (desktop) -->
         <aside class="d-none d-md-flex flex-column bg-light border-end overflow-auto"
                style="width:260px;min-height:0;">
-           @*  <NavMenu /> *@
-            @if (AuthService.IsAuthenticated)
-            {
-                <nav class="bottom-nav d-md-none">
-                    <NavLink href="/view-session" Match="NavLinkMatch.All" class="bottom-item">
-                        <i class="bi bi-house fs-5"></i><span class="small">Home</span>
-                    </NavLink>
-                    <NavLink href="/analyse" class="bottom-item">
-                        <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>
-                    </NavLink>
-                    <NavLink href="/generate-programme" class="bottom-item">
-                        <i class="bi bi-stars fs-5"></i><span class="small">Creer programme</span>
-                    </NavLink>
-                    <NavLink href="/mon-profil" class="bottom-item">
-                        <i class="bi bi-person fs-5"></i><span class="small">Profil</span>
-                    </NavLink>
-                    <NavLink href="/create-programme" class="bottom-item">
-                        <i class="bi bi-person fs-5"></i><span class="small">Create</span>
-                    </NavLink>
-                </nav>
-            }
+            <NavMenu />
+           
         </aside>
 
         <!-- Contenu principal -->

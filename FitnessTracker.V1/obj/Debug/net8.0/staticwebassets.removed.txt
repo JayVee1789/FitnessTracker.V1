@@ -1,2 +1,0 @@
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\wwwroot\appsettings.Development.json
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\wwwroot\appsettings.Production.json

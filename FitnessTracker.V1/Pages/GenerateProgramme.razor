@@ -1,6 +1,5 @@
 ﻿@page "/generate-programme"
 @using FitnessTracker.V1.Models
-
 @inject ProgrammeGeneratorService Generator
 @inject HttpClient Http
 @inject SupabaseService2 SupabaseService
@@ -21,32 +20,32 @@ else
     {
         <div class="card my-3">
             <div class="card-header bg-primary text-white">
-                <strong>Semaine @week.WeekNumber</strong> — Charge: @week.ChargeIncrementPercent%
+                <strong>Semaine @week.WeekNumber</strong> — Charge : @week.ChargeIncrementPercent%
             </div>
             <div class="card-body">
                 <p>
-                    <strong>Séries:</strong> @week.SeriesWeek |
-                    <strong>Reps:</strong> @week.RepetitionsWeek |
-                    <strong>Repos:</strong> @week.RestTimeWeek s
+                    <strong>Séries :</strong> @week.SeriesWeek |
+                    <strong>Reps :</strong> @week.RepetitionsWeek |
+                    <strong>Repos :</strong> @week.RestTimeWeek s
                 </p>
 
                 @foreach (var day in week.Days.OrderBy(d => d.DayIndex))
                 {
                     <div class="mb-3">
-                        <h5>Jour @day.DayIndex - @day.TypeProgramme</h5>
+                        <h5>Jour @day.DayIndex</h5>
                         @if (day.IsRest)
                         {
                             <em>Repos</em>
                         }
                         else
                         {
-                            <ul>
+                            <ul class="list-group list-group-flush">
                                 @foreach (var ex in day.Exercises)
                                 {
-                                    <li>
+                                    <li class="list-group-item">
                                         <strong>@ex.ExerciseName</strong>
-                                        <small>
-                                            (@ex.Series x @ex.Repetitions | @ex.RestTimeSeconds s | @ex.Pourcentage1RM% 1RM
+                                        <small class="text-muted">
+                                            (@ex.Series × @ex.Repetitions | @ex.RestTimeSeconds s | @ex.Pourcentage1RM% 1RM
                                             @(ex.IsSuperset ? "| Superset" : ""))
                                         </small>
                                     </li>
@@ -58,93 +57,169 @@ else
             </div>
         </div>
     }
-    <button class="btn btn-primary mt-3" @onclick="() => EnregistrerProgrammeAsync(plan)">
+
+    <button class="btn btn-primary mt-3" @onclick="OpenSaveModal">
         Enregistrer ce programme
     </button>
 }
 
-@code {
+@* ---------- MODAL NOM DU PROGRAMME ---------- *@
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nom du programme</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Veuillez saisir un nom :</label>
+                        <input class="form-control" @bind="newProgrammeName" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Annuler</button>
+                    <button class="btn btn-primary" @onclick="ConfirmSaveAsync">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code
+{
+    // ------------- State -------------
     private WorkoutPlan? plan;
     private List<ExerciseDefinition> exerciseList = new();
-    protected override void OnInitialized()
-    {
-        Console.WriteLine("🔥 OnInitialized() appelé");
-    }
+    private bool showModal = false;
+    private string newProgrammeName = "Programme glute focus";
+
+    // ------------- Cycle de vie -------------
+    protected override void OnInitialized() => Console.WriteLine("🔥 OnInitialized() appelé");
+
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("🛠️ OnInitializedAsync lancé");
-        // var user = Supabase.Auth.CurrentUser;
-        // if (user is null)
-        // {
-        //     Console.WriteLine("❌ Utilisateur non connecté, redirection");
-        //     Nav.NavigateTo("/login");
-        //     return;
-        // }
-        // var exos = new List<ExerciseDefinition>
-        // {
-        //     new() { Id = 1, Name = "Bench Press", Category = "Chest", Equipment = "Barbell", Description = "Compound" },
-        //     new() { Id = 2, Name = "Pull-Up", Category = "Back", Equipment = "Body Weight", Description = "Compound" },
-        //     new() { Id = 3, Name = "Squat", Category = "Legs", Equipment = "Barbell", Description = "Compound" },
-        //     new() { Id = 4, Name = "Overhead Press", Category = "Shoulders", Equipment = "Dumbbell", Description = "Compound" },
-        //     new() { Id = 5, Name = "Barbell Curl", Category = "Biceps", Equipment = "Barbell", Description = "Single-Joint" },
-        //     new() { Id = 6, Name = "Triceps Dips", Category = "Triceps", Equipment = "Body Weight", Description = "Single-Joint" }
-        // };
 
-        //json
-        // Charger les exercices depuis le fichier JSON
-        try{
-            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("data/ExercicesListeLocal.json")
-                                  ?? new();
-        }catch(Exception ex)
+        // 1. Charger la banque d’exercices JSON
+        try
         {
-            Console.WriteLine(  ex);
+            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("data/ExercicesListeLocal.json") ?? new();
+        }
+        catch (Exception ex)
+        {
             Console.WriteLine("Erreur chargement JSON exercices : " + ex.Message);
         }
-        
 
-        // var profile = new UserProfile
-        //     {
-        //         Age = 28,
-        //         Level = UserLevel.Intermediaire,
-        //         Objective = TrainingObjective.Hypertrophy,
-        //         SeancesPerWeek = 3,
-        //         ProgramDurationMonths = 1,
-        //         WantsSuperset = false,
-        //         BodyweightOnly = false,
-        //         PathologieMuscle = "",
-        //         PriorityMuscle = ""
-        //     };
-
-         var profile = await profileService.GetOrCreateUserProfileAsync();
-       
-
-        plan = Generator.Generate("TBT", profile, exerciseList);
+        // 2. Récupérer (ou créer) le profil utilisateur
+        var profile = await profileService.GetOrCreateUserProfileAsync();
+        // 3. Choix automatique de la stratégie
+        var strategy = PickProgrammeStrategy(profile);
+        // 3. Générer le plan (ici stratégie GluteFocus)
+        plan = Generator.Generate(strategy, profile, exerciseList);
     }
 
-    private async Task EnregistrerProgrammeAsync(WorkoutPlan plan)
+    // ------------- UI helpers -------------
+    private void OpenSaveModal()
     {
-        
+        newProgrammeName = $"Programme {DateTime.Today:dd/MM}-{plan?.TotalWeeks}w";
+        showModal = true;
+    }
+
+    private void CloseModal() => showModal = false;
+
+    private async Task ConfirmSaveAsync()
+    {
+        if (plan == null) return;
+
+        await EnregistrerProgrammeAsync(plan, newProgrammeName);
+        CloseModal();
+    }
+
+    // ------------- Persistance -------------
+    private async Task EnregistrerProgrammeAsync(WorkoutPlan planToSave, string nom)
+    {
         if (!AuthService.IsAuthenticated)
         {
             Nav.NavigateTo("/login");
             return;
         }
-       
 
         var model = new ProgrammeModel
             {
                 Id = Guid.NewGuid(),
-                Nom = "Programme TBT généré",
+                Nom = nom,
                 DateDebut = DateTime.Today,
-                Contenu = JsonSerializer.Serialize(plan)
-               
+                Contenu = JsonSerializer.Serialize(planToSave),
+                UserId = Supabase.Auth.CurrentUser?.Id ?? "",
+                Source = "auto"
             };
 
         bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
+
         if (ok)
         {
-            Console.WriteLine("✅ Programme généré enregistré dans Supabase");
+            Console.WriteLine("✅ Programme enregistré dans Supabase");
             Nav.NavigateTo("/view-session");
         }
+        else
+        {
+            Console.WriteLine("❌ Erreur lors de l’enregistrement du programme");
+        }
+    }
+    public static string PickProgrammeStrategy(UserProfile p)
+    {
+        // 1. Priorité aux pathologies / priorités musculaires explicites ↓
+        if (!string.IsNullOrWhiteSpace(p.PriorityMuscle) &&
+            p.PriorityMuscle.Contains("glute", StringComparison.OrdinalIgnoreCase))
+            return "GluteFocus";                    // Priorité fessiers
+
+        // 2. Objectif principal ↓
+        switch (p.Objective)
+        {
+            case TrainingObjective.Strength:
+                // Force : niveau + nbre de séances
+                return p.Level switch
+                {
+                    UserLevel.Debutant => "Strength",        // 3 séances 5×5
+                    UserLevel.Intermediaire => "StrengthInt",     // 3 séances mix 6-4-3
+                    UserLevel.Avance => "StrengthAdv",     // 4 séances + peaking
+                    _ => "Strength"
+                };
+
+            case TrainingObjective.Hypertrophy:
+                // 2-3 séances ⇒ TBT, 4 ⇒ PushPull, 5+ ⇒ Split
+                return p.SeancesPerWeek switch
+                {
+                    <= 3 => "TBT",
+                    4 => "PushPull4",
+                    _ => "Split5"
+                };
+
+            case TrainingObjective.Fat_loss:
+                return "FatLoss";
+
+            case TrainingObjective.Mobility:
+                return p.Level == UserLevel.Avance ? "MobilityAdv"
+                     : p.Level == UserLevel.Intermediaire ? "MobilityInt"
+                     : "Mobility";
+
+            case TrainingObjective.Yoga:
+                return p.Level == UserLevel.Avance ? "YogaAdv"
+                     : p.Level == UserLevel.Intermediaire ? "YogaInt"
+                     : "Yoga";
+
+            case TrainingObjective.Pilates:
+                return p.Level == UserLevel.Avance ? "PilatesAdv"
+                     : p.Level == UserLevel.Intermediaire ? "PilatesInt"
+                     : "Pilates";
+        }
+
+        // 3. Fallback par défaut
+        return "TBT";
     }
 }
