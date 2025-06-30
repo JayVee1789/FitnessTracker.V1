@@ -1,4 +1,5 @@
 ﻿
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
 using static FitnessTracker.V1.Models.Model;
 
 namespace FitnessTracker.V1.Services.ProgrammeGeneration
@@ -21,6 +22,13 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
             RegisterStrategy(new StrengthAdvancedProgrammeStrategy());
             RegisterStrategy(new MobilityAdvancedProgrammeStrategy());
             RegisterStrategy(new PilatesAdvancedProgrammeStrategy());
+            RegisterStrategy(new WaterburyProgrammeStrategy());
+            RegisterStrategy(new BradPittSnatchProgrammeStrategy());
+            RegisterStrategy(new DrakeProgrammeStrategy());
+            RegisterStrategy(new MeganStallionProgrammeStrategy());
+            RegisterStrategy(new RockProgrammeStrategy());
+            RegisterStrategy(new ArnoldProgrammeStrategy());
+            RegisterStrategy(new CalisthenicsProgrammeStrategy());
         }
         public void RegisterStrategy(IProgrammeStrategy strategy)
         {

@@ -181,6 +181,13 @@ else
         // 2. Objectif principal ↓
         switch (p.Objective)
         {
+
+            case TrainingObjective.Glutes:
+                return "GluteFocus";
+            
+            case TrainingObjective.Calistenie:
+                return "Calisthenics";
+
             case TrainingObjective.Strength:
                 // Force : niveau + nbre de séances
                 return p.Level switch
@@ -217,6 +224,7 @@ else
                 return p.Level == UserLevel.Avance ? "PilatesAdv"
                      : p.Level == UserLevel.Intermediaire ? "PilatesInt"
                      : "Pilates";
+            
         }
 
         // 3. Fallback par défaut

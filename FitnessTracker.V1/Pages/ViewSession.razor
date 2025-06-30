@@ -94,20 +94,29 @@
                     </div>
 
                     <!-- BODY -->
-                    <div class="card-body small">
+                    <div class="card-body text-center">
                         <p class="mb-2">
                             <strong>@ex.Series × @ex.Repetitions</strong> &mdash;
                             Repos&nbsp;: @ex.RestTimeSeconds&nbsp;s
                         </p>
-
+                        <!-- Objectif affiché  (RE-AJOUT) -->
+                        @{
+                            var objText = AfficherEnLb
+                            ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                            : $"{Math.Round(ex.Objectif, 1)} kg";
+                        }
+                        <p class="mb-2">
+                            <span class="text-secondary">Objectif&nbsp;:</span>
+                            <strong>@objText</strong>
+                        </p>
                         @* -------- Poids + suffixe ---------- *@
                         @{
                             var suffix = ex.IsLb ? "lb" : "kg";
                         }
 
-                        <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
                             <input type="number"
-                                   class="form-control form-control-sm flex-grow-1"
+                                   class="form-control form-control-sm "
                                    style="max-width:120px"
                                    step="0.5"
                                    @bind="ex.PoidsAffiche"
@@ -134,7 +143,7 @@
 <!-- -------------------------------------------------------------
      SECTION 3 : Actions globales
 -------------------------------------------------------------- -->
-@if (SelectedPlanAvailable)
+@* @if (SelectedPlanAvailable)
 {
     <button class="btn btn-success mt-4 me-2" @onclick="SauvegarderSeance">
         Enregistrer les performances
@@ -143,8 +152,13 @@
     <button class="btn btn-outline-success mt-4" @onclick="SauvegarderProgrammeModifié">
         💾 Sauvegarder les modifications du programme
     </button>
+} *@
+@if (SelectedPlanAvailable)
+{
+    <button class="btn btn-success mt-4" @onclick="SaveEverything">
+        💾 Enregistrer
+    </button>
 }
-
 <!-- -------------------------------------------------------------
      SECTION 4 : Modales (confirmation suppression + remplacement)
 -------------------------------------------------------------- -->
@@ -220,6 +234,9 @@
     List<ExerciseDefinition> allExercises = new();
     private bool SelectedPlanAvailable => SelectedPlan is not null;
 
+
+   
+   
     protected override async Task OnInitializedAsync()
     {
         if (!AuthService.IsAuthenticated)
@@ -442,28 +459,7 @@
         }
     }
 
-    // private async Task ProposerRemplacement(ExerciceJour ex)
-    // {
-    //     ExerciceCible = ex;
-    //     List<ExerciseDefinition> allExercises = new();
-
-
-    //     var version = DateTime.Now.Ticks;
-    //     allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
-
-    //     var tous = new List<string>
-    //     {
-    //         "Pompes", "Tractions", "Développé militaire", "Rowing barre", "Curl biceps", "Hip Thrust"
-    //     };
-
-    //     Suggestions = tous
-    //         .Where(e => e != ex.ExerciseName)
-    //         .OrderBy(_ => Guid.NewGuid())
-    //         .Take(2)
-    //         .ToList();
-
-    //     // Pas besoin de JS ici, le bouton dans le tableau ouvre le modal
-    // }
+  
     private async Task ProposerRemplacement(ExerciceJour ex)
     {
         ExerciceCible = ex;
@@ -492,16 +488,6 @@
         Console.WriteLine($"🔁 Suggestions trouvées pour {original.Name} : {string.Join(", ", Suggestions)}");
     }
 
-
-    // private void ConfirmerRemplacement(string nouveau)
-    // {
-    //     if (ExerciceCible is null) return;
-
-    //     ExerciceCible.ExerciseName = nouveau;
-    //     ExerciceCible = null;
-
-    //     StateHasChanged();
-    // }
 
     private async Task ConfirmerRemplacement(string nouveau)
     {
@@ -698,9 +684,14 @@
     private async void ToggleUnite()
     {
         AfficherEnLb = !AfficherEnLb;
-
+        
+        foreach (var ex in Exercises)        // 2) on reflète le choix
+            ex.IsLb = AfficherEnLb;
+        
+        StateHasChanged();
     }
-
+   
+   
     /// <summary>
     /// Ajoute un pourcentage au poids de départ.
     /// Exemple : poids = 100, pourcentage = 2.5  → 102.5
@@ -724,8 +715,22 @@
         if (double.TryParse(val, out double result))
             ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
     }
+    private bool HasPerformanceChanged() => Exercises.Any(e => e.IsDirty);
 
+    private async Task SaveEverything()
+    {
+        if (HasPerformanceChanged())
+        {
+            await SauvegarderSeance();          // ← enregistre Poids + programme
+            foreach (var ex in Exercises) ex.AcceptChanges();
+        }
+        else
+        {
+            await SauvegarderProgrammeModifié(); // ← programme seul
+        }
 
+        await JS.InvokeVoidAsync("showToast", "✅ Données enregistrées");
+    }
     public class ExerciceJour
     {
         public string ExerciseName { get; set; } = "";
@@ -738,14 +743,34 @@
         public bool ObjectifAtteint { get; set; } = false;
         public bool IsLb { get; set; } = false;
         public bool RefreshFlag { get; set; } = false;
+        public bool IsDirty { get; private set; } = false;
         public double PoidsAffiche
         {
             get => ViewSession.AfficherEnLb
             ? Math.Round(PoidsUtilisé / 0.453592, 1)
             : Math.Round(PoidsUtilisé, 1);
-            set => PoidsUtilisé = ViewSession.AfficherEnLb
-                ? Math.Round(value * 0.453592, 2)
-                : Math.Round(value, 1);
+            set
+            {
+                double newKg = ViewSession.AfficherEnLb
+                    ? Math.Round(value * 0.453592, 2)
+                    : value;
+
+                if (!newKg.Equals(PoidsUtilisé))          // ← comparaison
+                {
+                    PoidsUtilisé = newKg;
+                    IsDirty = true;                       // ← on marque sale
+                }
+            }
         }
+
+        /* ─── méthode pour (dé)marquer l’objectif ─── */
+        public void ToggleObjectif()
+        {
+            ObjectifAtteint = !ObjectifAtteint;
+            IsDirty = true;
+        }
+
+        /* ─── réinitialisation après sauvegarde ─── */
+        public void AcceptChanges() => IsDirty = false;
     }
 }

@@ -8,13 +8,13 @@
         <div class="container-fluid">
 
             <!-- Burger (mobile) -->
-            <button class="btn btn-primary d-md-none"
+           @*  <button class="btn btn-primary d-md-none"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNav"
                     aria-label="Menu">
                 <i class="bi bi-list fs-3"></i>
-            </button>
+            </button> *@
 
             <span class="navbar-brand ms-2">FitnessTracker</span>
 
@@ -37,7 +37,7 @@
     </nav>
 
     <!-- ░▒▓  OFFCANVAS NAV (mobile) ▓▒░ -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav">
+   @*  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav">
         <div class="offcanvas-header bg-primary text-white">
             <h5 class="offcanvas-title">Menu</h5>
             <button type="button" class="btn-close btn-close-white"
@@ -46,7 +46,7 @@
         <div class="offcanvas-body p-0 overflow-auto" style="min-height:0;">
             <NavMenu />
         </div>
-    </div>
+    </div> *@
 
     <!-- ░▒▓  GRILLE  ▓▒░ -->
     <div class="d-flex flex-grow-1" style="min-height:0;">
@@ -69,8 +69,8 @@
     @if (AuthService.IsAuthenticated)
     {
         <nav class="bottom-nav d-md-none">
-            <NavLink href="/view-session" Match="NavLinkMatch.All" class="bottom-item">
-                <i class="bi bi-house fs-5"></i><span class="small">Home</span>
+            <NavLink href="/view-session" class="bottom-item">
+                <i class="bi bi-house fs-5"></i><span class="small">Entrainement</span>
             </NavLink>
             <NavLink href="/analyse" class="bottom-item">
                 <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>

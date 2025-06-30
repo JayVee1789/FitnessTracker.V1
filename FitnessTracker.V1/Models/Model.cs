@@ -14,7 +14,10 @@
             Yoga,
             Mobility,
             Pilates,
-            Strength
+            Strength,
+            SuperStar,
+            Glutes,
+            Calistenie
 
         }
 
@@ -35,7 +38,9 @@
             Rest,
             Mobility,
             Yoga,
-            Pilates
+            Pilates,
+            Cardio,
+            Core
 
         }
 
