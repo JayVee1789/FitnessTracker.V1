@@ -1,0 +1,32 @@
+﻿@namespace FitnessTracker.V1.Components
+@using BlazorBootstrap
+
+<!-- Canvas du graphique -->
+<LineChart @ref="chart" Width="600" Height="350" />
+
+@code
+{
+    private LineChart? chart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || chart is null) return;
+
+        /* ─── données de démonstration ─── */
+        var labels = new List<string> { "Lun", "Mar", "Mer", "Jeu", "Ven" };
+
+        var dataset = new LineChartDataset
+            {
+                Label = "Démo",
+                Data = new List<double?> { 50, 75, 60, 90, 100 },
+                BackgroundColor = "#3b8bff",
+                BorderColor = "#3b8bff",
+                BorderWidth = 2
+            };
+
+        var data = new ChartData { Labels = labels, Datasets = new() { dataset } };
+        var options = new LineChartOptions { Responsive = true };
+
+        await chart.InitializeAsync(data, options);
+    }
+}

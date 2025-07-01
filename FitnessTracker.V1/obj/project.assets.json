@@ -2,6 +2,24 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "Blazor.Bootstrap/3.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "8.0.11"
+        },
+        "compile": {
+          "lib/net8.0/BlazorBootstrap.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/BlazorBootstrap.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazor.Bootstrap.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazor.Bootstrap.props": {}
+        }
+      },
       "Blazored.LocalStorage/4.5.0": {
         "type": "package",
         "dependencies": {
@@ -862,6 +880,24 @@
       }
     },
     "net8.0/browser-wasm": {
+      "Blazor.Bootstrap/3.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "8.0.11"
+        },
+        "compile": {
+          "lib/net8.0/BlazorBootstrap.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/BlazorBootstrap.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazor.Bootstrap.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazor.Bootstrap.props": {}
+        }
+      },
       "Blazored.LocalStorage/4.5.0": {
         "type": "package",
         "dependencies": {
@@ -1723,6 +1759,36 @@
     }
   },
   "libraries": {
+    "Blazor.Bootstrap/3.3.1": {
+      "sha512": "YJUyRsTYXr2SbDugC6zWSr2dz2hPK+8BYdigZ6oI0ERkFWkebzxMsDlF3eiomqBnVuG/PBB5KUfgw4Vp2LBCHA==",
+      "type": "package",
+      "path": "blazor.bootstrap/3.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "128X128.png",
+        "README.md",
+        "blazor.bootstrap.3.3.1.nupkg.sha512",
+        "blazor.bootstrap.nuspec",
+        "build/Blazor.Bootstrap.props",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/Blazor.Bootstrap.props",
+        "buildTransitive/Blazor.Bootstrap.props",
+        "lib/net6.0/BlazorBootstrap.dll",
+        "lib/net8.0/BlazorBootstrap.dll",
+        "lib/net9.0/BlazorBootstrap.dll",
+        "staticwebassets/Blazor.Bootstrap.7t9tbfaemk.bundle.scp.css",
+        "staticwebassets/blazor.bootstrap.css",
+        "staticwebassets/blazor.bootstrap.js",
+        "staticwebassets/blazor.bootstrap.pdf.js",
+        "staticwebassets/blazor.bootstrap.sortable-list.js",
+        "staticwebassets/blazor.bootstrap.theme-switcher.js",
+        "staticwebassets/icon/128X128.png",
+        "staticwebassets/pdfjs-4.0.379.min.js",
+        "staticwebassets/pdfjs-4.0.379.worker.min.js"
+      ]
+    },
     "Blazored.LocalStorage/4.5.0": {
       "sha512": "6nZuJwA7zNIKx83IsObiHXZb09ponJOpCClU3en+hI8ZFvrOKXeOw+H7TegQZQrvdR1n9fkrVkEBQZg8vx6ZTw==",
       "type": "package",
@@ -3161,6 +3227,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Blazor.Bootstrap >= 3.3.1",
       "Blazored.LocalStorage >= 4.5.0",
       "Microsoft.AspNetCore.Components.WebAssembly >= 8.0.17",
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 8.0.17",
@@ -3221,6 +3288,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Blazor.Bootstrap": {
+            "target": "Package",
+            "version": "[3.3.1, )"
+          },
           "Blazored.LocalStorage": {
             "target": "Package",
             "version": "[4.5.0, )"

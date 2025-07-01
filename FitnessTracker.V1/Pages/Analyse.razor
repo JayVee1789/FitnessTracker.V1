@@ -5,9 +5,9 @@
 
 <h3>Analyse des Performances</h3>
 
-@if (analyse == null)
+@if (analyse is null)
 {
-    <p>Chargement...</p>
+    <p>Chargement…</p>
 }
 else
 {
@@ -31,14 +31,25 @@ else
             </ul>
         </div>
     </div>
+
+    <hr />
+
+    <TestLineChart />
+
+    <!-- 📊 Intégration du composant graphique -->
+    if (analyse != null && entries.Any())
+    {
+        <GraphiqueLine Entries="entries" Analyse="analyse" Width="800" Height="400" />
+    }
 }
 
 @code {
+    private List<PoidsEntry> entries = new();
     private PoidsAnalysisResult? analyse;
 
     protected override async Task OnInitializedAsync()
     {
-        var entries = await PoidsService.GetEntriesAsync();
+        entries = await PoidsService.GetEntriesAsync();
         analyse = PoidsAnalyzer.Analyser(entries);
     }
 }

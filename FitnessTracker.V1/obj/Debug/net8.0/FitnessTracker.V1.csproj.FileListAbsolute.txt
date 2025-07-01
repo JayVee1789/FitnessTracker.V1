@@ -1149,6 +1149,11 @@ C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\refint\FitnessTracker.V1.dll
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.pdb
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\ref\FitnessTracker.V1.dll
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-nne2cxp7f1.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-thuxw43a18.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-qe1cux4l8m.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\wwwroot\_framework\BlazorBootstrap.wasm
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\wwwroot\_framework\BlazorBootstrap.wasm.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\BlazorBootstrap.dll
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\webcil\BlazorBootstrap.wasm
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\z4h9f9o8no-crhmysnj5e.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-awh1te0qyt.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-gpzoehssdo.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-04pxwnnqcg.gz

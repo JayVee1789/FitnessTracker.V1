@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "pu94d/WeuRQ=",
+  "dgSpecHash": "Ul59KeI8D94=",
   "success": true,
   "projectFilePath": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\FitnessTracker.V1.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\jvere\\.nuget\\packages\\blazor.bootstrap\\3.3.1\\blazor.bootstrap.3.3.1.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.17\\microsoft.aspnetcore.authorization.8.0.17.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.17\\microsoft.aspnetcore.components.8.0.17.nupkg.sha512",

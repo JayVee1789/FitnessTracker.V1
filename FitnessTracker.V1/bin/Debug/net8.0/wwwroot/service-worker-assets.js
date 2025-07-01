@@ -1,20 +1,60 @@
 self.assetsManifest = {
-  "version": "FnbXCOr6",
+  "version": "8eYXUS1X",
   "assets": [
     {
-      "hash": "sha256-v1pHDI04sZJoacoRkUu8L1aWrEJ0kvUf5tQO/4b/ReE=",
+      "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
       "url": "FitnessTracker.V1.styles.css"
+    },
+    {
+      "hash": "sha256-FYJNevdgdMX4R7rEhQxDvKVdV5SyZSlRT4eVSU+Lgyk=",
+      "url": "_content/Blazor.Bootstrap/Blazor.Bootstrap.7t9tbfaemk.bundle.scp.css"
+    },
+    {
+      "hash": "sha256-jqE3jyGxWnCTc0Y7oGfHKZOpZM9udgb38MQGLaxmkNc=",
+      "url": "_content/Blazor.Bootstrap/blazor.bootstrap.css"
+    },
+    {
+      "hash": "sha256-/56eGJ+O8AbP07k4uCOAQdLbbj1ZsrX1aBINOPS9IAM=",
+      "url": "_content/Blazor.Bootstrap/blazor.bootstrap.js"
+    },
+    {
+      "hash": "sha256-oAIj2P0Z/6hTwjGA3OGvWLdxMP4KwE35+AQzWQTpxAg=",
+      "url": "_content/Blazor.Bootstrap/blazor.bootstrap.pdf.js"
+    },
+    {
+      "hash": "sha256-du71NM6e2+m9l81ldV+Gbr74ER7Xx1GnJFg+rIY6OQU=",
+      "url": "_content/Blazor.Bootstrap/blazor.bootstrap.sortable-list.js"
+    },
+    {
+      "hash": "sha256-Hy2y6B5ohWPnmWg4c52+QUuZGTw8r09KtWKcaGiaa/k=",
+      "url": "_content/Blazor.Bootstrap/blazor.bootstrap.theme-switcher.js"
+    },
+    {
+      "hash": "sha256-J1yB7ftYf6PWiU1781eE0JHBGfd1MV/XlLaxpVy09RU=",
+      "url": "_content/Blazor.Bootstrap/icon/128X128.png"
+    },
+    {
+      "hash": "sha256-XX7we2CiSWzj3rsNtKFCod90LBYAJ3bo8rmu4EuN7SQ=",
+      "url": "_content/Blazor.Bootstrap/pdfjs-4.0.379.min.js"
+    },
+    {
+      "hash": "sha256-JbwqIn9Fic7JuWyTXuNnAA1T0dYQ2tkTi9HhrSltUtQ=",
+      "url": "_content/Blazor.Bootstrap/pdfjs-4.0.379.worker.min.js"
+    },
+    {
+      "hash": "sha256-aIXXR+9s7dYyi5uLNEw6yrNYcjcOCvrD+zPA2yDLSOw=",
+      "url": "_framework/BlazorBootstrap.wasm"
     },
     {
       "hash": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-oXhD3R7sU4kekOTiH+g9bAgOTck9hK1pceWaXsn3YrI=",
+      "hash": "sha256-xDzv5zTZjY1c7d94hDIYNsJoyyapLujq7Ozt+/TLJ7E=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-s7bjW+aXqyFJ4WNOEXJR95azRv+sTxQ+MWKdU/QOcyk=",
+      "hash": "sha256-JjqKx078i8ncBjiGVHmlI6MWU8NLBeOGCPF4YvhuvVA=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -858,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-IhSgIVnJ/pMPSBL8GSYunNFzRC4o1kzI3pXLONON0FQ=",
+      "hash": "sha256-YMnJWhq+3yogxgQjk+SP4M9Ph9hTPJ8FR0qA34o0K0k=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -934,7 +974,7 @@ self.assetsManifest = {
       "url": "css/mobile-native.css"
     },
     {
-      "hash": "sha256-Xp+Nxk8mGLorMdGFMEtKZ/z+vslo7c9tdwDvOLRwBtY=",
+      "hash": "sha256-tbOSOHeXNlDmoVbbwl/I0l6AA5Bj7L/ihOZcr1Vj7Rs=",
       "url": "css/style.css"
     },
     {
@@ -954,7 +994,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-6d1IHuMX2PP7e3Gkk1UvpmWLx26vr5D2Wh81ef9Xfh4=",
+      "hash": "sha256-Ph9I3Bv7CG3t/tWJgf4eGPJSc64W57PDzl48+V4SVrQ=",
       "url": "index.html"
     },
     {

@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Blazored.LocalStorage;
-
+﻿using Blazored.LocalStorage;
 using FitnessTracker.V1;
 using FitnessTracker.V1.Services;
 using FitnessTracker.V1.Services.ProgrammeGeneration;
-
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
-
 using Supabase;
 using FT_SupabaseOptions = FitnessTracker.V1.Options.SupabaseOptions;   // 👈 alias local
 
@@ -18,6 +13,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 // ───────────────────────── COMPOSANTS ────────────────────────────
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddBlazorBootstrap();
 
 // ──────────────────── CONFIGURATION SUPABASE ─────────────────────
 builder.Services.Configure<FT_SupabaseOptions>(

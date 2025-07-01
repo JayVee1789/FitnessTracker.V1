@@ -1,0 +1,94 @@
+﻿@namespace FitnessTracker.V1.Components
+@using System.Linq
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<div class="container-fluid overflow-x-auto">
+    <LineChart @ref="lineChart" Width="@Width" Height="@Height" />
+</div>
+
+@code {
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
+    [Parameter] public PoidsAnalysisResult? Analyse { get; set; }
+    [Parameter] public int Width { get; set; } = 800;
+    [Parameter] public int Height { get; set; } = 400;
+
+    private LineChart? lineChart;
+    private ChartData? chartData;
+    private LineChartOptions? chartOptions;
+    private bool chartReady;   // devient true après InitializeAsync
+
+    protected override async Task OnParametersSetAsync()
+    {
+        PrepareChartData();                 // crée chartData & chartOptions quand Entries arrivent
+
+        if (chartReady && lineChart is not null && chartData is not null)
+            await lineChart.UpdateAsync(chartData, chartOptions);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool _)
+    {
+        // 👉 initialise au tout premier moment où chartData est prêt
+        if (!chartReady && lineChart is not null && chartData is not null)
+        {
+            await lineChart.InitializeAsync(chartData, chartOptions);
+            chartReady = true;
+        }
+    }
+
+    /* ---------- construction chartData (identique à avant) ---------- */
+    private void PrepareChartData()
+    {
+        if (Entries == null || Entries.Count == 0) return;
+
+        var selection = (Analyse?.ExercicesFort ?? new())
+                        .Concat(Analyse?.ExercicesFaible ?? new())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Distinct()
+                        .Take(4)
+                        .ToList();
+
+        if (selection.Count == 0)
+            selection = Entries.Select(e => e.Exercice).Distinct().Take(4).ToList();
+
+        var jours = Entries.Select(e => e.Date.Date).Distinct().OrderBy(d => d).ToList();
+        var labels = jours.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+
+        var datasets = new List<IChartDataset>();
+        int idx = 0;
+        foreach (var ex in selection)
+        {
+            var data = jours.Select(j => Entries.FirstOrDefault(e => e.Exercice == ex && e.Date.Date == j)?.Poids)
+                            .Cast<double?>().ToList();
+
+            var color = ColorUtility.CategoricalTwelveColors[idx %
+                         ColorUtility.CategoricalTwelveColors.Length];
+            idx++;
+
+            datasets.Add(new LineChartDataset
+                {
+                    Label = ex,
+                    Data = data,
+                    BackgroundColor = color,
+                    BorderColor = color,
+                    BorderWidth = 2,
+                    SpanGaps = true
+                });
+        }
+
+        chartData = new ChartData { Labels = labels, Datasets = datasets };
+
+        chartOptions = new LineChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
+                IndexAxis = "x",
+                Plugins = new() { Title = new() { Display = true, Text = "Progression du poids (kg)" } },
+                Scales = new()
+                {
+                    X = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Date" } },
+                    Y = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)" } }
+                }
+            };
+    }
+}
