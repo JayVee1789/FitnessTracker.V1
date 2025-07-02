@@ -1,0 +1,44 @@
+﻿@namespace FitnessTracker.V1.Components
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<LineChart @ref="timeline" Width="800" Height="250" />
+
+@code {
+    [Parameter] public ProgrammeModel Programme { get; set; } = new();  // date début + nom
+    [Parameter] public int DurationWeeks { get; set; } = 8;             // longueur prévue
+
+    private LineChart? timeline;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || timeline is null) return;
+
+        var labels = Enumerable.Range(0, DurationWeeks)
+                               .Select(i => Programme.DateDebut.AddDays(i * 7).ToString("dd/MM"))
+                               .ToList();
+
+        var ds = new LineChartDataset
+            {
+                Label = Programme.Nom,
+                Data = Enumerable.Range(1, DurationWeeks).Select(i => (double?)i).ToList(),
+                BackgroundColor = "#ff9800",
+                BorderColor = "#ff9800",
+                BorderWidth = 4
+                
+            };
+
+        await timeline.InitializeAsync(
+            new ChartData { Labels = labels, Datasets = new() { ds } },
+            new LineChartOptions
+                {
+                    Responsive = true,
+                    Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
+                    Plugins = new() { Title = new() { Display = true, Text = "Avancement programme" } },
+                    Scales = new()
+                    {
+                        Y = new ChartAxes { Min = 0, Max = DurationWeeks }
+                    }
+                });
+    }
+}

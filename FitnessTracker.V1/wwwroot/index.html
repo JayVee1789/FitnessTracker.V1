@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitnessTracker</title>
     <base href="/" />
 
-    <!-- ► Styles -->
+    <!-- ► Styles (inchangés) -->
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/Blazor.Bootstrap/blazor.bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/mobile-native.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="FitnessTracker.V1.styles.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
@@ -20,53 +19,53 @@
 </head>
 
 <body>
-    <div id="app">
-        <!-- Loader Blazor -->
-        <svg class="loading-progress"><circle r="40%" cx="50%" cy="50%" /><circle r="40%" cx="50%" cy="50%" /></svg>
-        <div class="loading-progress-text"></div>
-    </div>
+    <div id="app"></div>
+    <div id="blazor-error-ui">…</div>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
-
-    <!-- ─────────────────────────── JS ─────────────────────────── -->
-    <!-- 1. Bootstrap JS (obligatoire pour Blazor Bootstrap) -->
+    <!-- 1. Bootstrap JS bundle (incl. Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
-
-    <!-- 2. Chart.js 4.x (obligatoire si tu utilises les graphiques) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+    <!-- 2. Chart.js v3 (compatible avec ChartJs.Blazor) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"
             crossorigin="anonymous"></script>
-    <!-- (optionnel) DataLabels si tu en as besoin -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
-            crossorigin="anonymous"></script> -->
-    <!-- 3. Script interne de Blazor Bootstrap : FON-DA-MEN-TAL -->
+    <!-- 3. Interop ChartJs.Blazor -->
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
+    <!-- 4. Blazor WebAssembly runtime -->
+    <script src="_framework/blazor.webassembly.js"></script>
+    <!-- 5. BlazorBootstrap interop (après Blazor runtime) -->
     <script src="_content/Blazor.Bootstrap/blazor.bootstrap.js"></script>
 
-    <!-- 4. Blazor runtime -->
-    <script src="_framework/blazor.webassembly.js"></script>
+    <!-- 6. Auto‐resize des charts quand un modal est complètement ouvert -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.modal').forEach(modalEl => {
+                modalEl.addEventListener('shown.bs.modal', () => {
+                    modalEl.querySelectorAll('canvas[id]').forEach(canvas => {
+                        const chart = Chart.getChart(canvas.id);
+                        if (chart) {
+                            chart.resize();
+                            chart.update();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
-    <!-- 5. Service-worker utils + enregistrement -->
+    <!-- 7. Service‐worker utils + enregistrement -->
     <script src="sw-utils.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
-    <!-- 6. Helpers custom -->
+    <!-- 8. Helpers custom -->
     <script>
-        window.listenForServiceWorkerUpdates = function (dotNetObj) {
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data?.type === 'update-available') {
-                        dotNetObj.invokeMethodAsync('NotifyUpdateAvailable');
-                    }
-                });
-            }
-        };
-
-        window.showModal = id => bootstrap.Modal.getOrCreateInstance(document.getElementById(id)).show();
-        window.hideModal = id => bootstrap.Modal.getInstance(document.getElementById(id))?.hide();
+        window.showModal = id =>
+            bootstrap.Modal
+                .getOrCreateInstance(document.getElementById(id))
+                .show();
+        window.hideModal = id =>
+            bootstrap.Modal
+                .getInstance(document.getElementById(id))
+                ?.hide();
     </script>
 </body>
 </html>

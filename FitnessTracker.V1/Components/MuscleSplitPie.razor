@@ -1,0 +1,40 @@
+﻿@namespace FitnessTracker.V1.Components
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<PieChart @ref="pie" Width="400" Height="400" />
+
+@code {
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
+    [Parameter] public List<ExerciseDefinition> Definitions { get; set; } = new();
+
+    private PieChart? pie;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || pie is null || Definitions.Count == 0) return;
+
+        var monthAgo = DateTime.Today.AddMonths(-1);
+        var recent = Entries.Where(e => e.Date >= monthAgo).ToList();
+
+        var byMuscle = recent
+            .GroupJoin(Definitions, e => e.Exercice, d => d.Name,
+                       (e, g) => new { e, def = g.FirstOrDefault() })
+            .GroupBy(x => x.def?.Muscle ?? "Autre")
+            .Select(g => new { Muscle = g.Key, Count = g.Count() })
+            .OrderByDescending(g => g.Count)
+            .ToList();
+
+        var colors = ColorUtility.CategoricalTwelveColors;
+
+        var ds = new PieChartDataset
+            {
+                Data = byMuscle.Select(b => (double?)b.Count).ToList(),
+                BackgroundColor = byMuscle.Select((_, i) => colors[i % colors.Length]).ToList()
+            };
+
+        await pie.InitializeAsync(
+            new ChartData { Labels = byMuscle.Select(b => b.Muscle).ToList(), Datasets = new() { ds } },
+            new PieChartOptions { Responsive = true });
+    }
+}

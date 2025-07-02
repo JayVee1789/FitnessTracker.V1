@@ -1,0 +1,70 @@
+﻿@namespace FitnessTracker.V1.Components
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<LineChart @ref="chart" Width="800" Height="400" />
+
+@code {
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
+
+    private LineChart? chart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || chart is null || Entries.Count == 0) return;
+
+        var top3 = Entries.GroupBy(e => e.Exercice)
+                          .OrderByDescending(g => g.Count())
+                          .Take(3)
+                          .Select(g => g.Key)
+                          .ToList();
+
+        var days = Entries.Select(e => e.Date.Date)
+                          .Distinct()
+                          .OrderBy(d => d)
+                          .ToList();
+
+        var colors = ColorUtility.CategoricalTwelveColors;
+        var datasets = new List<IChartDataset>();
+        int idx = 0;
+
+        foreach (var ex in top3)
+        {
+            var values = days.Select(d => Entries
+                               .FirstOrDefault(e => e.Exercice == ex && e.Date.Date == d)?.Poids)
+                             .Cast<double?>()
+                             .ToList();
+
+            var color = colors[idx % colors.Length]; idx++;
+
+            var max = values.Max() ?? 0;
+            var prIndex = values.IndexOf(max);
+
+            var ds = new LineChartDataset
+                {
+                    Label = ex,
+                    Data = values,
+                    BorderColor = color,
+                    BackgroundColor = color,
+                    PointRadius = Enumerable.Range(0, values.Count)
+                                                .Select(i => i == prIndex ? 6 : 3)
+                                                .Cast<double>()
+                                                .ToList(),
+                };
+            datasets.Add(ds);
+        }
+
+        await chart.InitializeAsync(
+            new ChartData
+                {
+                    Labels = days.Select(d => d.ToString("dd/MM")).ToList(),
+                    Datasets = datasets
+                },
+            new LineChartOptions
+                {
+                    Responsive = true,
+                    Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
+                    Plugins = new() { Title = new() { Display = true, Text = "Records personnels" } }
+                });
+    }
+}

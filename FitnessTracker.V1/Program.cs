@@ -20,20 +20,29 @@ builder.Services.AddBlazorBootstrap();
 builder.Services.Configure<FT_SupabaseOptions>(
     builder.Configuration.GetSection("Supabase"));
 
-// ───────────────────── SERVICES MÉTIER ───────────────────────────
-builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<PoidsService>();
-builder.Services.AddScoped<ProfileService>();
-
-builder.Services.AddSingleton<ProgrammeGeneratorService>();
-builder.Services.AddSingleton<IProgrammeStrategy, TbtProgrammeStrategy>();
-
-// ──────────────── HttpClient « site » ( wwwroot ) ────────────────
+// ──────────────── HttpClient « site » (wwwroot) ────────────────
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 });
+
+// ───────────── Client SDK Supabase (Auth / From / RPC …) ──────────
+builder.Services.AddScoped(sp =>
+{
+    var cfg = sp.GetRequiredService<IOptions<FT_SupabaseOptions>>().Value;
+    var sdkOpts = new SupabaseOptions
+    {
+        AutoRefreshToken = true,
+        AutoConnectRealtime = false
+    };
+    return new Client(cfg.Url, cfg.AnonKey, sdkOpts);
+});
+
+// ──────────────── SUPABASESERVICE & AUTRES SERVICES ───────────────
+builder.Services.AddScoped<SupabaseService>();      // ← Enregistrement du service principal Supabase
+builder.Services.AddScoped<ProgrammeService>();
+builder.Services.AddSingleton<ProgrammeGeneratorService>();
+builder.Services.AddSingleton<IProgrammeStrategy, TbtProgrammeStrategy>();
 
 // ───────── HttpClient typé pour SupabaseService2 (REST v1) ───────
 builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
@@ -43,19 +52,11 @@ builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
     http.DefaultRequestHeaders.Add("apikey", cfg.AnonKey);
 });
 
-// ───────────── Client SDK Supabase (Auth / From / RPC …) ──────────
-builder.Services.AddScoped(sp =>
-{
-    var cfg = sp.GetRequiredService<IOptions<FT_SupabaseOptions>>().Value;
-
-    var sdkOpts = new global::Supabase.SupabaseOptions   // 👈 on qualifie
-    {
-        AutoRefreshToken = true,
-        AutoConnectRealtime = false
-    };
-
-    return new Client(cfg.Url, cfg.AnonKey, sdkOpts);
-});
+// ───────────────────── SERVICES MÉTIER ───────────────────────────
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<PoidsService>();
+builder.Services.AddScoped<ProfileService>();
 
 // ────────────────────────── LOGGING ──────────────────────────────
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
@@ -64,11 +65,10 @@ var host = builder.Build();
 
 // ─────── Restaure la session Supabase si un refresh_token existe ─
 var supabase = host.Services.GetRequiredService<Client>();
-await supabase.InitializeAsync();          // obligatoire avant .Auth
+await supabase.InitializeAsync();
 
 var localStorage = host.Services.GetRequiredService<ILocalStorageService>();
 var refreshToken = await localStorage.GetItemAsync<string>("refresh_token");
-
 if (!string.IsNullOrEmpty(refreshToken))
 {
     try

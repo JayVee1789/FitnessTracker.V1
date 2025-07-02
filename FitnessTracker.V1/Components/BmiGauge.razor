@@ -1,0 +1,36 @@
+﻿@namespace FitnessTracker.V1.Components
+@using BlazorBootstrap
+
+<DoughnutChart @ref="gauge" Width="300" Height="300" />
+
+@code {
+    [Parameter] public double WeightKg { get; set; }
+    [Parameter] public double HeightCm { get; set; }
+
+    private DoughnutChart? gauge;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || gauge is null || HeightCm <= 0) return;
+
+        var bmi = WeightKg / Math.Pow(HeightCm / 100, 2);
+        var capped = Math.Min(bmi, 40d);              // jauge 0-40
+        var remain = 40d - capped;
+
+        var data = new ChartData
+            {
+                Labels = new() { "IMC", "Reste" },
+                Datasets = new() {
+                new DoughnutChartDataset {
+                    Data = new() { capped, remain },
+                    BackgroundColor = new() { "#ff6384", "#e0e0e0" }
+                    // BorderWidth     = 1
+                }
+            }
+            };
+
+        var opt = new DoughnutChartOptions { Responsive = true /* Cutout non exposé en 3.x */ };
+
+        await gauge.InitializeAsync(data, opt);
+    }
+}

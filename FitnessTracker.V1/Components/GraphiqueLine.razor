@@ -4,7 +4,7 @@
 @using BlazorBootstrap
 
 <div class="container-fluid overflow-x-auto">
-    <LineChart @ref="lineChart" Width="@Width" Height="@Height" />
+    <LineChart @ref="chart" Width="@Width" Height="@Height" />
 </div>
 
 @code {
@@ -12,63 +12,62 @@
     [Parameter] public PoidsAnalysisResult? Analyse { get; set; }
     [Parameter] public int Width { get; set; } = 800;
     [Parameter] public int Height { get; set; } = 400;
+    [Parameter] public bool ShowDemoButtons { get; set; } = true;
 
-    private LineChart? lineChart;
-    private ChartData? chartData;
-    private LineChartOptions? chartOptions;
-    private bool chartReady;   // devient true après InitializeAsync
+    private LineChart? chart;
+    private ChartData? data;
+    private LineChartOptions? options;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        PrepareChartData();                 // crée chartData & chartOptions quand Entries arrivent
-
-        if (chartReady && lineChart is not null && chartData is not null)
-            await lineChart.UpdateAsync(chartData, chartOptions);
-    }
-
-    protected override async Task OnAfterRenderAsync(bool _)
-    {
-        // 👉 initialise au tout premier moment où chartData est prêt
-        if (!chartReady && lineChart is not null && chartData is not null)
+        // Ne tente l'init qu'une seule fois, et seulement si on a des données
+        if (firstRender && chart is not null && Entries.Count > 0)
         {
-            await lineChart.InitializeAsync(chartData, chartOptions);
-            chartReady = true;
+            BuildChart();
+            await chart.InitializeAsync(data!, options!);
         }
     }
 
-    /* ---------- construction chartData (identique à avant) ---------- */
-    private void PrepareChartData()
+    private void BuildChart()
     {
-        if (Entries == null || Entries.Count == 0) return;
+        // --- Prépare les labels et le dataset
+        var jours = Entries.Select(e => e.Date.Date)
+                           .Distinct()
+                           .OrderBy(d => d)
+                           .Select(d => d.ToString("yyyy-MM-dd"))
+                           .ToList();
 
         var selection = (Analyse?.ExercicesFort ?? new())
-                        .Concat(Analyse?.ExercicesFaible ?? new())
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .Distinct()
-                        .Take(4)
-                        .ToList();
-
+            .Concat(Analyse?.ExercicesFaible ?? new())
+            .Distinct()
+            .Take(4)
+            .ToList();
         if (selection.Count == 0)
-            selection = Entries.Select(e => e.Exercice).Distinct().Take(4).ToList();
-
-        var jours = Entries.Select(e => e.Date.Date).Distinct().OrderBy(d => d).ToList();
-        var labels = jours.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+            selection = Entries.Select(e => e.Exercice)
+                               .Distinct()
+                               .Take(4)
+                               .ToList();
 
         var datasets = new List<IChartDataset>();
         int idx = 0;
         foreach (var ex in selection)
         {
-            var data = jours.Select(j => Entries.FirstOrDefault(e => e.Exercice == ex && e.Date.Date == j)?.Poids)
-                            .Cast<double?>().ToList();
+            var serie = jours
+                .Select(label => Entries
+                    .FirstOrDefault(e => e.Exercice == ex
+                                      && e.Date.ToString("yyyy-MM-dd") == label)
+                    ?.Poids)
+                .Cast<double?>()
+                .ToList();
 
-            var color = ColorUtility.CategoricalTwelveColors[idx %
-                         ColorUtility.CategoricalTwelveColors.Length];
+            var color = ColorUtility.CategoricalTwelveColors[
+                idx % ColorUtility.CategoricalTwelveColors.Length];
             idx++;
 
             datasets.Add(new LineChartDataset
                 {
                     Label = ex,
-                    Data = data,
+                    Data = serie,
                     BackgroundColor = color,
                     BorderColor = color,
                     BorderWidth = 2,
@@ -76,13 +75,16 @@
                 });
         }
 
-        chartData = new ChartData { Labels = labels, Datasets = datasets };
+        data = new ChartData
+            {
+                Labels = jours,
+                Datasets = datasets
+            };
 
-        chartOptions = new LineChartOptions
+        options = new LineChartOptions
             {
                 Responsive = true,
                 Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
-                IndexAxis = "x",
                 Plugins = new() { Title = new() { Display = true, Text = "Progression du poids (kg)" } },
                 Scales = new()
                 {

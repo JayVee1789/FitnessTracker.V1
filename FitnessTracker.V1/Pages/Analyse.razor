@@ -1,7 +1,41 @@
 ﻿@page "/analyse"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
+@using FitnessTracker.V1.Components
 @inject PoidsService PoidsService
+@inject ProgrammeService ProgService
+@inject IJSRuntime JS
+
+<style>
+    .thumb-container {
+    display: inline-block;
+    margin: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    }
+
+    .thumb {
+    width: 200px;
+    height: 120px;
+    overflow: hidden;
+    }
+
+    .thumb .container-fluid {
+    width: 200px !important;
+    height: 120px !important;
+    overflow: hidden !important;
+    }
+
+    .thumb canvas {
+    width: 200px !important;
+    height: 120px !important;
+    }
+
+    .thumb-label {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    }
+</style>
 
 <h3>Analyse des Performances</h3>
 
@@ -11,45 +45,266 @@
 }
 else
 {
-    <div class="row">
-        <div class="col-md-6">
-            <h4>💪 Exercices les plus forts</h4>
-            <ul>
-                @foreach (var ex in analyse.ExercicesFort)
-                {
-                    <li>@ex</li>
-                }
-            </ul>
+    <div>
+        <!-- Vignettes -->
+        <div class="thumb-container" @onclick="OpenLineModal">
+            <div class="thumb">
+                <GraphiqueLine Entries="entries" Analyse="analyse" ShowDemoButtons="false" />
+            </div>
+            <div class="thumb-label">Progression Poids</div>
         </div>
-        <div class="col-md-6">
-            <h4>⚠️ Exercices les plus faibles</h4>
-            <ul>
-                @foreach (var ex in analyse.ExercicesFaible)
+
+        <div class="thumb-container" @onclick="OpenFreqModal">
+            <div class="thumb">
+                <WorkoutFrequencyBar Entries="entries" />
+            </div>
+            <div class="thumb-label">Séances / semaine</div>
+        </div>
+
+        <div class="thumb-container" @onclick="OpenRadarModal">
+            <div class="thumb">
+                <StrengthRadar Entries="entries" Analyse="analyse" />
+            </div>
+            <div class="thumb-label">Radar</div>
+        </div>
+
+        <div class="thumb-container" @onclick="OpenBmiModal">
+            <div class="thumb">
+                <BmiGauge WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
+                HeightCm="178" />
+            </div>
+            <div class="thumb-label">IMC</div>
+        </div>
+
+        <div class="thumb-container" @onclick="OpenProgModal">
+            <div class="thumb">
+                @if (currentProg is not null)
                 {
-                    <li>@ex</li>
+                    <ProgrammeTimeline Programme="currentProg" DurationWeeks="8" />
                 }
-            </ul>
+            </div>
+            <div class="thumb-label">Timeline</div>
+        </div>
+
+        <div class="thumb-container" @onclick="OpenPieModal">
+            <div class="thumb">
+                <MuscleSplitPie Entries="entries" Definitions="exerciseDefs" />
+            </div>
+            <div class="thumb-label">Muscles</div>
+        </div>
+
+        <div class="thumb-container" @onclick="OpenPrModal">
+            <div class="thumb">
+                <PrTracker Entries="entries" />
+            </div>
+            <div class="thumb-label">Records</div>
         </div>
     </div>
-
-    <hr />
-
-    <TestLineChart />
-
-    <!-- 📊 Intégration du composant graphique -->
-    if (analyse != null && entries.Any())
-    {
-        <GraphiqueLine Entries="entries" Analyse="analyse" Width="800" Height="400" />
-    }
 }
+
+<!-- Modals natifs Bootstrap -->
+<!-- Thumbnail grid unchanged… -->
+<!-- Modal Progression Poids -->
+<div class="modal fade" id="lineModal" tabindex="-1" role="dialog"
+aria-labelledby="lineModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lineModalLabel">Progression du poids</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <GraphiqueLine Entries="entries"
+                Analyse="analyse"
+                Width="800" Height="400"
+                ShowDemoButtons="false" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Séances / semaine -->
+<div class="modal fade" id="freqModal" tabindex="-1" role="dialog"
+aria-labelledby="freqModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="freqModalLabel">Séances par semaine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <WorkoutFrequencyBar Entries="entries" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Radar Forces/Faiblesses -->
+<div class="modal fade" id="radarModal" tabindex="-1" role="dialog"
+aria-labelledby="radarModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="radarModalLabel">Radar Forces/Faiblesses</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <StrengthRadar Entries="entries" Analyse="analyse" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal IMC -->
+<div class="modal fade" id="bmiModal" tabindex="-1" role="dialog"
+aria-labelledby="bmiModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bmiModalLabel">Indice de Masse Corporelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <BmiGauge WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
+                HeightCm="178"
+                Width="400" Height="400" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Avancement du programme -->
+<div class="modal fade" id="progModal" tabindex="-1" role="dialog"
+aria-labelledby="progModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="progModalLabel">Avancement du programme</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @if (currentProg is not null)
+                {
+                    <ProgrammeTimeline Programme="currentProg" DurationWeeks="8" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Répartition des muscles -->
+<div class="modal fade" id="pieModal" tabindex="-1" role="dialog"
+aria-labelledby="pieModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pieModalLabel">Répartition des muscles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <MuscleSplitPie Entries="entries" Definitions="exerciseDefs" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Records personnels -->
+<div class="modal fade" id="prModal" tabindex="-1" role="dialog"
+aria-labelledby="prModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="prModalLabel">Records personnels</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <PrTracker Entries="entries" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     private List<PoidsEntry> entries = new();
     private PoidsAnalysisResult? analyse;
+    private ProgrammeModel? currentProg;
+    private List<ExerciseDefinition> exerciseDefs = new();
 
     protected override async Task OnInitializedAsync()
     {
         entries = await PoidsService.GetEntriesAsync();
         analyse = PoidsAnalyzer.Analyser(entries);
+        currentProg = await ProgService.GetCurrentAsync();
+        exerciseDefs = await ProgService.GetExerciseDefinitionsAsync();
     }
+
+  
+        // … vos propriétés et OnInitializedAsync …
+
+        private async Task OpenLineModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "lineModal");
+          
+        }
+
+        private async Task OpenFreqModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "freqModal");
+           
+        }
+
+        private async Task OpenRadarModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "radarModal");
+          
+        }
+
+        private async Task OpenBmiModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "bmiModal");
+           
+        }
+
+        private async Task OpenProgModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "progModal");
+           
+        }
+
+        private async Task OpenPieModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "pieModal");
+          
+        }
+
+        private async Task OpenPrModal()
+        {
+            await JS.InvokeVoidAsync("showModal", "prModal");
+          
+        }
+    
+
+}
+
 }

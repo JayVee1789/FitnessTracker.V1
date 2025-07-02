@@ -1,0 +1,41 @@
+﻿@namespace FitnessTracker.V1.Components
+@using System.Globalization
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<BarChart @ref="chart" Width="700" Height="350" />
+
+@code {
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();   // logs d’exercices
+
+    private BarChart? chart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || chart is null || Entries.Count == 0) return;
+
+        // Grouper par semaine ISO-8601
+        var weekly = Entries
+            .GroupBy(e => ISOWeek.GetWeekOfYear(e.Date))
+            .OrderBy(g => g.Key)
+            .Select(g => new { Week = $"S{g.Key}", Count = g.Count() })
+            .ToList();
+
+        var data = new ChartData
+            {
+                Labels = weekly.Select(w => w.Week).ToList(),
+                Datasets = new() {
+        new BarChartDataset {
+            Label = "Séances / semaine",
+            Data  = weekly.Select(w => (double?)w.Count).ToList(),
+            BackgroundColor = new() { "#4caf50" }   // ← liste
+        }
+    }
+            };
+
+        var opt = new BarChartOptions { Responsive = true };
+
+        await chart.InitializeAsync(data, opt);
+    }
+}
+

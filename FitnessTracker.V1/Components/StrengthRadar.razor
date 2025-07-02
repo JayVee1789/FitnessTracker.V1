@@ -1,0 +1,39 @@
+﻿@namespace FitnessTracker.V1.Components
+@using FitnessTracker.V1.Models
+@using BlazorBootstrap
+
+<RadarChart @ref="radar" Width="500" Height="500" />
+
+@code {
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
+    [Parameter] public PoidsAnalysisResult? Analyse { get; set; }
+
+    private RadarChart? radar;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || radar is null || Analyse is null) return;
+
+        var exos = Analyse.ExercicesFort
+                          .Concat(Analyse.ExercicesFaible)
+                          .Distinct()
+                          .Take(4)
+                          .ToList();
+
+        var points = exos.Select(e =>
+            Entries.Where(p => p.Exercice == e).OrderByDescending(p => p.Date).FirstOrDefault()?.Poids ?? 0)
+            .Select(p => (double?)p).ToList();
+
+        var ds = new RadarChartDataset
+            {
+                Label = "Charge max (kg)",
+                Data = points,
+                BackgroundColor = "rgba(54,162,235,0.2)",
+                BorderColor = "rgb(54,162,235)"
+            };
+
+        await radar.InitializeAsync(
+            new ChartData { Labels = exos, Datasets = new() { ds } },
+            new RadarChartOptions { Responsive = true });
+    }
+}
