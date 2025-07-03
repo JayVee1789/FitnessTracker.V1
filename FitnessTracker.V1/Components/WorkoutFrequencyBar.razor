@@ -1,14 +1,19 @@
 ﻿@namespace FitnessTracker.V1.Components
 @using System.Globalization
-@using FitnessTracker.V1.Models
+@using System.Linq
 @using BlazorBootstrap
+@using FitnessTracker.V1.Models
 
-<BarChart @ref="chart" Width="700" Height="350" />
+<BarChart @ref="chart" Width="@Width" Height="@Height" />
 
 @code {
-    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();   // logs d’exercices
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
+    [Parameter] public int Width { get; set; } = 700;
+    [Parameter] public int Height { get; set; } = 350;
 
     private BarChart? chart;
+    private ChartData? data;
+    private BarChartOptions? options;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -21,21 +26,33 @@
             .Select(g => new { Week = $"S{g.Key}", Count = g.Count() })
             .ToList();
 
-        var data = new ChartData
+        data = new ChartData
             {
                 Labels = weekly.Select(w => w.Week).ToList(),
-                Datasets = new() {
-        new BarChartDataset {
-            Label = "Séances / semaine",
-            Data  = weekly.Select(w => (double?)w.Count).ToList(),
-            BackgroundColor = new() { "#4caf50" }   // ← liste
-        }
-    }
+                Datasets = new()
+            {
+                new BarChartDataset
+                {
+                    Label = "Séances / semaine",
+                    Data = weekly.Select(w => (double?)w.Count).ToList(),
+                    BackgroundColor = weekly.Select(_ => "#4caf50").ToList()
+                }
+            }
             };
 
-        var opt = new BarChartOptions { Responsive = true };
+        options = new BarChartOptions
+            {
+                Responsive = true,
+                MaintainAspectRatio = false,
+                Plugins = new() { Title = new() { Display = true, Text = "Séances hebdomadaires" } }
+            };
 
-        await chart.InitializeAsync(data, opt);
+        await chart.InitializeAsync(data, options);
+    }
+
+    public async Task RefreshAsync()
+    {
+        if (chart is not null && data is not null && options is not null)
+            await chart.InitializeAsync(data, options);
     }
 }
-

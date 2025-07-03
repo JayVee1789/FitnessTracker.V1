@@ -1,44 +1,78 @@
 ﻿@namespace FitnessTracker.V1.Components
-@using FitnessTracker.V1.Models
+@using System.Linq
 @using BlazorBootstrap
+@using FitnessTracker.V1.Models
 
-<LineChart @ref="timeline" Width="800" Height="250" />
+<LineChart @ref="timeline" Width="@Width" Height="@Height" />
 
 @code {
-    [Parameter] public ProgrammeModel Programme { get; set; } = new();  // date début + nom
-    [Parameter] public int DurationWeeks { get; set; } = 8;             // longueur prévue
+    [Parameter] public ProgrammeModel Programme { get; set; } = new();
+    [Parameter] public int DurationWeeks { get; set; } = 8;
+    [Parameter] public int Width { get; set; } = 800;
+    [Parameter] public int Height { get; set; } = 250;
 
     private LineChart? timeline;
+    private ChartData? data;
+    private LineChartOptions? options;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender || timeline is null) return;
+        if (!firstRender || timeline is null)
+            return;
 
+        // 1) Génère les labels : dates de début de semaine
         var labels = Enumerable.Range(0, DurationWeeks)
-                               .Select(i => Programme.DateDebut.AddDays(i * 7).ToString("dd/MM"))
+                               .Select(i => Programme.DateDebut
+                                                    .AddDays(i * 7)
+                                                    .ToString("dd/MM"))
                                .ToList();
 
+        // 2) Jeu de données « avancement » fictif (1, 2, 3, …)
         var ds = new LineChartDataset
             {
                 Label = Programme.Nom,
-                Data = Enumerable.Range(1, DurationWeeks).Select(i => (double?)i).ToList(),
+                Data = Enumerable.Range(1, DurationWeeks)
+                                            .Select(i => (double?)i)
+                                            .ToList(),
                 BackgroundColor = "#ff9800",
                 BorderColor = "#ff9800",
                 BorderWidth = 4
-                
             };
 
-        await timeline.InitializeAsync(
-            new ChartData { Labels = labels, Datasets = new() { ds } },
-            new LineChartOptions
+        data = new ChartData
+            {
+                Labels = labels,
+                Datasets = new() { ds }
+            };
+
+        options = new LineChartOptions
+            {
+                Responsive = true,
+                MaintainAspectRatio = false,
+                Interaction = new Interaction
                 {
-                    Responsive = true,
-                    Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
-                    Plugins = new() { Title = new() { Display = true, Text = "Avancement programme" } },
-                    Scales = new()
-                    {
-                        Y = new ChartAxes { Min = 0, Max = DurationWeeks }
-                    }
-                });
+                    Mode = InteractionMode.Index,
+                    Intersect = false
+                },
+                Plugins = new()
+                {
+                    Title = new() { Display = true, Text = "Avancement programme" }
+                },
+                Scales = new()
+                {
+                    Y = new ChartAxes { Min = 0, Max = DurationWeeks }
+                }
+            };
+
+        await timeline.InitializeAsync(data, options);
+    }
+
+    /// <summary>
+    /// Appelé par un parent (Modal) pour « redessiner » après ouverture
+    /// </summary>
+    public async Task RefreshAsync()
+    {
+        if (timeline is not null && data is not null && options is not null)
+            await timeline.InitializeAsync(data, options);
     }
 }

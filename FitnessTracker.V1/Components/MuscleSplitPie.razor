@@ -1,40 +1,77 @@
 ﻿@namespace FitnessTracker.V1.Components
-@using FitnessTracker.V1.Models
+@using System.Linq
 @using BlazorBootstrap
+@using FitnessTracker.V1.Models
 
-<PieChart @ref="pie" Width="400" Height="400" />
+<PieChart @ref="pie" />
 
 @code {
     [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
     [Parameter] public List<ExerciseDefinition> Definitions { get; set; } = new();
 
     private PieChart? pie;
+    private ChartData? data;
+    private PieChartOptions? options;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender || pie is null || Definitions.Count == 0) return;
+        if (!firstRender || pie is null
+            || Entries.Count == 0
+            || Definitions.Count == 0)
+            return;
 
+        // 1) Récupère les entrées du mois dernier (ou plus si vous préférez)
         var monthAgo = DateTime.Today.AddMonths(-1);
         var recent = Entries.Where(e => e.Date >= monthAgo).ToList();
 
+        // 2) Regroupe manuellement
         var byMuscle = recent
-            .GroupJoin(Definitions, e => e.Exercice, d => d.Name,
-                       (e, g) => new { e, def = g.FirstOrDefault() })
-            .GroupBy(x => x.def?.Muscle ?? "Autre")
+            .Select(e =>
+            {
+                var def = Definitions.FirstOrDefault(d => d.Name == e.Exercice);
+                return def?.Muscle ?? "Autre";
+            })
+            .GroupBy(m => m)
             .Select(g => new { Muscle = g.Key, Count = g.Count() })
-            .OrderByDescending(g => g.Count)
+            // on ne prend que ceux qui ont au moins 1 occurence
+            .Where(x => x.Count > 0)
+            // on peut limiter au top 5
+            .OrderByDescending(x => x.Count)
+            .Take(5)
             .ToList();
 
-        var colors = ColorUtility.CategoricalTwelveColors;
+        if (!byMuscle.Any())
+            return;  // rien à afficher
 
-        var ds = new PieChartDataset
+        // 3) Prépare chart.js
+        var colors = ColorUtility.CategoricalTwelveColors;
+        var labels = byMuscle.Select(x => x.Muscle).ToList();
+        var counts = byMuscle.Select(x => (double?)x.Count).ToList();
+        var bg = labels.Select((_, i) => colors[i % colors.Length]).ToList();
+
+        data = new ChartData
             {
-                Data = byMuscle.Select(b => (double?)b.Count).ToList(),
-                BackgroundColor = byMuscle.Select((_, i) => colors[i % colors.Length]).ToList()
+                Labels = labels,
+                Datasets = new() {
+                new PieChartDataset {
+                    Data            = counts,
+                    BackgroundColor = bg
+                }
+            }
             };
 
-        await pie.InitializeAsync(
-            new ChartData { Labels = byMuscle.Select(b => b.Muscle).ToList(), Datasets = new() { ds } },
-            new PieChartOptions { Responsive = true });
+        options = new PieChartOptions
+            {
+                Responsive = true,
+                MaintainAspectRatio = false
+            };
+
+        await pie.InitializeAsync(data, options);
+    }
+
+    public async Task RefreshAsync()
+    {
+        if (pie is not null && data is not null && options is not null)
+            await pie.InitializeAsync(data, options);
     }
 }

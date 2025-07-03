@@ -30,8 +30,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>swsybuv5hr</Fingerprint>
-      <Integrity>JOZWd9XYwDyrwjSB0PVTcc602GisYED21qQUCSMlGtI=</Integrity>
+      <Fingerprint>q9eelth8pn</Fingerprint>
+      <Integrity>QucfvCxzZWCBxNOaGIID0hE2izBvomrVXAkhlX43vnY=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\app.css'))</OriginalItemSpec>
@@ -84,8 +84,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>wk3gjnyuz4</Fingerprint>
-      <Integrity>4Doak9Cy2LCYleTjixFoMUBsMSKieLnXtiEc4cuBUtg=</Integrity>
+      <Fingerprint>vrohjrxbje</Fingerprint>
+      <Integrity>VVmUkGyqukzvtInbtE2djxY4i9APelQDwiXIoM+Xp4k=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\mobile-native.css'))</OriginalItemSpec>

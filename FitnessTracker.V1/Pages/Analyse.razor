@@ -2,38 +2,33 @@
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Components
+@using BlazorBootstrap
 @inject PoidsService PoidsService
 @inject ProgrammeService ProgService
-@inject IJSRuntime JS
 
 <style>
     .thumb-container {
-    display: inline-block;
-    margin: 0.5rem;
-    text-align: center;
-    cursor: pointer;
+        display: inline-block;
+        margin: 0.5rem;
+        text-align: center
     }
 
-    .thumb {
-    width: 200px;
-    height: 120px;
-    overflow: hidden;
-    }
-
-    .thumb .container-fluid {
-    width: 200px !important;
-    height: 120px !important;
-    overflow: hidden !important;
-    }
-
-    .thumb canvas {
-    width: 200px !important;
-    height: 120px !important;
+    .thumb-placeholder {
+        width: 200px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
     .thumb-label {
-    margin-top: 0.25rem;
-    font-size: 0.85rem;
+        margin-top: .25rem;
+        font-size: .85rem;
+        text-align: center
     }
 </style>
 
@@ -45,205 +40,153 @@
 }
 else
 {
-    <div>
-        <!-- Vignettes -->
-        <div class="thumb-container" @onclick="OpenLineModal">
-            <div class="thumb">
-                <GraphiqueLine Entries="entries" Analyse="analyse" ShowDemoButtons="false" />
+    <div class="d-flex flex-wrap justify-content-center">
+        <div class="thumb-container me-3 mb-3" @onclick="ShowLineModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-bar-chart-line" style="font-size:2rem;color:#6c757d"></i>
             </div>
-            <div class="thumb-label">Progression Poids</div>
+            <div class="thumb-label">Progression du poids</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenFreqModal">
-            <div class="thumb">
-                <WorkoutFrequencyBar Entries="entries" />
+        <div class="thumb-container me-3 mb-3" @onclick="ShowFreqModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-calendar-week" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">Séances / semaine</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenRadarModal">
-            <div class="thumb">
-                <StrengthRadar Entries="entries" Analyse="analyse" />
+        <div class="thumb-container me-3 mb-3" @onclick="ShowRadarModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-graph-up-arrow" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">Radar</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenBmiModal">
-            <div class="thumb">
-                <BmiGauge WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
-                HeightCm="178" />
+        <div class="thumb-container me-3 mb-3" @onclick="ShowBmiModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-activity" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">IMC</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenProgModal">
-            <div class="thumb">
-                @if (currentProg is not null)
-                {
-                    <ProgrammeTimeline Programme="currentProg" DurationWeeks="8" />
-                }
+        <div class="thumb-container me-3 mb-3" @onclick="ShowProgModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-calendar3" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">Timeline</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenPieModal">
-            <div class="thumb">
-                <MuscleSplitPie Entries="entries" Definitions="exerciseDefs" />
+        <div class="thumb-container me-3 mb-3" @onclick="ShowPieModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-pie-chart" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">Muscles</div>
         </div>
 
-        <div class="thumb-container" @onclick="OpenPrModal">
-            <div class="thumb">
-                <PrTracker Entries="entries" />
+        <div class="thumb-container mb-3" @onclick="ShowPrModal">
+            <div class="thumb-placeholder">
+                <i class="bi bi-trophy" style="font-size:2rem;color:#6c757d"></i>
             </div>
             <div class="thumb-label">Records</div>
         </div>
     </div>
 }
 
-<!-- Modals natifs Bootstrap -->
-<!-- Thumbnail grid unchanged… -->
-<!-- Modal Progression Poids -->
-<div class="modal fade" id="lineModal" tabindex="-1" role="dialog"
-aria-labelledby="lineModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="lineModalLabel">Progression du poids</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <GraphiqueLine Entries="entries"
-                Analyse="analyse"
-                Width="800" Height="400"
-                ShowDemoButtons="false" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+@* ------------------------------------------------- *@
+@*         LES MODALS AVEC OnShownAsync          *@
+@* ------------------------------------------------- *@
 
-<!-- Modal Séances / semaine -->
-<div class="modal fade" id="freqModal" tabindex="-1" role="dialog"
-aria-labelledby="freqModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="freqModalLabel">Séances par semaine</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <WorkoutFrequencyBar Entries="entries" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="lineModal" Size="ModalSize.Large" OnShownAsync="OnLineModalShown">
+    <HeaderTemplate><h5>Progression du poids</h5></HeaderTemplate>
+    <BodyTemplate>
+        <GraphiqueLine @ref="largeLineChart"
+                       Entries="entries"
+                       Analyse="analyse"
+                       Width="400" Height="400" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideLineModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
-<!-- Modal Radar Forces/Faiblesses -->
-<div class="modal fade" id="radarModal" tabindex="-1" role="dialog"
-aria-labelledby="radarModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="radarModalLabel">Radar Forces/Faiblesses</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <StrengthRadar Entries="entries" Analyse="analyse" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="freqModal" Size="ModalSize.Large" OnShownAsync="OnFreqModalShown">
+    <HeaderTemplate><h5>Séances par semaine</h5></HeaderTemplate>
+    <BodyTemplate>
+        <WorkoutFrequencyBar @ref="largeFreqChart"
+                             Entries="entries"
+                             Width="400" Height="400" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideFreqModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
-<!-- Modal IMC -->
-<div class="modal fade" id="bmiModal" tabindex="-1" role="dialog"
-aria-labelledby="bmiModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bmiModalLabel">Indice de Masse Corporelle</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <BmiGauge WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
-                HeightCm="178"
-                Width="400" Height="400" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="radarModal" Size="ModalSize.Large" OnShownAsync="OnRadarModalShown">
+    <HeaderTemplate><h5>Radar Forces/Faiblesses</h5></HeaderTemplate>
+    <BodyTemplate>
+        <StrengthRadar @ref="largeRadarChart"
+                       Entries="entries"
+                       Analyse="analyse"
+                       Width="400" Height="400" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideRadarModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
-<!-- Modal Avancement du programme -->
-<div class="modal fade" id="progModal" tabindex="-1" role="dialog"
-aria-labelledby="progModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="progModalLabel">Avancement du programme</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                @if (currentProg is not null)
-                {
-                    <ProgrammeTimeline Programme="currentProg" DurationWeeks="8" />
-                }
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="bmiModal" Size="ModalSize.Small" OnShownAsync="OnBmiModalShown">
+    <HeaderTemplate><h5>Indice de Masse Corporelle</h5></HeaderTemplate>
+    <BodyTemplate>
+        <BmiGauge @ref="largeBmiGauge"
+                  WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
+                  HeightCm="178"
+                  Width="400" Height="400" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideBmiModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
-<!-- Modal Répartition des muscles -->
-<div class="modal fade" id="pieModal" tabindex="-1" role="dialog"
-aria-labelledby="pieModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pieModalLabel">Répartition des muscles</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <MuscleSplitPie Entries="entries" Definitions="exerciseDefs" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="progModal" Size="ModalSize.Large" OnShownAsync="OnProgModalShown">
+    <HeaderTemplate><h5>Timeline du programme</h5></HeaderTemplate>
+    <BodyTemplate>
+        @if (currentProg is not null)
+        {
+            <ProgrammeTimeline @ref="largeProgTimeline"
+                               Programme="currentProg"
+                               DurationWeeks="8"
+                               Width="400"
+                               Height="250" />
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideProgModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
-<!-- Modal Records personnels -->
-<div class="modal fade" id="prModal" tabindex="-1" role="dialog"
-aria-labelledby="prModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="prModalLabel">Records personnels</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <PrTracker Entries="entries" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
+<Modal @ref="pieModal" Size="ModalSize.Small" OnShownAsync="OnPieModalShown">
+    <HeaderTemplate><h5>Répartition des muscles</h5></HeaderTemplate>
+    <BodyTemplate>
+        <MuscleSplitPie @ref="largePieChart"
+                        Entries="entries"
+                        Definitions="exerciseDefs" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HidePieModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="prModal" Size="ModalSize.Regular" OnShownAsync="OnPrModalShown">
+    <HeaderTemplate><h5>Records personnels</h5></HeaderTemplate>
+    <BodyTemplate>
+        <PrTracker @ref="largePrChart"
+                   Entries="entries"
+                   Width="380" Height="400" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HidePrModal">Fermer</Button>
+    </FooterTemplate>
+</Modal>
 
 @code {
     private List<PoidsEntry> entries = new();
@@ -251,60 +194,49 @@ aria-labelledby="prModalLabel" aria-modal="true">
     private ProgrammeModel? currentProg;
     private List<ExerciseDefinition> exerciseDefs = new();
 
+    private Modal lineModal, freqModal, radarModal,
+                  bmiModal, progModal, pieModal, prModal;
+
+    private GraphiqueLine largeLineChart;
+    private WorkoutFrequencyBar largeFreqChart;
+    private StrengthRadar largeRadarChart;
+    private BmiGauge largeBmiGauge;
+    private ProgrammeTimeline largeProgTimeline;
+    private MuscleSplitPie largePieChart;
+    private PrTracker largePrChart;
+
     protected override async Task OnInitializedAsync()
     {
         entries = await PoidsService.GetEntriesAsync();
         analyse = PoidsAnalyzer.Analyser(entries);
         currentProg = await ProgService.GetCurrentAsync();
-        exerciseDefs = await ProgService.GetExerciseDefinitionsAsync();
+        var defs = await ProgService.GetExerciseDefinitionsAsync();
+        exerciseDefs = defs ?? new List<ExerciseDefinition>();
+        Console.WriteLine($"[Analyse] exerciseDefs.Count = {exerciseDefs.Count}");
     }
 
-  
-        // … vos propriétés et OnInitializedAsync …
+    // ouverture / fermeture
+    private Task ShowLineModal() => lineModal.ShowAsync();
+    private Task HideLineModal() => lineModal.HideAsync();
+    private Task ShowFreqModal() => freqModal.ShowAsync();
+    private Task HideFreqModal() => freqModal.HideAsync();
+    private Task ShowRadarModal() => radarModal.ShowAsync();
+    private Task HideRadarModal() => radarModal.HideAsync();
+    private Task ShowBmiModal() => bmiModal.ShowAsync();
+    private Task HideBmiModal() => bmiModal.HideAsync();
+    private Task ShowProgModal() => progModal.ShowAsync();
+    private Task HideProgModal() => progModal.HideAsync();
+    private Task ShowPieModal() => pieModal.ShowAsync();
+    private Task HidePieModal() => pieModal.HideAsync();
+    private Task ShowPrModal() => prModal.ShowAsync();
+    private Task HidePrModal() => prModal.HideAsync();
 
-        private async Task OpenLineModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "lineModal");
-          
-        }
-
-        private async Task OpenFreqModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "freqModal");
-           
-        }
-
-        private async Task OpenRadarModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "radarModal");
-          
-        }
-
-        private async Task OpenBmiModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "bmiModal");
-           
-        }
-
-        private async Task OpenProgModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "progModal");
-           
-        }
-
-        private async Task OpenPieModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "pieModal");
-          
-        }
-
-        private async Task OpenPrModal()
-        {
-            await JS.InvokeVoidAsync("showModal", "prModal");
-          
-        }
-    
-
-}
-
+    // rafraîchissement à l'ouverture
+    private Task OnLineModalShown() => largeLineChart.RefreshAsync();
+    private Task OnFreqModalShown() => largeFreqChart.RefreshAsync();
+    private Task OnRadarModalShown() => largeRadarChart.RefreshAsync();
+    private Task OnBmiModalShown() => largeBmiGauge.RefreshAsync();
+    private Task OnProgModalShown() => largeProgTimeline.RefreshAsync();
+    private Task OnPieModalShown() => largePieChart.RefreshAsync();
+    private Task OnPrModalShown() => largePrChart.RefreshAsync();
 }

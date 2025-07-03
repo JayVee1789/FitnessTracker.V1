@@ -1,28 +1,36 @@
 ﻿@namespace FitnessTracker.V1.Components
-@using FitnessTracker.V1.Models
 @using BlazorBootstrap
+@using FitnessTracker.V1.Models
 
-<RadarChart @ref="radar" Width="500" Height="500" />
+<RadarChart @ref="radar" Width="@Width" Height="@Height" />
 
 @code {
     [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
     [Parameter] public PoidsAnalysisResult? Analyse { get; set; }
+    [Parameter] public int Width { get; set; } = 400;
+    [Parameter] public int Height { get; set; } = 400;
 
     private RadarChart? radar;
+    private ChartData? data;
+    private RadarChartOptions? options;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender || radar is null || Analyse is null) return;
 
         var exos = Analyse.ExercicesFort
-                          .Concat(Analyse.ExercicesFaible)
-                          .Distinct()
-                          .Take(4)
-                          .ToList();
+                      .Concat(Analyse.ExercicesFaible)
+                      .Distinct()
+                      .Take(4)
+                      .ToList();
 
-        var points = exos.Select(e =>
-            Entries.Where(p => p.Exercice == e).OrderByDescending(p => p.Date).FirstOrDefault()?.Poids ?? 0)
-            .Select(p => (double?)p).ToList();
+        var points = exos
+            .Select(e => Entries
+                .Where(p => p.Exercice == e)
+                .OrderByDescending(p => p.Date)
+                .FirstOrDefault()?.Poids ?? 0)
+            .Select(p => (double?)p)
+            .ToList();
 
         var ds = new RadarChartDataset
             {
@@ -32,8 +40,15 @@
                 BorderColor = "rgb(54,162,235)"
             };
 
-        await radar.InitializeAsync(
-            new ChartData { Labels = exos, Datasets = new() { ds } },
-            new RadarChartOptions { Responsive = true });
+        data = new ChartData { Labels = exos, Datasets = new() { ds } };
+        options = new RadarChartOptions { Responsive = true, MaintainAspectRatio = false };
+
+        await radar.InitializeAsync(data, options);
+    }
+
+    public async Task RefreshAsync()
+    {
+        if (radar is not null && data is not null && options is not null)
+            await radar.InitializeAsync(data, options);
     }
 }

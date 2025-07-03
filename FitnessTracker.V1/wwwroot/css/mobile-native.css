@@ -100,3 +100,33 @@ aside.overflow-auto {
     padding: 1rem 1rem calc(var(--bottom-bar-h) + 1rem) 1rem;
     min-height: 0; /* indispensable dans un flex */
 }
+
+/*tesrt*/
+.thumb-container {
+    display: inline-block;
+    margin: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+    .thumb-container:focus {
+        outline: none;
+    }
+
+.thumb-placeholder {
+    width: 200px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.thumb-label {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+}

@@ -101,3 +101,13 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+/*rajout*/
+.modal-content .modal-body {
+    overflow-x: auto; /* scroll si besoin */
+}
+
+    .modal-content .modal-body canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
