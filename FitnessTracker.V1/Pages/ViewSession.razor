@@ -345,7 +345,11 @@
         }
 
         // ✅ Chargement des programmes comme avant
-        Programmes = await SupabaseService.GetAllProgrammesAsync();
+        // Programmes = await SupabaseService.GetAllProgrammesAsync();
+        // ✅ Chargement des programmes par user
+        Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+
+            
     }
 
     private async Task OnProgrammeSelected(ChangeEventArgs e)

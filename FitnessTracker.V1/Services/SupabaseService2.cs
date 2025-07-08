@@ -203,5 +203,24 @@ public class SupabaseService2
         var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url) { Content = content });
         return res.IsSuccessStatusCode;
     }
+    public async Task<List<ProgrammeModel>> GetAllProgrammesForCurrentUserAsync()
+    {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId)) return new();
+
+        RefreshAuthHeaders();
+
+        var url1 = $"{_programmesUrl}?user_id=eq.{userId}";
+        var url2 = $"{_programmesManuelsUrl}?user_id=eq.{userId}";
+
+        var auto = await _http.GetFromJsonAsync<List<ProgrammeModel>>(url1) ?? new();
+        auto.ForEach(p => p.Source = "auto");
+
+        var manuels = await _http.GetFromJsonAsync<List<ProgrammeModel>>(url2) ?? new();
+        manuels.ForEach(p => p.Source = "manuel");
+
+        return auto.Concat(manuels).ToList();
+    }
+
     #endregion
 }
