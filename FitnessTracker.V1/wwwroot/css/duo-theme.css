@@ -237,3 +237,13 @@ body {
     .duo-icon-btn-small:hover {
         background-color: #ffd6d6;
     }
+
+.superset-link {
+    text-align: center;
+    margin: -0.8rem 0 -0.6rem;
+}
+
+    .superset-link i {
+        font-size: 1.4rem;
+        color: #1CB0F6;
+    }

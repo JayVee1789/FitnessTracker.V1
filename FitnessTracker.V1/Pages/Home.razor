@@ -1,12 +1,123 @@
 ﻿@page "/"
 
-<h3>Bienvenue sur FitnessTracker !</h3>
+<style>
+    .fade-slide-in {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInSlide 0.8s ease-out forwards;
+    }
 
-<ul class="list-group">
-    <li class="list-group-item">
-        <NavLink href="/Login">▶️  Connectez vous</NavLink>
-    </li>
-    <li class="list-group-item">
-        <NavLink href="/generate-programme">✨ Créer un compte</NavLink>
-    </li>
-</ul>
+    @@keyframes fadeInSlide {
+        to
+
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .progress-container {
+        background-color: #55c7ffcc;
+        border-radius: 20px;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: white;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .progress-bar-animated {
+        flex: 1;
+        height: 10px;
+        background-color: white;
+        border-radius: 10px;
+        margin-left: 1rem;
+        position: relative;
+        overflow: visible;
+    }
+
+    .progress-fill-animated {
+        height: 100%;
+        background-color: #BDF98F;
+        border-radius: 10px;
+        animation: pulseProgress 2.5s ease-in-out infinite alternate;
+        position: relative;
+        z-index: 1;
+    }
+
+    @@keyframes pulseProgress {
+        0%
+
+    {
+        width: 30%;
+    }
+
+    50% {
+        width: 65%;
+    }
+
+    100% {
+        width: 40%;
+    }
+
+    }
+
+    .progress-fire {
+        position: absolute;
+        top: -22px;
+        right: -16px;
+        width: 50px; /* ✅ plus large */
+        height: 50px; /* ✅ plus haut */
+        z-index: 2;
+        animation: flameBounce 1.5s infinite ease-in-out;
+    }
+
+    @@keyframes flameBounce {
+        0%, 100%
+
+    {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+    }
+</style>
+
+<div class="mobile-container fade-slide-in">
+
+    <div class="session-header">🏆 Bienvenue sur FitnessTracker</div>
+
+    <div class="progress-container">
+        Objectif du jour : Démarrer
+        <div class="progress-bar-animated">
+            <div class="progress-fill-animated" id="progressFill">
+                <img src="flamme.png" class="progress-fire" alt="🔥" />
+            </div>
+        </div>
+    </div>
+
+    <div class="duo-card">
+        <div class="duo-title">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <NavLink class="duo-title-text" href="/Login">▶️ Connectez-vous</NavLink>
+        </div>
+        <div class="duo-info">Reprenez vos progrès là où vous vous êtes arrêté !</div>
+    </div>
+
+    <div class="duo-card">
+        <div class="duo-title">
+            <i class="fa-solid fa-star"></i>
+            <NavLink class="duo-title-text" href="/Register">✨ Créez un compte</NavLink>
+        </div>
+        <div class="duo-info">Un programme 100% personnalisé t’attend 🧠💥</div>
+    </div>
+
+    <div class="motiv-message">💬 “Celui qui commence aujourd’hui sera plus fort demain.”</div>
+</div>

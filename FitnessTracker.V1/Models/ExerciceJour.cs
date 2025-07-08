@@ -15,6 +15,7 @@ namespace FitnessTracker.V1.Models
         public bool IsLb { get; set; } = false;
         public bool RefreshFlag { get; set; } = false;
         public bool IsDirty { get; private set; } = false;
+        public bool IsSuperset { get; set; } = false;
         public double PoidsAffiche
         {
             get => ViewSession.AfficherEnLb

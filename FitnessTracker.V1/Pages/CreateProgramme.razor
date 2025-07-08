@@ -7,112 +7,139 @@
 @using System.Text.Json
 @using Blazored.LocalStorage
 
-<h3>Créer un programme personnalisé</h3>
+<style>
+    .input-label {
+        color: white;
+        font-weight: 700;
+        margin-top: 0.5rem;
+    }
 
-<input class="form-control my-2" placeholder="Nom du programme" @bind="programmeName" />
-<div class="alert alert-secondary">
-    <b>Semaine(s) :</b> @plan.Weeks.Count |
-    <b>Total jours :</b> @plan.Weeks.Sum(w => w.Days.Count) |
-    <b>Total exos :</b> @plan.Weeks.Sum(w => w.Days.Sum(d => d.Exercises.Count))
+    .filter-box {
+        background: white;
+        border-radius: 20px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+        .filter-box input {
+            margin-bottom: 0.5rem;
+        }
+</style>
+
+<div class="session-header">Créer un programme</div>
+
+<div class="duo-card">
+    <input class="form-control" placeholder="Nom du programme" @bind="programmeName" />
 </div>
 
-<button class="btn btn-primary my-2" @onclick="AddWeek">➕ Ajouter une semaine</button>
+<div class="duo-card">
+    <div class="duo-info"><b>Semaine(s):</b> @plan.Weeks.Count</div>
+    <div class="duo-info"><b>Jours:</b> @plan.Weeks.Sum(w => w.Days.Count)</div>
+    <div class="duo-info"><b>Exos:</b> @plan.Weeks.Sum(w => w.Days.Sum(d => d.Exercises.Count))</div>
+</div>
+
+<button class="duo-btn mb-3" @onclick="AddWeek">➕ Ajouter une semaine</button>
 
 @foreach (var week in plan.Weeks.Select((w, wi) => new { w, wi }))
 {
-    <div class="border p-3 mb-3">
-        <h4>Semaine @(@week.wi + 1)</h4>
+    <div class="duo-card">
+        <div class="duo-title">
+            <span class="duo-title-text">Semaine @(@week.wi + 1)</span>
+        </div>
+        <div>
+            <button class="duo-icon-btn me-1" @onclick="@(() => AddDay(@week.wi))">➕ Jour</button>
+            <button class="duo-icon-btn" @onclick="@(() => DuplicateWeek(@week.wi))">📑 Dupliquer semaine</button>
+        </div>
+    </div>
 
-        <button class="btn btn-secondary me-2 mb-2" @onclick="@(() => AddDay(@week.wi))">➕ Jour</button>
-        <button class="btn btn-warning mb-2" @onclick="@(() => DuplicateWeek(@week.wi))">📑 Dupliquer la semaine</button>
-
-        @foreach (var day in week.w.Days.Select((d, di) => new { d, di }))
-        {
-            <div class="border p-2 mb-2">
-                <h5>Jour @(@day.di + 1)</h5>
-                <button class="btn btn-sm btn-outline-success mb-2" @onclick="@(() => PrepareAddExercise(@week.wi, @day.di))">➕ Exercice</button>
-                @foreach (var ex in day.d.Exercises)
-                {
-                    <div>@ex.ExerciseName — @ex.Series × @ex.Repetitions, @ex.RestTimeSeconds s</div>
+    @foreach (var day in week.w.Days.Select((d, di) => new { d, di }))
+    {
+        <div class="duo-card">
+            <div>
+                <div class="duo-title">
+                    <span class="duo-title-text">Jour @(@day.di + 1)</span>
+                </div>
+                <button class="duo-icon-btn-small me-1 mb-2" @onclick="@(() => PrepareAddExercise(@week.wi, @day.di))">➕ Exercice</button>
+                <button class="duo-icon-btn-small mb-2" @onclick="@(() => DuplicateDay(@week.wi, @day.di))">📄 Dupliquer journée</button>
+                @{
+                    int weekIdx = week.wi;
+                    int dayIdx = day.di;
                 }
+
+                @for (int ei = 0; ei < plan.Weeks[weekIdx].Days[dayIdx].Exercises.Count; ei++)
+                {
+                    var ex = plan.Weeks[weekIdx].Days[dayIdx].Exercises[ei];
+                    <div class="duo-info d-flex justify-content-between align-items-center">
+                        <span>💪 @ex.ExerciseName — @ex.Series × @ex.Repetitions, @ex.RestTimeSeconds s</span>
+                        <button class="duo-icon-btn-small" title="Supprimer"
+                                @onclick="@(() => RemoveExercise(weekIdx, dayIdx, ei))">
+                            ❌
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+<div class="filter-box">
+    <h4>Filtres</h4>
+    <input class="form-control" placeholder="Nom" @bind="filterName" />
+    <input class="form-control" placeholder="Description" @bind="filterDescription" />
+    <input class="form-control" placeholder="Muscle" @bind="filterMuscle" />
+
+    <h5>Catégories</h5>
+    <button class="btn btn-sm btn-link" @onclick="() => selectedCategories.Clear()">Tout décocher</button>
+    @foreach (var cat in AllCategories)
+    {
+        <label class="me-2">
+            <input type="checkbox" @onchange="e => ToggleFilter(selectedCategories, cat, e)" checked="@selectedCategories.Contains(cat)" /> @cat
+        </label>
+    }
+
+    <h5>Équipements</h5>
+    <button class="btn btn-sm btn-link" @onclick="() => selectedEquipments.Clear()">Tout décocher</button>
+    @foreach (var eq in AllEquipments)
+    {
+        <label class="me-2">
+            <input type="checkbox" @onchange="e => ToggleFilter(selectedEquipments, eq, e)" checked="@selectedEquipments.Contains(eq)" /> @eq
+        </label>
+    }
+
+    <h5>Résultats filtrés : @FilteredExercises.Count()</h5>
+    <div style="max-height: 300px; overflow-y: scroll;">
+        @foreach (var ex in FilteredExercises)
+        {
+            <div class="duo-card">
+                <div>
+                    <b>@ex.Name</b> | @ex.Category | @ex.Equipment
+                </div>
+                <button class="duo-btn" style="font-size:0.9rem; padding: 0.3rem 1rem;" @onclick="@(() => SelectExercise(ex))">Sélectionner</button>
             </div>
         }
     </div>
-}
-
-<hr />
-<h4>Filtres</h4>
-<div class="mb-2">
-    <input class="form-control mb-1" placeholder="Nom" @bind="filterName" />
-    <input class="form-control mb-1" placeholder="Description" @bind="filterDescription" />
-    <input class="form-control mb-1" placeholder="Muscle" @bind="filterMuscle" />
-</div>
-
-<h5>Catégories</h5>
-<button class="btn btn-sm btn-link" @onclick="() => selectedCategories.Clear()">Tout décocher catégories</button>
-@foreach (var cat in AllCategories)
-{
-    <label class="me-2">
-        <input type="checkbox" @onchange="e => ToggleFilter(selectedCategories, cat, e)" checked="@selectedCategories.Contains(cat)" />
-        @cat
-    </label>
-}
-
-<h5>Équipements</h5>
-<button class="btn btn-sm btn-link" @onclick="() => selectedEquipments.Clear()">Tout décocher Equipements</button>
-@foreach (var eq in AllEquipments)
-{
-    <label class="me-2">
-        <input type="checkbox" @onchange="e => ToggleFilter(selectedEquipments, eq, e)" checked="@selectedEquipments.Contains(eq)" />
-        @eq
-    </label>
-}
-
-<h5>Origines</h5>
-<button class="btn btn-sm btn-link" @onclick="() => selectedOrigins.Clear()">Tout décocher Origins</button>
-@foreach (var ori in AllOrigins)
-{
-    <label class="me-2">
-        <input type="checkbox" @onchange="e => ToggleFilter(selectedOrigins, ori, e)" checked="@selectedOrigins.Contains(ori)" />
-        @ori
-    </label>
-}
-
-<h5>Types</h5>
-<button class="btn btn-sm btn-link" @onclick="() => selectedTypes.Clear()">Tout décocher Types</button>
-@foreach (var typ in AllTypes)
-{
-    <label class="me-2">
-        <input type="checkbox" @onchange="e => ToggleFilter(selectedTypes, typ, e)" checked="@selectedTypes.Contains(typ)" />
-        @typ
-    </label>
-}
-
-<h5>Résultats filtrés : @FilteredExercises.Count()</h5>
-<div style="max-height: 300px; overflow-y: scroll;">
-    @foreach (var ex in FilteredExercises)
-    {
-        <div class="border p-1 mb-1">
-            <b>@ex.Name</b> | @ex.Category | @ex.Equipment
-            <button class="btn btn-sm btn-outline-primary float-end" @onclick="@(() => SelectExercise(ex))">Sélectionner</button>
-        </div>
-    }
 </div>
 
 @if (selected != null)
 {
-    <div class="mt-3">
-        <h5>Ajout de : @selected.Name</h5>
-        Séries : <input type="number" class="form-control" @bind="inputSeries" min="1" />
-        Répétitions : <input type="number" class="form-control" @bind="inputReps" min="1" />
-        Repos (s) : <input type="number" class="form-control" @bind="inputRest" min="0" />
-        <button class="btn btn-success mt-2" @onclick="ConfirmAddExercise">Confirmer l'ajout</button>
+    <div class="duo-card">
+        <div class="duo-title-text">Ajout de : @selected.Name</div>
+        <div class="mt-2">
+            Séries :
+            <input type="number" class="form-control" @bind="inputSeries" min="1" />
+            Répétitions :
+            <input type="number" class="form-control" @bind="inputReps" min="1" />
+            Repos (s) :
+            <input type="number" class="form-control" @bind="inputRest" min="0" />
+            <button class="duo-btn mt-2" @onclick="ConfirmAddExercise">Confirmer l'ajout</button>
+        </div>
     </div>
 }
 
-<hr />
-<button class="btn btn-warning me-2" @onclick="SaveToLocal">💾 Sauver local</button>
-<button class="btn btn-success" @onclick="OnSaveManualProgramme">☁️ Enregistrer dans Supabase</button>
+<div class="d-flex justify-content-between mt-4">
+    <button class="duo-btn" @onclick="SaveToLocal">💾 Sauver local</button>
+    <button class="duo-btn" @onclick="OnSaveManualProgramme">☁️ Enregistrer Supabase</button>
+</div>
 
 @if (jsonOut != null)
 {
@@ -189,7 +216,7 @@
                         Repetitions = e.Repetitions,
                         RestTimeSeconds = e.RestTimeSeconds,
                         IsSuperset = e.IsSuperset,
-                        Pourcentage1RM = e.Pourcentage1RM
+                        Pourcentage1RM = /* e.Pourcentage1RM */ 2.5
                     }).ToList()
                 }).ToList()
             };
@@ -275,4 +302,34 @@
             Nav.NavigateTo("/view-session");
         }
     }
+    private void DuplicateDay(int weekIdx, int dayIdx)
+    {
+        var day = plan.Weeks[weekIdx].Days[dayIdx];
+        var newDay = new WorkoutDay
+            {
+                DayIndex = plan.Weeks[weekIdx].Days.Count + 1,
+                TypeProgramme = day.TypeProgramme,
+                Exercises = day.Exercises.Select(e => new ExerciseSession
+                {
+                    ExerciseId = e.ExerciseId,
+                    ExerciseName = e.ExerciseName,
+                    Series = e.Series,
+                    Repetitions = e.Repetitions,
+                    RestTimeSeconds = e.RestTimeSeconds,
+                    IsSuperset = e.IsSuperset,
+                    Pourcentage1RM = e.Pourcentage1RM
+                }).ToList()
+            };
+        plan.Weeks[weekIdx].Days.Add(newDay);
+    }
+    private void RemoveExercise(int weekIdx, int dayIdx, int exerciseIdx)
+    {
+        if (weekIdx < 0 || dayIdx < 0 || exerciseIdx < 0) return;
+        if (weekIdx >= plan.Weeks.Count) return;
+        if (dayIdx >= plan.Weeks[weekIdx].Days.Count) return;
+        if (exerciseIdx >= plan.Weeks[weekIdx].Days[dayIdx].Exercises.Count) return;
+
+        plan.Weeks[weekIdx].Days[dayIdx].Exercises.RemoveAt(exerciseIdx);
+    }
+
 }

@@ -1,16 +1,13 @@
-﻿@page "/generate-programme"
+﻿@page "/programme-en-cours"
 @using FitnessTracker.V1.Models
-@inject ProgrammeGeneratorService Generator
-@inject HttpClient Http
-@inject SupabaseService2 SupabaseService
 @inject NavigationManager Nav
-@inject AuthService AuthService
+@inject SupabaseService2 SupabaseService
 @inject Supabase.Client Supabase
-@inject ProfileService profileService
+@inject AuthService AuthService
 @inject PoidsService poidsService
 
 <div class="mobile-container app-main">
-    <h2 class="session-header text-center mb-4">💪 Programme généré</h2>
+    <h2 class="session-header text-center mb-4">🎯 Programme sélectionné</h2>
 
     @if (plan == null)
     {
@@ -24,12 +21,7 @@
                 <div class="w-100">
                     <div class="duo-title mb-2">
                         <span class="duo-title-text">Semaine @week.WeekNumber</span>
-                       @*  <span class="ms-auto text-muted">+@week.ChargeIncrementPercent% charge</span> *@
                     </div>
-
-                  @*   <div class="duo-info mb-2">
-                        Séries: <strong>@week.SeriesWeek</strong> • Reps: <strong>@week.RepetitionsWeek</strong> • Repos: <strong>@week.RestTimeWeek</strong> sec
-                    </div> *@
 
                     @foreach (var day in week.Days.OrderBy(d => d.DayIndex))
                     {
@@ -50,11 +42,9 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-start">
                                             <div>
                                                 <strong>@ex.ExerciseName</strong>
-                                                @{
-                                                    if (derniersPoids.TryGetValue(ex.ExerciseName, out var poids) && poids.HasValue)
-                                                    {
-                                                        <span title="Poids précédent"> ⭐️ @($"{poids.Value} kg")</span>
-                                                    }
+                                                @if (derniersPoids.TryGetValue(ex.ExerciseName, out var poids) && poids.HasValue)
+                                                {
+                                                    <span title="Poids précédent"> ⭐️ @($"{poids.Value} kg")</span>
                                                 }
                                                 <br />
                                                 <small class="text-muted">
@@ -104,27 +94,21 @@
 
 @code {
     private WorkoutPlan? plan;
-    private List<ExerciseDefinition> exerciseList = new();
     private Dictionary<string, double?> derniersPoids = new();
+    private string newProgrammeName = "Programme prédéfini";
     private bool showModal = false;
-    private string newProgrammeName = "Programme glute focus";
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        if (TempDataStore.CurrentProgramme == null)
         {
-            exerciseList = await Http.GetFromJsonAsync<List<ExerciseDefinition>>("data/ExercicesListeLocal.json") ?? new();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Erreur chargement JSON exercices : " + ex.Message);
+            Nav.NavigateTo("/programmes-predefinis");
+            return;
         }
 
-        var profile = await profileService.GetOrCreateUserProfileAsync();
-        var strategy = PickProgrammeStrategy(profile);
-        plan = Generator.Generate(strategy, profile, exerciseList);
+        plan = TempDataStore.CurrentProgramme.Plan;
+        newProgrammeName = TempDataStore.CurrentProgramme.Nom;
 
-        // Précharger les poids connus pour les exercices
         var nomsExercices = plan.Weeks
             .SelectMany(w => w.Days)
             .Where(d => !d.IsRest)
@@ -141,7 +125,7 @@
 
     private void OpenSaveModal()
     {
-        newProgrammeName = $"Programme {DateTime.Today:dd/MM}-{plan?.TotalWeeks}w";
+        newProgrammeName = $"{newProgrammeName} ({DateTime.Today:dd/MM})";
         showModal = true;
     }
 
@@ -151,12 +135,6 @@
     {
         if (plan == null) return;
 
-        await EnregistrerProgrammeAsync(plan, newProgrammeName);
-        CloseModal();
-    }
-
-    private async Task EnregistrerProgrammeAsync(WorkoutPlan planToSave, string nom)
-    {
         if (!AuthService.IsAuthenticated)
         {
             Nav.NavigateTo("/login");
@@ -166,14 +144,14 @@
         var model = new ProgrammeModel
             {
                 Id = Guid.NewGuid(),
-                Nom = nom,
+                Nom = newProgrammeName,
                 DateDebut = DateTime.Today,
-                Contenu = JsonSerializer.Serialize(planToSave),
+                Contenu = System.Text.Json.JsonSerializer.Serialize(plan),
                 UserId = Supabase.Auth.CurrentUser?.Id ?? "",
-                Source = "auto"
+                Source = "predefini"
             };
 
-        bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
+        var ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
 
         if (ok)
         {
@@ -183,51 +161,7 @@
         {
             Console.WriteLine("❌ Erreur lors de l’enregistrement du programme");
         }
-    }
 
-    public static string PickProgrammeStrategy(UserProfile p)
-    {
-        if (!string.IsNullOrWhiteSpace(p.PriorityMuscle) &&
-            p.PriorityMuscle.Contains("glute", StringComparison.OrdinalIgnoreCase))
-            return "GluteFocus";
-
-        return p.Objective switch
-        {
-            TrainingObjective.Glutes => "GluteFocus",
-            TrainingObjective.Calistenie => "Calisthenics",
-            TrainingObjective.Strength => p.Level switch
-            {
-                UserLevel.Debutant => "Strength",
-                UserLevel.Intermediaire => "StrengthInt",
-                UserLevel.Avance => "StrengthAdv",
-                _ => "Strength"
-            },
-            TrainingObjective.Hypertrophy => p.SeancesPerWeek switch
-            {
-                <= 3 => "TBT",
-                4 => "PushPull4",
-                _ => "Split5"
-            },
-            TrainingObjective.Fat_loss => "FatLoss",
-            TrainingObjective.Mobility => p.Level switch
-            {
-                UserLevel.Avance => "MobilityAdv",
-                UserLevel.Intermediaire => "MobilityInt",
-                _ => "Mobility"
-            },
-            TrainingObjective.Yoga => p.Level switch
-            {
-                UserLevel.Avance => "YogaAdv",
-                UserLevel.Intermediaire => "YogaInt",
-                _ => "Yoga"
-            },
-            TrainingObjective.Pilates => p.Level switch
-            {
-                UserLevel.Avance => "PilatesAdv",
-                UserLevel.Intermediaire => "PilatesInt",
-                _ => "Pilates"
-            },
-            _ => "TBT"
-        };
+        CloseModal();
     }
 }

@@ -1,0 +1,61 @@
+﻿@page "/login"
+
+@inject AuthService AuthService
+@inject SupabaseService2 SupabaseService
+@inject NavigationManager Nav
+
+<div class="mobile-container d-flex flex-column justify-content-center align-items-center app-main">
+    <div class="duo-card w-100" style="max-width: 420px;">
+        <div class="w-100">
+            <h2 class="text-center session-header mb-3">Connexion</h2>
+
+            <div class="mb-3">
+                <label for="email" class="duo-title-text">Email</label>
+                <input id="email" class="form-control" @bind="email" placeholder="ex: jean@email.com" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="duo-title-text">Mot de passe</label>
+                <input id="password" class="form-control" type="password" @bind="password" placeholder="••••••••" />
+            </div>
+
+            <button class="duo-btn w-100 mb-2" @onclick="LoginAsync">Connexion</button>
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <p class="text-danger text-center mt-2">@errorMessage</p>
+            }
+
+            <div class="text-center mt-3">
+                <a href="/mot-de-passe-oublie" class="link-secondary">Mot de passe oublié ?</a>
+            </div>
+
+            <div class="text-center mt-2">
+                Pas encore de compte ?
+                <a href="/register" class="duo-title-text ms-1">Créer un compte</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string errorMessage = "";
+
+    private async Task LoginAsync()
+    {
+        var success = await AuthService.SignInAsync(email, password);
+        if (success)
+        {
+            SupabaseService.RefreshAuthHeaders();
+            Console.WriteLine("✅ Connexion réussie");
+            Nav.NavigateTo("/view-session");
+        }
+        else
+        {
+            errorMessage = "Échec de la connexion. Vérifie tes identifiants.";
+            Console.WriteLine("❌ Connexion échouée");
+        }
+    }
+}

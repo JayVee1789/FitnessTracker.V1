@@ -11,6 +11,12 @@ public class SportProfileModel : BaseModel
     [Column("age")]
     public int Age { get; set; }
 
+    [Column("poids")]
+    public int Poids { get; set; }
+
+    [Column("taille")]
+    public string Taille { get; set; } = "";
+
     [Column("sexe")]
     public string Sexe { get; set; }
 

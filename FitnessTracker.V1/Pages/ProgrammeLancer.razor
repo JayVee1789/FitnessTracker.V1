@@ -1,0 +1,55 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Nav
+
+@page "/programme-lancer/{NomProgramme}"
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar
+
+@code {
+    [Parameter]
+    public string NomProgramme { get; set; } = "";
+
+    private List<Model.ExerciseDefinition> allExercises = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allExercises = await Http.GetFromJsonAsync<List<Model.ExerciseDefinition>>("data/ExercicesListeLocal.json")
+                         ?? new();
+
+        IProgrammeStrategy? strategy = NomProgramme switch
+        {
+            "Rock" => new RockProgrammeStrategy(),
+            "Arnold" => new ArnoldProgrammeStrategy(),
+            "Drake" => new DrakeProgrammeStrategy(),
+            "MeganStallion" => new MeganStallionProgrammeStrategy(),
+            "PittSnatch" => new BradPittSnatchProgrammeStrategy(),
+            "5x5" => new Classic5x5Strategy(), // à créer
+            _ => null
+        };
+
+        if (strategy == null || !allExercises.Any())
+        {
+            Nav.NavigateTo("/programmes-predefinis");
+            return;
+        }
+
+        var profile = new Model.UserProfile
+            {
+                Level = Model.UserLevel.Debutant,
+                Sexe = "H",
+                Age = 25,
+                SeancesPerWeek = 4,
+                Objective = Model.TrainingObjective.Hypertrophy
+            };
+
+        var plan = strategy.GeneratePlan(profile, allExercises);
+
+        // 🔥 ICI : tu peux enregistrer le plan dans Supabase ou le stocker localement
+        TempDataStore.CurrentProgramme = new TempDataStore.ProgrammeTemporaire
+            {
+                Nom = NomProgramme,
+                Plan = plan
+            };
+
+        Nav.NavigateTo("/programme-en-cours");
+    }
+}

@@ -1,3 +1,4 @@
+wwwroot\animations.js
 wwwroot\appsettings.json
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
@@ -9,9 +10,11 @@ wwwroot\css\mobile-native.css
 wwwroot\css\style.css
 wwwroot\data\ExercicesListeLocal.json
 wwwroot\favicon.png
+wwwroot\flamme.png
 wwwroot\icon-192.png
 wwwroot\icon-512.png
 wwwroot\index.html
 wwwroot\manifest.webmanifest
+wwwroot\my-toast.js
 wwwroot\sample-data\weather.json
 wwwroot\sw-utils.js

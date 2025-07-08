@@ -1,21 +1,21 @@
 ﻿@inherits LayoutComponentBase
 @inject AuthService AuthService
 
-<div class="d-flex flex-column min-vh-100">
+<div class="d-flex flex-column min-vh-100" style="background-color:#1CB0F6;">
     <!-- ░▒▓ BARRE DU HAUT ▓▒░ -->
-    <nav class="navbar navbar-dark bg-primary shadow-sm" style="--bs-navbar-padding-y:.4rem;">
+    <nav class="navbar navbar-dark shadow-sm" style="background:#1CB0F6;border-bottom-left-radius: 14px;border-bottom-right-radius: 14px; --bs-navbar-padding-y:.4rem;">
         <div class="container-fluid">
-            <span class="navbar-brand ms-2">FitnessTracker</span>
+            <span class="navbar-brand ms-2 fw-bold fs-4" style="color:white;">🏋️ FitnessTracker</span>
             <div class="ms-auto">
                 @if (AuthService.IsAuthenticated)
                 {
-                    <a class="btn btn-outline-light btn-sm" href="/logout">
+                    <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
                         <i class="bi bi-box-arrow-right"></i>
                     </a>
                 }
                 else
                 {
-                    <a class="btn btn-outline-light btn-sm" href="/login">
+                    <a class="btn btn-light btn-sm" href="/login" title="Se connecter">
                         <i class="bi bi-box-arrow-in-right"></i>
                     </a>
                 }
@@ -24,10 +24,10 @@
     </nav>
 
     <div class="d-flex flex-grow-1" style="min-height:0;">
-        <aside class="d-none d-md-flex flex-column bg-light border-end overflow-auto" style="width:260px;min-height:0;">
-            <NavMenu />
+        <aside class="d-none d-md-flex flex-column bg-white border-end overflow-auto" style="width:260px;min-height:0;">
+            <NavMenu CssClass="p-3" />
         </aside>
-        <main class="app-main" style="min-height:0;">
+        <main class="app-main">
             @Body
         </main>
     </div>
@@ -41,18 +41,26 @@
             <NavLink href="/analyse" class="bottom-item">
                 <i class="bi bi-graph-up fs-5"></i><span class="small">Analyse</span>
             </NavLink>
-            <NavLink href="/generate-programme" class="bottom-item">
+            <NavLink href="/choix-programme" class="bottom-item">
                 <i class="bi bi-virus2 fs-5"></i><span class="small">Auto</span>
             </NavLink>
             <NavLink href="/mon-profil" class="bottom-item">
                 <i class="bi bi-person fs-5"></i><span class="small">Profil</span>
             </NavLink>
-            <NavLink class="bottom-item" href="/create-programme">
+            <NavLink href="/create-programme" class="bottom-item">
                 <i class="bi bi-cpu fs-5"></i><span class="small">Manuel</span>
-           </NavLink>
+            </NavLink>
         </nav>
     }
 </div>
 
 <!-- CE Modal sert de "container" aux modals lancés par ModalService -->
 <Modal IsServiceModal="true" />
+
+<!-- MENU LATÉRAL DUO -->
+@code {
+    [Parameter] public string? CssClass { get; set; }
+    private string role = "user";
+    protected override async Task OnInitializedAsync()
+        => role = await AuthService.GetCurrentUserRoleAsync();
+}

@@ -6,95 +6,91 @@
 @inject PoidsService PoidsService
 @inject ProgrammeService ProgService
 
-<style>
-    .thumb-container {
-        display: inline-block;
-        margin: 0.5rem;
-        text-align: center
-    }
-
-    .thumb-placeholder {
-        width: 200px;
-        height: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .thumb-label {
-        margin-top: .25rem;
-        font-size: .85rem;
-        text-align: center
-    }
-</style>
-
-<h3>Analyse des Performances</h3>
+<div class="session-header">Analyse des Performances</div>
 
 @if (analyse is null)
 {
-    <p>Chargement…</p>
+    <div class="motiv-message">Chargement de tes progrès…</div>
 }
 else
 {
     <div class="d-flex flex-wrap justify-content-center">
-        <div class="thumb-container me-3 mb-3" @onclick="ShowLineModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-bar-chart-line" style="font-size:2rem;color:#6c757d"></i>
+
+        @* Carte Duo pour chaque graphique *@
+        <div class="thumb-container" @onclick="ShowLineModal">
+            <div class="duo-card">
+                <i class="bi bi-bar-chart-line" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Progression du poids</div>
+                    <div class="duo-objectif">Voir l’évolution</div>
+                </div>
             </div>
-            <div class="thumb-label">Progression du poids</div>
         </div>
 
-        <div class="thumb-container me-3 mb-3" @onclick="ShowFreqModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-calendar-week" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowFreqModal">
+            <div class="duo-card">
+                <i class="bi bi-calendar-week" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Séances / semaine</div>
+                    <div class="duo-objectif">Suivre ta régularité</div>
+                </div>
             </div>
-            <div class="thumb-label">Séances / semaine</div>
         </div>
 
-        <div class="thumb-container me-3 mb-3" @onclick="ShowRadarModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-graph-up-arrow" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowRadarModal">
+            <div class="duo-card">
+                <i class="bi bi-graph-up-arrow" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Radar</div>
+                    <div class="duo-objectif">Forces et faiblesses</div>
+                </div>
             </div>
-            <div class="thumb-label">Radar</div>
         </div>
 
-        <div class="thumb-container me-3 mb-3" @onclick="ShowBmiModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-activity" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowBmiModal">
+            <div class="duo-card">
+                <i class="bi bi-activity" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">IMC</div>
+                    <div class="duo-objectif">Suivi santé</div>
+                </div>
             </div>
-            <div class="thumb-label">IMC</div>
         </div>
 
-        <div class="thumb-container me-3 mb-3" @onclick="ShowProgModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-calendar3" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowProgModal">
+            <div class="duo-card">
+                <i class="bi bi-calendar3" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Timeline</div>
+                    <div class="duo-objectif">Vision du programme</div>
+                </div>
             </div>
-            <div class="thumb-label">Timeline</div>
         </div>
 
-        <div class="thumb-container me-3 mb-3" @onclick="ShowPieModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-pie-chart" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowPieModal">
+            <div class="duo-card">
+                <i class="bi bi-pie-chart" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Muscles</div>
+                    <div class="duo-objectif">Répartition entraînée</div>
+                </div>
             </div>
-            <div class="thumb-label">Muscles</div>
         </div>
 
-        <div class="thumb-container mb-3" @onclick="ShowPrModal">
-            <div class="thumb-placeholder">
-                <i class="bi bi-trophy" style="font-size:2rem;color:#6c757d"></i>
+        <div class="thumb-container" @onclick="ShowPrModal">
+            <div class="duo-card">
+                <i class="bi bi-trophy" style="font-size:2rem;color:#1CB0F6;"></i>
+                <div>
+                    <div class="duo-title-text">Records</div>
+                    <div class="duo-objectif">Tes PR 🏆</div>
+                </div>
             </div>
-            <div class="thumb-label">Records</div>
         </div>
+
     </div>
 }
 
-@* ------------------------------------------------- *@
-@*         LES MODALS AVEC OnShownAsync          *@
-@* ------------------------------------------------- *@
+@* Modals inchangés, conservés pour compatibilité *@
 
 <Modal @ref="lineModal" Size="ModalSize.Large" OnShownAsync="OnLineModalShown">
     <HeaderTemplate><h5>Progression du poids</h5></HeaderTemplate>
@@ -105,7 +101,7 @@ else
                        Width="400" Height="400" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HideLineModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HideLineModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -117,7 +113,7 @@ else
                              Width="400" Height="400" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HideFreqModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HideFreqModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -130,7 +126,7 @@ else
                        Width="400" Height="400" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HideRadarModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HideRadarModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -143,7 +139,7 @@ else
                   Width="400" Height="400" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HideBmiModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HideBmiModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -160,7 +156,7 @@ else
         }
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HideProgModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HideProgModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -172,7 +168,7 @@ else
                         Definitions="exerciseDefs" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HidePieModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HidePieModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -184,7 +180,7 @@ else
                    Width="380" Height="400" />
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="HidePrModal">Fermer</Button>
+        <Button class="duo-btn" @onclick="HidePrModal">Fermer</Button>
     </FooterTemplate>
 </Modal>
 
@@ -215,7 +211,6 @@ else
         Console.WriteLine($"[Analyse] exerciseDefs.Count = {exerciseDefs.Count}");
     }
 
-    // ouverture / fermeture
     private Task ShowLineModal() => lineModal.ShowAsync();
     private Task HideLineModal() => lineModal.HideAsync();
     private Task ShowFreqModal() => freqModal.ShowAsync();
@@ -231,7 +226,6 @@ else
     private Task ShowPrModal() => prModal.ShowAsync();
     private Task HidePrModal() => prModal.HideAsync();
 
-    // rafraîchissement à l'ouverture
     private Task OnLineModalShown() => largeLineChart.RefreshAsync();
     private Task OnFreqModalShown() => largeFreqChart.RefreshAsync();
     private Task OnRadarModalShown() => largeRadarChart.RefreshAsync();

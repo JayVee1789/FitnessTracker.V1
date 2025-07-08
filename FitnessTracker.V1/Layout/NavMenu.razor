@@ -5,7 +5,7 @@
 
     <!-- HOME -->
     <div class="nav-item px-3">
-        <NavLink class="nav-link text-dark" href="" Match="NavLinkMatch.All">
+        <NavLink class="nav-link text-white fw-bold" href="" Match="NavLinkMatch.All">
             <i class="bi bi-house"></i> Salut
         </NavLink>
     </div>
@@ -14,19 +14,16 @@
     @if (role == "user")
     {
         <div class="nav-item">
-            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
-               data-bs-toggle="collapse" href="#menuUser" role="button"
+            <a class="nav-link text-white fw-bold dropdown-toggle" data-bs-toggle="collapse" href="#menuUser" role="button"
                aria-expanded="false" aria-controls="menuUser">
-                <span><i class="bi bi-person-circle"></i> Utilisateur</span>
-                <i class="bi bi-chevron-down small"></i>
+                <i class="bi bi-person-circle"></i> Utilisateur
             </a>
-
             <div class="collapse ps-3" id="menuUser">
-                <NavLink class="nav-link text-dark" href="/analyse">Analyse</NavLink>
-                <NavLink class="nav-link text-dark" href="/generate-programme">Générateur</NavLink>
-                <NavLink class="nav-link text-dark" href="/view-session">Voir Séance</NavLink>
-                <NavLink class="nav-link text-dark" href="/mon-profil">Mon profil</NavLink>
-                <NavLink class="nav-link text-dark" href="/create-programme">Créer programme</NavLink>
+                <NavLink class="nav-link text-white" href="/analyse">Analyse</NavLink>
+                <NavLink class="nav-link text-white" href="/generate-programme">Générateur</NavLink>
+                <NavLink class="nav-link text-white" href="/view-session">Voir Séance</NavLink>
+                <NavLink class="nav-link text-white" href="/mon-profil">Mon profil</NavLink>
+                <NavLink class="nav-link text-white" href="/create-programme">Créer programme</NavLink>
             </div>
         </div>
     }
@@ -35,17 +32,14 @@
     @if (role == "admin" || role == "coach")
     {
         <div class="nav-item">
-            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
-               data-bs-toggle="collapse" href="#menuGestion" role="button"
+            <a class="nav-link text-white fw-bold dropdown-toggle" data-bs-toggle="collapse" href="#menuGestion" role="button"
                aria-expanded="false" aria-controls="menuGestion">
-                <span><i class="bi bi-tools"></i> Gestion</span>
-                <i class="bi bi-chevron-down small"></i>
+                <i class="bi bi-tools"></i> Gestion
             </a>
-
             <div class="collapse ps-3" id="menuGestion">
-                <NavLink class="nav-link text-dark" href="/dashboard">Tableau de bord</NavLink>
-                <NavLink class="nav-link text-dark" href="/Exercices">Gestion Exercices</NavLink>
-                <NavLink class="nav-link text-dark" href="/gestion_poids">Gestion poids</NavLink>
+                <NavLink class="nav-link text-white" href="/dashboard">Tableau de bord</NavLink>
+                <NavLink class="nav-link text-white" href="/Exercices">Gestion Exercices</NavLink>
+                <NavLink class="nav-link text-white" href="/gestion_poids">Gestion poids</NavLink>
             </div>
         </div>
     }
@@ -54,33 +48,30 @@
     @if (role == "admin")
     {
         <div class="nav-item">
-            <a class="nav-link text-dark d-flex justify-content-between align-items-center dropdown-toggle"
-               data-bs-toggle="collapse" href="#menuAdminOnly" role="button"
+            <a class="nav-link text-white fw-bold dropdown-toggle" data-bs-toggle="collapse" href="#menuAdminOnly" role="button"
                aria-expanded="false" aria-controls="menuAdminOnly">
-                <span><i class="bi bi-shield-lock"></i> Admin</span>
-                <i class="bi bi-chevron-down small"></i>
+                <i class="bi bi-shield-lock"></i> Admin
             </a>
-
             <div class="collapse ps-3" id="menuAdminOnly">
-                <NavLink class="nav-link text-dark" href="/gestion-utilisateurs">Gérer utilisateurs</NavLink>
-                <NavLink class="nav-link text-dark" href="/dashboard">Tableau de bord</NavLink>
+                <NavLink class="nav-link text-white" href="/gestion-utilisateurs">Gérer utilisateurs</NavLink>
+                <NavLink class="nav-link text-white" href="/dashboard">Tableau de bord</NavLink>
             </div>
         </div>
     }
 
     <!-- Connexion / Déconnexion -->
-    <hr class="my-3" />
+    <hr class="my-3 border-white" />
 
     <div class="nav-item px-3">
         @if (AuthService.IsAuthenticated)
         {
-            <NavLink class="nav-link text-dark text-danger" href="/logout">
+            <NavLink class="nav-link text-danger fw-bold" href="/logout">
                 <i class="bi bi-box-arrow-right"></i> Déconnexion
             </NavLink>
         }
         else
         {
-            <NavLink class="nav-link text-dark" href="/login">
+            <NavLink class="nav-link text-white" href="/login">
                 <i class="bi bi-box-arrow-in-right"></i> Connexion
             </NavLink>
         }

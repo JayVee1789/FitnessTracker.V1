@@ -1,0 +1,32 @@
+﻿@page "/programmes-predefinis"
+@inject NavigationManager Nav
+
+<h3 class="session-header">Programmes prédéfinis</h3>
+
+<div class="app-main" style="display: flex; flex-wrap: wrap; justify-content: center;">
+    @foreach (var programme in Programmes)
+    {
+        <button class="thumb-container" @onclick="() => SelectionnerProgrammeAsync(programme.Key)">
+            <div class="thumb-placeholder">@programme.Key</div>
+            <div class="thumb-label">@programme.Value</div>
+        </button>
+    }
+</div>
+
+@code {
+    private Dictionary<string, string> Programmes = new()
+    {
+        {"Rock", "Style The Rock"},
+        {"Arnold", "Arnold Split"},
+        {"Drake", "Drake Fit"},
+        {"PittSnatch", "Snatch Fight Club"},
+        {"MeganStallion", "Glute Master"},
+        {"5x5", "Programme 5x5 classique"}
+    };
+
+    private async Task SelectionnerProgrammeAsync(string nom)
+    {
+        await Task.Yield();
+        Nav.NavigateTo($"/programme-lancer/{nom}");
+    }
+}

@@ -3,124 +3,123 @@
 @inject NavigationManager Nav
 @inject AuthService AuthService
 
-
-<h3 class="mb-4">👤 Mon profil sportif</h3>
+<div class="session-header">👤 Mon profil sportif</div>
 
 @if (isLoading)
 {
-    <div class="alert alert-info">Chargement de votre profil...</div>
+    <div class="duo-card">Chargement de votre profil...</div>
 }
 else if (profile is null)
 {
-    
-    <div class="alert alert-danger">Erreur : impossible de charger ou créer un profil utilisateur.</div>
+    <div class="duo-card objectif-atteint">❌ Erreur : impossible de charger ou créer un profil utilisateur.</div>
 }
 else
 {
     <EditForm Model="profile" OnValidSubmit="SauvegarderProfil">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Âge</label>
-                <InputNumber class="form-control" @bind-Value="profile.Age" />
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Sexe</label>
-                <InputSelect class="form-select" @bind-Value="profile.Sexe">
-                    <option value="Homme">Homme</option>
-                    <option value="Femme">Femme</option>
-                    <option value="Autre">Autre</option>
-                </InputSelect>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Niveau</label>
-                <InputSelect class="form-select" @bind-Value="profile.Level">
-                    <option value="Debutant">Débutant</option>
-                    <option value="Intermediaire">Intermédiaire</option>
-                    <option value="Avance">Avancé</option>
-                    
-                    Fat_loss,
-                    Yoga,
-                    Mobility,
-                    Pilates,
-                    Strength
-                </InputSelect>
+        <div class="duo-card">
+            <div class="duo-title">Âge</div>
+            <InputNumber class="form-control" @bind-Value="profile.Age" />
+        </div>
+        <div class="duo-card">
+            <div class="duo-title">Poids (kg)</div>
+            <InputNumber class="form-control" @bind-Value="profile.Poids" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Taille (cm ou format libre)</div>
+            <InputText class="form-control" @bind-Value="profile.Taille" />
+        </div>
+        <div class="duo-card">
+            <div class="duo-title">Sexe</div>
+            <InputSelect class="form-select" @bind-Value="profile.Sexe">
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+            </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Niveau</div>
+            <InputSelect class="form-select" @bind-Value="profile.Level">
+                <option value="Debutant">Débutant</option>
+                <option value="Intermediaire">Intermédiaire</option>
+                <option value="Avance">Avancé</option>
+            </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Objectif</div>
+            <InputSelect class="form-select" @bind-Value="profile.Objective">
+                <option value="Force">Force</option>
+                <option value="Endurance">Endurance</option>
+                <option value="Hypertrophy">Hypertrophie</option>
+                <option value="Fat_loss">Perte de poids</option>
+                <option value="Mobility">Mobilité</option>
+                <option value="Strength">Force / Strength</option>
+                <option value="Glutes">Fessiers</option>
+                <option value="Calistenie">Calisthenie</option>
+            </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Séances / semaine</div>
+            <InputNumber class="form-control" @bind-Value="profile.SeancesPerWeek" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Durée du programme (mois)</div>
+            <InputNumber class="form-control" @bind-Value="profile.ProgramDurationMonths" />
+        </div>
+
+        <div class="duo-card">
+            <div class="form-check mb-2">
+                <InputCheckbox class="form-check-input" @bind-Value="profile.WantsSuperset" id="superset" />
+                <label class="form-check-label" for="superset">Utiliser des supersets</label>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Objectif</label>
-                <InputSelect class="form-select" @bind-Value="profile.Objective">
-                    <option value="Force">Force</option>
-                    <option value="Endurance">Endurance</option>
-                    <option value="Hypertrophy">Hypertrophie</option>
-                    <option value="Fat_loss">Perte de poids</option>
-                  @*   <option value="Yoga">Yoga</option> *@
-                    <option value="Mobility">Mobility</option>
-                    @* <option value="Pilates">Pilates</option> *@
-                    <option value="Strength">Strength</option>
-                    <option value="Glutes">Glutes</option>
-                    <option value="Calistenie">Calistenie</option>
-                </InputSelect>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Séances / semaine</label>
-                <InputNumber class="form-control" @bind-Value="profile.SeancesPerWeek" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Durée du programme (mois)</label>
-                <InputNumber class="form-control" @bind-Value="profile.ProgramDurationMonths" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-check">
-                    <InputCheckbox class="form-check-input" @bind-Value="profile.WantsSuperset" id="superset" />
-                    <label class="form-check-label" for="superset">Utiliser des supersets</label>
-                </div>
-
-                <div class="form-check mt-2">
-                    <InputCheckbox class="form-check-input" @bind-Value="profile.BodyweightOnly" id="poidscorps" />
-                    <label class="form-check-label" for="poidscorps">Poids du corps uniquement</label>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Pathologie musculaire</label>
-                <InputText class="form-control" @bind-Value="profile.PathologieMuscle" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Muscle prioritaire</label>
-                <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" @bind-Value="profile.BodyweightOnly" id="poidscorps" />
+                <label class="form-check-label" for="poidscorps">Poids du corps uniquement</label>
             </div>
         </div>
 
-        <button class="btn btn-success mt-3">💾 Sauvegarder le profil</button>
+        <div class="duo-card">
+            <div class="duo-title">Pathologie musculaire</div>
+            <InputText class="form-control" @bind-Value="profile.PathologieMuscle" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Muscle prioritaire</div>
+            <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="duo-btn">💾 Sauvegarder</button>
+        </div>
 
         @if (message is not null)
         {
-            <div class="alert alert-success mt-3">@message</div>
+            <div class="motiv-message">@message</div>
         }
     </EditForm>
-        <h5 class="mt-4">🔐 Changer mon mot de passe</h5>
 
-        <div class="mb-3">
-            <input type="password" class="form-control" placeholder="Nouveau mot de passe" @bind="newPassword" />
-        </div>
-
-        <button class="btn btn-warning" @onclick="ChangePassword">Mettre à jour le mot de passe</button>
+    <div class="duo-card mt-4">
+        <div class="duo-title">🔐 Changer mon mot de passe</div>
+        <input type="password" class="form-control mt-2" placeholder="Nouveau mot de passe" @bind="newPassword" />
+        <button class="duo-btn mt-3" @onclick="ChangePassword">Mettre à jour</button>
 
         @if (!string.IsNullOrEmpty(passwordMessage))
         {
-            <div class="alert alert-info mt-2">@passwordMessage</div>
+            <div class="motiv-message mt-2">@passwordMessage</div>
         }
-
+    </div>
 }
 
 @code {
     private SportProfileModel? profile;
     private string? message;
     private bool isLoading = true;
+
     protected override async Task OnInitializedAsync()
     {
         var user = Supabase.Auth.CurrentUser;
@@ -142,22 +141,20 @@ else
             if (profile == null)
             {
                 profile = new SportProfileModel
-                    {
-                        Id = user.Id,
-                        Age = 25,
-                        Sexe = "Homme",
-                        Level = "Debutant",
-                        Objective = "Hypertrophy",
-                        SeancesPerWeek = 3,
-                        ProgramDurationMonths = 3,
-                        WantsSuperset = false,
-                        BodyweightOnly = false,
-                        PathologieMuscle = "",
-                        PriorityMuscle = ""
-                    };
-                // 🆕 Enregistrement immédiat du profil vierge
+                {
+                    Id = user.Id,
+                    Age = 25,
+                    Sexe = "Homme",
+                    Level = "Debutant",
+                    Objective = "Hypertrophy",
+                    SeancesPerWeek = 3,
+                    ProgramDurationMonths = 3,
+                    WantsSuperset = false,
+                    BodyweightOnly = false,
+                    PathologieMuscle = "",
+                    PriorityMuscle = ""
+                };
                 await Supabase.From<SportProfileModel>().Upsert(profile);
-
             }
         }
         catch (Exception ex)
@@ -168,14 +165,13 @@ else
         isLoading = false;
     }
 
-
     private async Task SauvegarderProfil()
     {
         if (profile is null) return;
-
         await Supabase.From<SportProfileModel>().Upsert(profile);
         message = "✅ Profil sauvegardé avec succès.";
     }
+
     private string newPassword = "";
     private string passwordMessage = "";
 

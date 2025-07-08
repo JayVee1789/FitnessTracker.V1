@@ -2,34 +2,45 @@
 @inject Supabase.Client Supabase
 @inject NavigationManager Nav
 
-<h3>📝 Créer un compte</h3>
+<div class="mobile-container d-flex flex-column justify-content-center align-items-center app-main">
+    <div class="duo-card w-100" style="max-width: 420px;">
+        <div class="w-100">
+            <h2 class="text-center session-header mb-3">📝 Créer un compte</h2>
 
-@if (!registered)
-{
-    <div class="mb-3">
-        <input placeholder="Email" class="form-control" @bind="email" />
-    </div>
-    <div class="mb-3">
-        <input placeholder="Mot de passe" type="password" class="form-control" @bind="password" />
-    </div>
-    
-    <button class="btn btn-success" @onclick="RegisterUser">Créer mon compte</button>
+            @if (!registered)
+            {
+                <div class="mb-3">
+                    <label for="email" class="duo-title-text">Email</label>
+                    <input id="email" placeholder="ex: jean@email.com" class="form-control" @bind="email" />
+                </div>
 
-    @if (!string.IsNullOrEmpty(error))
-    {
-        <div class="alert alert-danger mt-2">@error</div>
-    }
+                <div class="mb-3">
+                    <label for="password" class="duo-title-text">Mot de passe</label>
+                    <input id="password" placeholder="••••••••" type="password" class="form-control" @bind="password" />
+                </div>
 
-    <p class="mt-3">
-        Déjà inscrit ? <a href="/login" class="link-primary">Se connecter</a>
-    </p>
-}
-else
-{
-    <div class="alert alert-success">
-        ✅ Compte créé avec succès ! Redirection vers votre profil...
+                <button class="duo-btn w-100 mb-3" @onclick="RegisterUser">Créer mon compte</button>
+
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="alert alert-danger text-center">@error</div>
+                }
+
+                <p class="mt-3 text-center">
+                    Déjà inscrit ?
+                    <a href="/login" class="duo-title-text ms-1">Se connecter</a>
+                </p>
+            }
+            else
+            {
+                <div class="alert alert-success text-center">
+                    ✅ Compte créé avec succès !<br />
+                    Redirection vers votre profil...
+                </div>
+            }
+        </div>
     </div>
-}
+</div>
 
 @code {
     private string email = "";
@@ -65,7 +76,6 @@ else
             var session = await Supabase.Auth.SignUp(email, password);
             if (session?.User is not null)
             {
-                // Enregistrer dans la table user_profiles
                 var profile = new SupabaseUserProfile
                     {
                         Id = session.User.Id,

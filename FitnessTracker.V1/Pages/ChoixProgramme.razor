@@ -1,0 +1,21 @@
+﻿@page "/choix-programme"
+@inject NavigationManager Nav
+
+<h3>Quel type de programme souhaitez-vous ?</h3>
+
+<button class="duo-btn" @onclick="OnProgrammePersoClick">Programme personnalisé</button>
+<button class="duo-btn" @onclick="OnProgrammePredefClick">Programme prédéfini</button>
+
+@code {
+    private async Task OnProgrammePersoClick()
+    {
+        await Task.Yield(); // Évite warning pour async void
+        Nav.NavigateTo("/generation");
+    }
+
+    private async Task OnProgrammePredefClick()
+    {
+        await Task.Yield();
+        Nav.NavigateTo("/programmes-predefinis");
+    }
+}
