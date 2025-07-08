@@ -1,25 +1,78 @@
 ﻿@page "/view-session"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
+@using FitnessTracker.V1.Helper
 @using FitnessTracker.V1.Services.ProgrammeGeneration
 @using System.Text.Json
 @using static FitnessTracker.V1.Models.Model
+@* @using Progress = FitnessTracker.V1.Components.ProgressBar *@
+@using static FitnessTracker.V1.Components.SessionProgressBar
 @inject SupabaseService2 SupabaseService
 @inject PoidsService PoidsService
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 @inject AuthService AuthService
 @inject HttpClient Http
+@inject ViewSessionHelper viewSessionHelper
 
-<h3>Visualiser une séance de programme</h3>
+@code {
+    private string progress => SelectedPlan?.TotalWeeks > 0
+        ? Math.Min(100, Math.Round((SelectedSemaineIndex * 7 + SelectedJourIndex) * 100.0 / (SelectedPlan.TotalWeeks * 7))) + "%"
+        : "0%";
 
-<!-- -------------------------------------------------------------
-     SECTION 1 : Sélecteurs Programme / Semaine / Jour
--------------------------------------------------------------- -->
-<div class="row gy-2 gx-3 mb-4">
+    private int ExercicesCompletes() =>
+   Exercises.Count(e => e.ObjectifAtteint && e.ExerciseName != "Repos");
+
+    private int ExercicesTotales() =>
+        Exercises.Count(e => e.ExerciseName != "Repos");
+
+    private async Task CheckFireworks()
+    {
+        if (ExercicesTotales() > 0 && ExercicesCompletes() == ExercicesTotales())
+        {
+            await JS.InvokeVoidAsync("launchFireworks");
+        }
+    }
+}
+
+
+
+<div class="session-header">
+    Session du Jour 💪
+</div>
+
+
+<SessionProgressBar Completed="@ExercicesCompletes()" TotalDone="@ExercicesTotales()" />
+
+
+@if (ExercicesTotales() > 0 && ExercicesCompletes() == ExercicesTotales())
+{
+    <div>
+        <script>
+            await JS.InvokeVoidAsync("launchFireworks");
+        </script>
+    </div>
+}
+
+
+<!-- Sélecteurs Programme/Semaine/Jour -->
+<div class="row gy-2 gx-3 mb-4 px-3">
     <div class="col-12 col-md-4">
-        <label class="form-label">Programme :</label>
-        <select class="form-select" @onchange="OnProgrammeSelected">
+        <label class="form-label text-white">Programme : </label>
+        @if (SelectedPlan is not null)
+        {
+
+
+
+            <button class="duo-icon-btn-small text-danger ms-2"
+            title="Supprimer ce programme"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmModal">
+                🗑️
+            </button>
+
+        }
+        <select class="form-select rounded-pill" @onchange="OnProgrammeSelected">
             <option value="">-- Sélectionner --</option>
             @foreach (var prog in Programmes)
             {
@@ -31,21 +84,30 @@
     @if (SelectedPlanAvailable)
     {
         <div class="col-6 col-md-4">
-            <label class="form-label">Semaine :</label>
-            <select class="form-select" @onchange="OnSemaineChanged">
+            <label class="form-label text-white">Semaine :</label>
+            <select class="form-select rounded-pill" @onchange="OnSemaineChanged">
                 @for (int i = 0; i < SelectedPlan?.Weeks.Count; i++)
                 {
-                    <option value="@i">Semaine @(i + 1)</option>
+                    bool semaineComplete = SelectedPlan.Weeks[i].Days.All(day =>
+                    day.IsRest || ExercisesSemaineComplete(i, day.DayIndex));
+
+                    <option value="@i" class="@(semaineComplete ? "completed-option" : "")">
+                        Semaine @(i + 1)
+                    </option>
                 }
             </select>
         </div>
 
         <div class="col-6 col-md-4">
-            <label class="form-label">Jour :</label>
-            <select class="form-select" @onchange="OnJourChanged">
+            <label class="form-label text-white">Jour :</label>
+            <select class="form-select rounded-pill" @onchange="OnJourChanged">
                 @for (int j = 1; j <= 7; j++)
                 {
-                    <option value="@j">Jour @j</option>
+                    bool jourComplete = ExercisesJourComplete(j);
+
+                    <option value="@j" class="@(jourComplete ? "completed-option" : "")">
+                        Jour @j
+                    </option>
                 }
             </select>
         </div>
@@ -54,111 +116,82 @@
 
 @if (SelectedPlanAvailable)
 {
-    <button class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#confirmModal">
-        Supprimer ce programme
-    </button>
+    <div class="unit-toggle">
+        <button @onclick="ToggleUnite">
+            Affichage : @(AfficherEnLb ? "lb" : "kg")
+        </button>
+    </div>
 }
 
-<!-- -------------------------------------------------------------
-     SECTION 2 : Bouton kg / lb + Cartes exercices
--------------------------------------------------------------- -->
 @if (Exercises.Any())
 {
-    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
-        <h5 class="m-0">Séance du programme sélectionné</h5>
-        <button class="btn btn-sm btn-outline-primary" @onclick="ToggleUnite">
-            Affichage : @(AfficherEnLb ? "livres (lb)" : "kilos (kg)")
+    <div class="d-flex flex-column gap-3 px-3">
+        @foreach (var ex in Exercises)
+        {
+            <div class="duo-card @(ex.ObjectifAtteint ? "objectif-atteint" : "")">
+
+                <div class="flex-1">
+                    <div class="duo-title">
+                        <span class="duo-title-text">@ex.ExerciseName</span>
+                        <a class="duo-video-icon" href="@($"https://www.youtube.com/results?search_query={ex.ExerciseName}+exercise")"
+                        target="_blank" title="Voir la vidéo">🎥</a>
+                        <button class="duo-icon-btn" data-bs-toggle="modal" data-bs-target="#modalRemplacement"
+                        @onclick="() => ProposerRemplacement(ex)" title="Changer d’exercice">
+                            🔁
+                        </button>
+                    </div>
+
+                    <div class="duo-info">@ex.Series série(s) de @ex.Repetitions répétition(s) – Repos : @ex.RestTimeSeconds s</div>
+                    <div class="duo-info">Charge : @ex.Pourcentage1RM % 1RM</div>
+
+                    <div class="input-group mt-3" style="max-width: 120px;">
+                        <input type="number" class="form-control form-control-sm rounded-pill text-center"
+                        step="0.5" @bind="ex.PoidsAffiche" />
+                        <span class="input-group-text bg-light border-0">@((ex.IsLb ? "lb" : "kg"))</span>
+                    </div>
+
+                    <div class="duo-objectif mt-2">
+                        🎯 <strong>Objectif : @(AfficherEnLb ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb" : $"{Math.Round(ex.Objectif, 1)} kg")</strong>
+                    </div>
+                </div>
+
+                <button class="checkmark" @onclick="() => MarquerAtteint(ex)">
+                    ✔️
+                </button>
+            </div>
+
+
+
+
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <button class="duo-btn px-5 py-2 fs-5" @onclick="OnSessionTerminee">
+            Session terminée 🎉
         </button>
     </div>
 
-    <!-- Grille responsive -->
-    <div class="row row-cols-1 row-cols-md-2 g-3">
-        @foreach (var ex in Exercises)
-        {
-            @* Marquage “réussi” sur la bordure *@
-            var borderClass = ex.ObjectifAtteint ? "border-success" : "";
-
-            <div class="col">
-                <div class="card h-100 @borderClass">
-                    <!-- HEADER -->
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span class="fw-semibold">@ex.ExerciseName</span>
-
-                        <a href="#"
-                           class="btn btn-sm btn-link text-decoration-none"
-                           data-bs-toggle="modal"
-                           data-bs-target="#modalRemplacement"
-                           @onclick="() => ProposerRemplacement(ex)">
-                            changer
-                        </a>
-                    </div>
-
-                    <!-- BODY -->
-                    <div class="card-body text-center">
-                        <p class="mb-2">
-                            <strong>@ex.Series serie × @ex.Repetitions</strong> &mdash;
-                            Repos&nbsp;: @ex.RestTimeSeconds&nbsp;s
-                        </p>
-                        <!-- Objectif affiché  (RE-AJOUT) -->
-                        @{
-                            var objText = AfficherEnLb
-                            ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
-                            : $"{Math.Round(ex.Objectif, 1)} kg";
-                        }
-                        <p class="mb-2">
-                            <span class="text-secondary">Objectif&nbsp;:</span>
-                            <strong>@objText</strong>
-                        </p>
-                        @* -------- Poids + suffixe ---------- *@
-                        @{
-                            var suffix = ex.IsLb ? "lb" : "kg";
-                        }
-
-                        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-                            <input type="number"
-                                   class="form-control form-control-sm "
-                                   style="max-width:120px"
-                                   step="0.5"
-                                   @bind="ex.PoidsAffiche"
-                                   @key="AfficherEnLb.ToString() + ex.ExerciseName" />
-                            <span class="text-muted">@suffix</span>
-
-                            @if (ex.Pourcentage1RM > 0)
-                            {
-                                <span class="badge rounded-pill bg-info">@ex.Pourcentage1RM% 1RM</span>
-                            }
-                        </div>
-
-                        <button class="btn btn-sm btn-outline-success w-100"
-                                @onclick="() => MarquerAtteint(ex)">
-                            @((ex.ObjectifAtteint ? "Objectif atteint ✅" : "Marquer atteint"))
-                        </button>
-                    </div>
-                </div>
-            </div>
-        }
+    <div class="motiv-message">
+        Continue comme ça ! Tu vas tout déchirer 💥
     </div>
 }
 
-<!-- -------------------------------------------------------------
-     SECTION 3 : Actions globales
--------------------------------------------------------------- -->
-@* @if (SelectedPlanAvailable)
+@if (!Exercises.Any())
 {
-    <button class="btn btn-success mt-4 me-2" @onclick="SauvegarderSeance">
-        Enregistrer les performances
-    </button>
-
-    <button class="btn btn-outline-success mt-4" @onclick="SauvegarderProgrammeModifié">
-        💾 Sauvegarder les modifications du programme
-    </button>
-} *@
-@if (SelectedPlanAvailable)
-{
-    <button class="btn btn-success mt-4" @onclick="SaveEverything">
-        💾 Enregistrer
-    </button>
+    <div class="alert alert-light text-center m-3">
+        Aucune séance sélectionnée.
+    </div>
 }
+
+@code {
+    private void OnSessionTerminee()
+    {
+        SaveEverything();
+        /* Nav.NavigateTo("/view-session", forceLoad: true); */
+    }
+}
+
 <!-- -------------------------------------------------------------
      SECTION 4 : Modales (confirmation suppression + remplacement)
 -------------------------------------------------------------- -->
@@ -184,24 +217,22 @@
 <!-- Modal remplacement exercice -->
 <div class="modal fade" id="modalRemplacement" tabindex="-1" aria-labelledby="modalRemplacementLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalRemplacementLabel">Remplacer l'exercice</h5>
+        <div class="modal-content duo-modal">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold" id="modalRemplacementLabel">🔁 Remplacer l'exercice</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 @if (ExerciceCible is not null)
                 {
-                    <p>Exercice actuel&nbsp;: <strong>@ExerciceCible.ExerciseName</strong></p>
-                    <p class="mb-2">Suggestions&nbsp;:</p>
+                    <p><strong>Actuel :</strong> @ExerciceCible.ExerciseName</p>
+                    <p>Suggestions :</p>
                     @foreach (var s in Suggestions)
                     {
-                        <div class="d-flex justify-content-between align-items-center mb-2 px-2">
-                            <span>@s</span>
-                            <button class="btn btn-sm btn-outline-success"
-                                    data-bs-dismiss="modal"
-                                    @onclick="() => ConfirmerRemplacement(s)">
-                                ✅ Sélectionner
+                        <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                            <span class="fw-bold">@s</span>
+                            <button class="duo-btn-mini" data-bs-dismiss="modal" @onclick="() => ConfirmerRemplacement(s)">
+                                ✅ Choisir
                             </button>
                         </div>
                     }
@@ -210,6 +241,7 @@
         </div>
     </div>
 </div>
+
 
 @* -------------------------------------------------------------
    SECTION 5 : Code C# (inchangé sauf suffix & mobile tweaks)
@@ -233,10 +265,11 @@
     private string GetInputId(ExerciceJour ex) => $"{ex.ExerciseName}_{Guid.NewGuid()}";
     List<ExerciseDefinition> allExercises = new();
     private bool SelectedPlanAvailable => SelectedPlan is not null;
+    private List<string> SeancesCompletes = new(); // ex: "progId:sem:jour"
 
 
-   
-   
+
+
     protected override async Task OnInitializedAsync()
     {
         if (!AuthService.IsAuthenticated)
@@ -249,6 +282,11 @@
         {
             userId = SupabaseService.GetCurrentUserId();
             Console.WriteLine("🔑 Utilisateur actuel : " + userId);
+            var data = await JS.InvokeAsync<string>("localStorage.getItem", "seancesCompletes");
+            if (!string.IsNullOrEmpty(data))
+            {
+                SeancesCompletes = data.Split(',').ToList();
+            }
             // 🔄 Tente une synchro silencieuse sans casser la suite
             // await PoidsService.SyncFromSupabaseAsync();
             var supabaseEntries = await SupabaseService.GetEntriesAsync();
@@ -299,52 +337,6 @@
         await ChargerSeance();
     }
 
-    // private async Task ChargerSeance()
-    // {
-    //     Exercises.Clear();
-
-    //     if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
-    //         return;
-
-    //     var week = SelectedPlan.Weeks[SelectedSemaineIndex];
-    //     var jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
-
-    //     if (jour == null || jour.IsRest)
-    //     {
-    //         Exercises = new()
-    //         {
-    //             new ExerciceJour
-    //             {
-    //                 ExerciseName = "Repos",
-    //                 Series = 0,
-    //                 Repetitions = 0,
-    //                 RestTimeSeconds = 0,
-    //                 Pourcentage1RM = 0,
-    //                 PoidsUtilisé = 0
-    //             }
-    //         };
-    //     }
-    //     else
-    //     {
-    //         foreach (var ex in jour.Exercises)
-    //         {
-    //             var date = SelectedProgrammeDate.AddDays(SelectedSemaineIndex * 7 + (SelectedJourIndex - 1));
-
-    //             double lastPoids = await PoidsService.GetPoidsForExerciceAtDateAsync(ex.ExerciseName, date) ??0;
-    //             Exercises.Add(new ExerciceJour
-    //                 {
-    //                     ExerciseName = ex.ExerciseName,
-    //                     Series = ex.Series,
-    //                     Repetitions = ex.Repetitions,
-    //                     RestTimeSeconds = ex.RestTimeSeconds,
-    //                     Pourcentage1RM = ex.Pourcentage1RM,
-    //                     PoidsUtilisé = lastPoids
-    //                 });
-    //         }
-    //     }
-
-    //     StateHasChanged();
-    // }
 
     private async Task ChargerSeance()
     {
@@ -421,7 +413,10 @@
         double objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
 
         ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
+
+        _ = CheckFireworks(); // 🔥 déclenche sans bloquer
     }
+
     private void UpdatePoids(ChangeEventArgs e, ExerciceJour ex)
     {
         if (double.TryParse(e.Value?.ToString(), out double val))
@@ -430,6 +425,7 @@
             ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
         }
     }
+
     private async Task SauvegarderProgrammeModifié()
     {
         if (SelectedPlan is null || SelectedProgrammeId == Guid.Empty)
@@ -459,7 +455,7 @@
         }
     }
 
-  
+
     private async Task ProposerRemplacement(ExerciceJour ex)
     {
         ExerciceCible = ex;
@@ -539,47 +535,7 @@
         StateHasChanged();
     }
 
-    // private async Task SauvegarderSeance()
-    // {
-    //     foreach (var ex in Exercises)
-    //     {
-    //         if (ex.ExerciseName == "Repos") continue;
 
-    //         var poidsKg = AfficherEnLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
-
-    //         var entry = new PoidsEntry
-    //             {
-    //                 Exercice = ex.ExerciseName,
-    //                 Date = DateTime.Today,
-    //                 Poids = poidsKg
-    //             };
-
-    //         var local = new PoidsEntryLocal
-    //             {
-    //                 Exercice = ex.ExerciseName,
-    //                 Date = DateTime.Today,
-    //                 Poids = poidsKg
-    //             };
-
-    //         try
-    //         {
-    //             await PoidsService.SupprimerDepuisSupabaseAsync(ex.ExerciseName, DateTime.Today);
-    //             await PoidsService.AddEntryAsync(entry, local);
-    //             Console.WriteLine($" Entrée ajoutée : {entry.Exercice} - {entry.Poids} kg");
-    //         }
-    //         catch (Exception exerer)
-    //         {
-    //             Console.WriteLine("❌ Exception capturée dans SauvegarderSeance");
-    //             Console.WriteLine("❌ Erreur sauvegarde : " + exerer.Message);
-    //         }
-    //     }
-    //     // 🔄 Sauvegarder les éventuelles modifications du programme
-    //     await SauvegarderProgrammeModifié();
-    //     Console.WriteLine("✅ Programme sauvegardées");
-
-
-    //     Console.WriteLine("✅ Performances sauvegardées sans doublon ni erreur d'unité");
-    // }
     private async Task SauvegarderSeance()
     {
         foreach (var ex in Exercises)
@@ -654,11 +610,14 @@
         }
     }
 
+
     private double ConvertToDisplayUnit(double poidsKg) =>
     AfficherEnLb ? Math.Round(poidsKg / 0.453592, 1) : poidsKg;
 
+
     private double ConvertToKg(double valeurAffichee) =>
         AfficherEnLb ? Math.Round(valeurAffichee * 0.453592, 2) : valeurAffichee;
+
 
     private void OnPoidsChanged(string? valueStr, ExerciceJour ex)
     {
@@ -667,6 +626,7 @@
             ex.PoidsUtilisé = ConvertToKg(val);
         }
     }
+
 
     private double GetDisplayPoids(ExerciceJour ex)
     {
@@ -684,14 +644,14 @@
     private async void ToggleUnite()
     {
         AfficherEnLb = !AfficherEnLb;
-        
+
         foreach (var ex in Exercises)        // 2) on reflète le choix
             ex.IsLb = AfficherEnLb;
-        
+
         StateHasChanged();
     }
-   
-   
+
+
     /// <summary>
     /// Ajoute un pourcentage au poids de départ.
     /// Exemple : poids = 100, pourcentage = 2.5  → 102.5
@@ -728,49 +688,60 @@
         {
             await SauvegarderProgrammeModifié(); // ← programme seul
         }
-
+        MarquerSeanceCommeComplete();
         await JS.InvokeVoidAsync("showToast", "✅ Données enregistrées");
     }
-    public class ExerciceJour
+
+    private void MarquerSeanceCommeComplete()
     {
-        public string ExerciseName { get; set; } = "";
-        public int Series { get; set; }
-        public int Repetitions { get; set; }
-        public int RestTimeSeconds { get; set; }
-        public double Pourcentage1RM { get; set; }
-        public double PoidsUtilisé { get; set; }
-        public double Objectif { get; set; }
-        public bool ObjectifAtteint { get; set; } = false;
-        public bool IsLb { get; set; } = false;
-        public bool RefreshFlag { get; set; } = false;
-        public bool IsDirty { get; private set; } = false;
-        public double PoidsAffiche
+        if (SelectedProgrammeId == Guid.Empty)
+            return;
+
+        string key = $"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}";
+
+        if (!SeancesCompletes.Contains(key))
         {
-            get => ViewSession.AfficherEnLb
-            ? Math.Round(PoidsUtilisé / 0.453592, 1)
-            : Math.Round(PoidsUtilisé, 1);
-            set
-            {
-                double newKg = ViewSession.AfficherEnLb
-                    ? Math.Round(value * 0.453592, 2)
-                    : value;
-
-                if (!newKg.Equals(PoidsUtilisé))          // ← comparaison
-                {
-                    PoidsUtilisé = newKg;
-                    IsDirty = true;                       // ← on marque sale
-                }
-            }
+            SeancesCompletes.Add(key);
+            JS.InvokeVoidAsync("localStorage.setItem", "seancesCompletes", string.Join(",", SeancesCompletes));
         }
-
-        /* ─── méthode pour (dé)marquer l’objectif ─── */
-        public void ToggleObjectif()
-        {
-            ObjectifAtteint = !ObjectifAtteint;
-            IsDirty = true;
-        }
-
-        /* ─── réinitialisation après sauvegarde ─── */
-        public void AcceptChanges() => IsDirty = false;
     }
+
+
+    // private bool ExercisesJourComplete(int jourIndex)
+    // {
+    //     if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
+    //         return false;
+
+    //     var jour = SelectedPlan.Weeks[SelectedSemaineIndex].Days.FirstOrDefault(d => d.DayIndex == jourIndex);
+    //     if (jour == null || jour.IsRest) return true;
+
+    //     return jour.Exercises.All(ex =>
+    //         Exercises.Any(e => e.ExerciseName == ex.ExerciseName && e.ObjectifAtteint));
+    // }
+
+    // private bool ExercisesSemaineComplete(int semaineIndex, int jourIndex)
+    // {
+    //     if (SelectedPlan is null || semaineIndex >= SelectedPlan.Weeks.Count)
+    //         return false;
+
+    //     var semaine = SelectedPlan.Weeks[semaineIndex];
+    //     var jour = semaine.Days.FirstOrDefault(d => d.DayIndex == jourIndex);
+    //     if (jour == null || jour.IsRest) return true;
+
+    //     return jour.Exercises.All(ex =>
+    //         Exercises.Any(e => e.ExerciseName == ex.ExerciseName && e.ObjectifAtteint));
+    // }
+    private bool ExercisesJourComplete(int jourIndex)
+    {
+        string key = $"{SelectedProgrammeId}:{SelectedSemaineIndex}:{jourIndex}";
+        return SeancesCompletes.Contains(key);
+    }
+    private bool ExercisesSemaineComplete(int semaineIndex, int jourIndex)
+    {
+        return Enumerable.Range(1, 7).All(j =>
+            SeancesCompletes.Contains($"{SelectedProgrammeId}:{semaineIndex}:{j}"));
+    }
+
+
+    
 }

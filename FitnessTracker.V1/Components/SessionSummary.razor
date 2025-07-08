@@ -1,0 +1,119 @@
+﻿@using FitnessTracker.V1.Models
+@using static FitnessTracker.V1.Pages.ViewSession
+@using static FitnessTracker.V1.Models.Model
+@code {
+    [Parameter] public List<ExerciceJour> Exercises { get; set; } = new();
+    [Parameter] public TimeSpan Duree { get; set; }
+    [Parameter] public bool AfficherEnLb { get; set; }
+    [Parameter] public EventCallback OnFermer { get; set; }
+
+    private string TotalSouleveStr => GetTotalSouleveStr();
+    private List<string> Records => Exercises
+        .Where(e => e.ObjectifAtteint && e.ExerciseName != "Repos")
+        .Select(e => $"{e.ExerciseName} — {FormatPoids(e.PoidsUtilisé, e.IsLb)}")
+        .ToList();
+
+    private string GetTotalSouleveStr()
+    {
+        double totalKg = Exercises
+            .Where(e => e.ExerciseName != "Repos")
+            .Sum(e =>
+            {
+                double poidsKg = e.IsLb ? e.PoidsUtilisé * 0.453592 : e.PoidsUtilisé;
+                return poidsKg * e.Series * e.Repetitions;
+            });
+
+        if (AfficherEnLb)
+            return $"{Math.Round(totalKg / 0.453592, 1)} lb";
+
+        return $"{Math.Round(totalKg, 1)} kg";
+    }
+
+    private string FormatPoids(double poids, bool isLb)
+    {
+        return isLb
+            ? $"{Math.Round(poids, 1)} lb"
+            : $"{Math.Round(poids, 1)} kg";
+    }
+}
+
+<style>
+    .resume-popup {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        color: #1CB0F6;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: fadeIn 1s ease-out forwards;
+        max-width: 90%;
+        width: 400px;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translate(-50%, -20%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+
+    }
+
+    .resume-popup button {
+        margin-top: 1.5rem;
+        padding: 0.5rem 1.5rem;
+        background-color: #1CB0F6;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .resume-popup ul {
+        list-style: none;
+        padding-left: 0;
+        text-align: left;
+        margin-top: 0.5rem;
+    }
+
+    .resume-popup li {
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<div class="resume-popup">
+    <h3>Résumé de ta séance 💥</h3>
+    <p>⏱️ Durée : @Duree.TotalMinutes.ToString("0.0") min</p>
+    <p>🏋️ Total soulevé : <strong>@TotalSouleveStr</strong></p>
+
+    @if (Records.Any())
+    {
+        <p>🏆 Records battus :</p>
+        <ul>
+            @foreach (var record in Records)
+            {
+                <li>🔥 @record</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>💡 Aucun record battu aujourd'hui… mais tu t'es bien donné·e !</p>
+    }
+
+    <button @onclick="OnFermer">Fermer</button>
+</div>

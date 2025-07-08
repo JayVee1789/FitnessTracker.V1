@@ -1,0 +1,38 @@
+﻿.progress-container {
+    background-color: #ffffff44;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 10px;
+    background-color: #BDF98F;
+    border-radius: 10px;
+    margin-left: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: white;
+    border-radius: 10px;
+    transition: width 0.4s ease-in-out;
+}
+
+.modal-content .modal-body {
+    overflow-x: auto;
+}
+
+    .modal-content .modal-body canvas {
+        width: 100% !important;
+        height: auto !important;
+    }

@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "uRIorX4Y",
+  "version": "N5nSTcIA",
   "assets": [
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
@@ -50,11 +50,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-3/VYZvVQvPGQlTwHe4StmlRjey0A8PCaCHNYc9SwixA=",
+      "hash": "sha256-3fhMT8DSEnorgCQDwzg3Ls8vtxA2FALg0+F2o9KHsT8=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-6CHAz1aN/YkG2oXCLLayOe3yd9/xVMTtKU9ntnRh9Y4=",
+      "hash": "sha256-mvid8AEdXQ+7VGEl+ZYt8ErVpFMcw9hoomtgXZ8Cb18=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-7Y8qiIJhOQsyGXASla7YdbVXxGUIXIafD9RtbHjlE1M=",
+      "hash": "sha256-2KL3iYIH0/7j7V05CC0eQs6wAznrP4olWoUxWpmkQtQ=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -970,6 +970,18 @@ self.assetsManifest = {
       "url": "css/bootstrap/bootstrap.min.css.map"
     },
     {
+      "hash": "sha256-Mdq7r3BNRwIKsmgD/74uDlQGtGM/72sW1VZyy3Ag/tA=",
+      "url": "css/components.css"
+    },
+    {
+      "hash": "sha256-yTLrdgdK8D2vOnzojLJDMNEFuqKfyVJGQg0vEeVaBOQ=",
+      "url": "css/duo-theme.css"
+    },
+    {
+      "hash": "sha256-0ErMoTVEeFfWTJc8oxpShUmI0OstBJXjtVUpconivbQ=",
+      "url": "css/layout-core.css"
+    },
+    {
       "hash": "sha256-VVmUkGyqukzvtInbtE2djxY4i9APelQDwiXIoM+Xp4k=",
       "url": "css/mobile-native.css"
     },
@@ -994,7 +1006,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-U0RoPaMUBukpO1lFvi2YsIOZhIPVbl01yEECEJbDpZg=",
+      "hash": "sha256-J8fNABWyxQE8VM863pqQrHMLqTpKKURvONzw58lsyB4=",
       "url": "index.html"
     },
     {

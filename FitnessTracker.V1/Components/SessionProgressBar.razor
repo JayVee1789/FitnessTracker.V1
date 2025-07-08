@@ -1,0 +1,17 @@
+﻿<div class="progress-container">
+    <span>🔥 @Completed / @TotalDone exercices</span>
+    <div class="progress-bar">
+        <div class="progress-fill" style="width:@Progress"></div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Completed { get; set; }      // Nombre d’exercices cochés
+    [Parameter] public int TotalDone { get; set; }      // Nombre total d’exercices (hors repos)
+
+    private string Progress => TotalDone > 0
+        ? Math.Min(100, Math.Round((double)Completed * 100 / TotalDone)) + "%"
+        : "0%";
+    
+   
+}

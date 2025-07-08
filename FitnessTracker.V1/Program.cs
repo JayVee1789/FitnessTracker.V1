@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using FitnessTracker.V1;
+using FitnessTracker.V1.Helper;
 using FitnessTracker.V1.Services;
 using FitnessTracker.V1.Services.ProgrammeGeneration;
 using Microsoft.AspNetCore.Components.Web;
@@ -43,7 +44,7 @@ builder.Services.AddScoped<SupabaseService>();      // ← Enregistrement du ser
 builder.Services.AddScoped<ProgrammeService>();
 builder.Services.AddSingleton<ProgrammeGeneratorService>();
 builder.Services.AddSingleton<IProgrammeStrategy, TbtProgrammeStrategy>();
-
+builder.Services.AddScoped<ViewSessionHelper>();
 // ───────── HttpClient typé pour SupabaseService2 (REST v1) ───────
 builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
 {

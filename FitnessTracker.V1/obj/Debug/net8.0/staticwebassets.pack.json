@@ -25,6 +25,18 @@
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\components.css",
+      "PackagePath": "staticwebassets\\css\\components.css"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\duo-theme.css",
+      "PackagePath": "staticwebassets\\css\\duo-theme.css"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\layout-core.css",
+      "PackagePath": "staticwebassets\\css\\layout-core.css"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\mobile-native.css",
       "PackagePath": "staticwebassets\\css\\mobile-native.css"
     },

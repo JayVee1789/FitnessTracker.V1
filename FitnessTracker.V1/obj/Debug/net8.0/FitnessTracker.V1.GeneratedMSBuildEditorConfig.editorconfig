@@ -44,8 +44,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9ncmFtbWVUaW1lbGluZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/ProgressBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9ncmVzc0Jhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/PrTracker.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQclRyYWNrZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/SessionProgressBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTZXNzaW9uUHJvZ3Jlc3NCYXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/SessionSummary.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTZXNzaW9uU3VtbWFyeS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/StrengthRadar.razor]

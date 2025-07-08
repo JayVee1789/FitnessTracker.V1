@@ -1,0 +1,16 @@
+﻿<div class="progress-container">
+    <span>🔥 Jour @Day / @TotalDays</span>
+    <div class="progress-bar">
+        <div class="progress-fill" style="width:@Progress"></div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Day { get; set; }
+    [Parameter] public int TotalDays { get; set; }
+
+    private string Progress => TotalDays > 0
+        ? Math.Min(100, Math.Round((double)Day * 100 / TotalDays)) + "%"
+        : "0%";
+}
+

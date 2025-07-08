@@ -2,6 +2,9 @@ wwwroot\appsettings.json
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
+wwwroot\css\components.css
+wwwroot\css\duo-theme.css
+wwwroot\css\layout-core.css
 wwwroot\css\mobile-native.css
 wwwroot\css\style.css
 wwwroot\data\ExercicesListeLocal.json

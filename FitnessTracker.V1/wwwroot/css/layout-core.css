@@ -1,0 +1,30 @@
+﻿html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.card {
+    border-radius: 1.5rem !important;
+}
+
+.mobile-container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+@media (min-width: 481px) {
+    .mobile-container {
+        max-width: 600px;
+    }
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    height: 56px;
+    background: #f8f9fa;
+    border-top: 1px solid rgba(0,0,0,.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1030;
+}
