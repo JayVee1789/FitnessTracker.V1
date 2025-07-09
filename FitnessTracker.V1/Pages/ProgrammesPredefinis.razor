@@ -2,12 +2,31 @@
 @inject NavigationManager Nav
 
 <h3 class="session-header">Programmes prédéfinis</h3>
+<div class="duo-bubble">
+    📘 <strong>Signification des badges :</strong>
+    <div class="duo-quote">
+        🥇 Avancé &nbsp;&nbsp;–&nbsp;&nbsp; 🥈 Intermédiaire &nbsp;&nbsp;–&nbsp;&nbsp; 🥉 Débutant
+    </div>
+</div>
 
-<div class="app-main" style="display: flex; flex-wrap: wrap; justify-content: center;">
+<div class="app-main d-flex flex-wrap justify-content-center">
     @foreach (var programme in Programmes)
     {
+        var imageKey = programme.Key == "5x5" ? "5x5" : programme.Key.ToLower();
+        var imagePath = $"/images/programmes/{imageKey}.png";
+
         <button class="thumb-container" @onclick="() => SelectionnerProgrammeAsync(programme.Key)">
-            <div class="thumb-placeholder">@programme.Key</div>
+            <div class="thumb-image-wrapper">
+                <img src="@imagePath"
+                     class="thumb-image"
+                     alt="@programme.Value"
+                     onerror="this.src='/images/programmes/default.png'" />
+
+                @if (!string.IsNullOrEmpty(GetBadge(programme.Key)))
+                {
+                    <span class="thumb-badge">@GetBadge(programme.Key)</span>
+                }
+            </div>
             <div class="thumb-label">@programme.Value</div>
         </button>
     }
@@ -16,12 +35,21 @@
 @code {
     private Dictionary<string, string> Programmes = new()
     {
-        {"Rock", "Style The Rock"},
-        {"Arnold", "Arnold Split"},
-        {"Drake", "Drake Fit"},
-        {"PittSnatch", "Snatch Fight Club"},
-        {"MeganStallion", "Glute Master"},
-        {"5x5", "Programme 5x5 classique"}
+        { "Rock", "Style The Rock" },
+        { "Arnold", "Arnold Split" },
+        { "Drake", "Drake Fit" },
+        { "PittSnatch", "Snatch Fight Club" },
+        { "MeganStallion", "Glute Master" },
+        { "5x5", "Programme 5x5 classique" }
+    };
+
+    private string GetBadge(string key) => key switch
+    {
+        "Rock" => "🥇",
+        "Arnold" => "🥈",
+        "PittSnatch" => "🥇",
+        "5x5" => "🥉",
+        _ => ""
     };
 
     private async Task SelectionnerProgrammeAsync(string nom)

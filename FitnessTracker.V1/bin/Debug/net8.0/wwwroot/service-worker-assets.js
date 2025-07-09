@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "eBJ+z3TO",
+  "version": "0MyZ6vz1",
   "assets": [
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
@@ -50,11 +50,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-LesQXPtFNOi1UXFweT08rNbTe+MVfUm7ISgMzsSwNoA=",
+      "hash": "sha256-STh+J70PqtrZxz65cvX6NYI71Z53B3W0PtFOM3thLAQ=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-xmiCCNJ9Dlzo3rzl4RISFbS3Wep9JC4GE7dyPNtLiHg=",
+      "hash": "sha256-+3nzJII0XOz/UO1plJ+2ah76IMy0DD3u09O/bei3sk4=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-LcsLV5GDuaEFKBHibfe3zpbK7FN+Sf1/t7RiRLGWcWk=",
+      "hash": "sha256-Hh5mPGh+ulqJ9CNfnzzvDejitnPuouseBUHB/XIg3Yg=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -986,7 +986,7 @@ self.assetsManifest = {
       "url": "css/layout-core.css"
     },
     {
-      "hash": "sha256-VVmUkGyqukzvtInbtE2djxY4i9APelQDwiXIoM+Xp4k=",
+      "hash": "sha256-TdLdycCr4UZhsgeGpDlrTh7NlYitzRxVEZ8bY2RYPXw=",
       "url": "css/mobile-native.css"
     },
     {
@@ -1012,6 +1012,30 @@ self.assetsManifest = {
     {
       "hash": "sha256-0lZu7Hnve84K3AjNWu8ngpL9qJilHB4kRasoe/9v+P0=",
       "url": "icon-512.png"
+    },
+    {
+      "hash": "sha256-gVv3TltbGwAjL9++/21rwTEWZNAYkWqTlIL6fP0xVuY=",
+      "url": "images/programmes/arnold.png"
+    },
+    {
+      "hash": "sha256-hXS7Zu1gEXN0zCHZ4HeOP7CE22xBBX4PplWm814iRf4=",
+      "url": "images/programmes/default.png"
+    },
+    {
+      "hash": "sha256-DXiwl8ldy6LnaexRlJ6S5DPcJC2el98w4/aOfbKGXf8=",
+      "url": "images/programmes/drake.png"
+    },
+    {
+      "hash": "sha256-tf0HaVjm6FzuXZ8Wt8ORXpL6dcU6IlXNmeCBvQYjm4Y=",
+      "url": "images/programmes/meganstallion.png"
+    },
+    {
+      "hash": "sha256-eKPAf+l/QLK+brh7WtSeeAeE2vP074BoA8XtzKIqtww=",
+      "url": "images/programmes/pittsnatch.png"
+    },
+    {
+      "hash": "sha256-7BBpGmdHSK171SsXRe4KTK1GimqbpkmFarO8BEdQzEc=",
+      "url": "images/programmes/rock.png"
     },
     {
       "hash": "sha256-2J8naxHnCJzcJt9Acpf3wUQL5DIR8qA8cyHVtzU8IaU=",

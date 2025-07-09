@@ -13,6 +13,12 @@ wwwroot\favicon.png
 wwwroot\flamme.png
 wwwroot\icon-192.png
 wwwroot\icon-512.png
+wwwroot\images\programmes\arnold.png
+wwwroot\images\programmes\default.png
+wwwroot\images\programmes\drake.png
+wwwroot\images\programmes\meganstallion.png
+wwwroot\images\programmes\pittsnatch.png
+wwwroot\images\programmes\rock.png
 wwwroot\index.html
 wwwroot\manifest.webmanifest
 wwwroot\my-toast.js

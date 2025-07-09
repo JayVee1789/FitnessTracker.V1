@@ -102,13 +102,18 @@ aside.overflow-auto {
 }
 
 /*tesrt*/
+/* Miniatures programmes */
 .thumb-container {
     display: inline-block;
     margin: 0.5rem;
-    text-align: center;
-    cursor: pointer;
+    padding: 0;
     background: none;
     border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 45%;
+    max-width: 180px;
+    box-sizing: border-box;
 }
 
     .thumb-container:focus {
@@ -129,4 +134,52 @@ aside.overflow-auto {
 .thumb-label {
     margin-top: 0.25rem;
     font-size: 0.85rem;
+}
+.thumb-image-wrapper {
+    position: relative;
+    width: 100%;
+    border: none; /* ✅ Supprimer la bordure rouge une fois testée */
+}
+
+
+.thumb-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease;
+}
+
+.thumb-container:hover .thumb-image {
+    transform: scale(1.03);
+}
+.thumb-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background-color: white;
+    color: #111;
+    padding: 4px 6px;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.thumb-label {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Mobile : force une miniature par ligne */
+@media (max-width: 480px) {
+    .thumb-container {
+        width: 90vw;
+    }
 }

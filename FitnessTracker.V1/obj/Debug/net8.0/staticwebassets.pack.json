@@ -69,6 +69,30 @@
       "PackagePath": "staticwebassets\\icon-512.png"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\arnold.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\arnold.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\default.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\default.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\drake.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\drake.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\meganstallion.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\meganstallion.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\pittsnatch.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\pittsnatch.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\rock.png",
+      "PackagePath": "staticwebassets\\images\\programmes\\rock.png"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
