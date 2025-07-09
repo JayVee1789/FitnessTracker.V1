@@ -68,11 +68,12 @@
 
                 @for (int ei = 0; ei < plan.Weeks[weekIdx].Days[dayIdx].Exercises.Count; ei++)
                 {
-                    var ex = plan.Weeks[weekIdx].Days[dayIdx].Exercises[ei];
+                    int capturedIndex = ei; // ✅ capturer la valeur
+                    var ex = plan.Weeks[weekIdx].Days[dayIdx].Exercises[capturedIndex];
                     <div class="duo-info d-flex justify-content-between align-items-center">
                         <span>💪 @ex.ExerciseName — @ex.Series × @ex.Repetitions, @ex.RestTimeSeconds s</span>
                         <button class="duo-icon-btn-small" title="Supprimer"
-                                @onclick="@(() => RemoveExercise(weekIdx, dayIdx, ei))">
+                                @onclick="async () => await OnRemoveExercise(weekIdx, dayIdx, capturedIndex)">
                             ❌
                         </button>
                     </div>
@@ -131,7 +132,7 @@
             <input type="number" class="form-control" @bind="inputReps" min="1" />
             Repos (s) :
             <input type="number" class="form-control" @bind="inputRest" min="0" />
-            <button class="duo-btn mt-2" @onclick="ConfirmAddExercise">Confirmer l'ajout</button>
+            <button class="duo-btn mt-2" @onclick="ConfirmAddExercise" disabled="@(!IsExerciseTargetValid)">Confirmer l'ajout</button>
         </div>
     </div>
 }
@@ -246,7 +247,8 @@
     private void ConfirmAddExercise()
     {
         if (selected == null) return;
-
+        if (currentWeek < 0 || currentWeek >= plan.Weeks.Count) return;
+        if (currentDay < 0 || currentDay >= plan.Weeks[currentWeek].Days.Count) return;
         var ex = new ExerciseSession
             {
                 ExerciseId = selected.Id,
@@ -260,6 +262,13 @@
 
         plan.Weeks[currentWeek].Days[currentDay].Exercises.Add(ex);
         selected = null;
+    }
+
+    private async Task OnRemoveExercise(int w, int d, int e)
+    {
+        RemoveExercise(w, d, e);
+        await Task.Yield(); // (ou pas obligatoire)
+        StateHasChanged();
     }
 
     private void ToggleFilter(HashSet<string> set, string value, ChangeEventArgs e)
@@ -322,6 +331,7 @@
             };
         plan.Weeks[weekIdx].Days.Add(newDay);
     }
+
     private void RemoveExercise(int weekIdx, int dayIdx, int exerciseIdx)
     {
         if (weekIdx < 0 || dayIdx < 0 || exerciseIdx < 0) return;
@@ -330,6 +340,10 @@
         if (exerciseIdx >= plan.Weeks[weekIdx].Days[dayIdx].Exercises.Count) return;
 
         plan.Weeks[weekIdx].Days[dayIdx].Exercises.RemoveAt(exerciseIdx);
+        StateHasChanged(); // 🔁 Forcer le rendu
     }
-
+    private bool IsExerciseTargetValid =>
+    selected != null &&
+    currentWeek >= 0 && currentWeek < plan.Weeks.Count &&
+    currentDay >= 0 && currentDay < plan.Weeks[currentWeek].Days.Count;
 }

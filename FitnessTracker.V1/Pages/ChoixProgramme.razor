@@ -1,15 +1,34 @@
 ﻿@page "/choix-programme"
 @inject NavigationManager Nav
 
-<h3>Quel type de programme souhaitez-vous ?</h3>
+<div class="mobile-container app-main">
+    <h2 class="session-header text-center mb-4">🚀 Choisis ton aventure fitness !</h2>
 
-<button class="duo-btn" @onclick="OnProgrammePersoClick">Programme personnalisé</button>
-<button class="duo-btn" @onclick="OnProgrammePredefClick">Programme prédéfini</button>
+    <!-- Bulle explicative pour programme perso -->
+    <div class="duo-bubble text-start mb-3">
+        🎨 <b>Programme personnalisé</b><br />
+        Tu fabriques ton propre super-héros ! Niveau, objectifs, dispo... C’est ton plan, ton style 🧪
+        <div class="duo-quote mt-1">🧑‍🔬 « Je veux du muscle ici, moins de bobo là, et du temps pour Netflix le dimanche »</div>
+    </div>
+    <button class="duo-btn mb-4" @onclick="OnProgrammePersoClick">🎯 Programme personnalisé</button>
+
+    <div class="duo-bubble text-start mb-3">
+        ⭐ <b>Programme prédéfini</b><br />
+        T'entraîner comme The Rock, Arnold ou Megan ? Clique, choisis, transpire 💦
+        <div class="duo-quote mt-1">🌟 « Fais-moi transpirer comme Brad Pitt dans Snatch »</div>
+    </div>
+    <button class="duo-btn mb-4" @onclick="OnProgrammePredefClick">📚 Programme prédéfini</button>
+
+    <div class="duo-bubble text-center mt-4">
+        🐣 ou 🐉 ? Peu importe ton niveau… choisis ton style et deviens la star de ton propre film d'action 🎬💥
+    </div>
+
+</div>
 
 @code {
     private async Task OnProgrammePersoClick()
     {
-        await Task.Yield(); // Évite warning pour async void
+        await Task.Yield();
         Nav.NavigateTo("/generate-programme");
     }
 

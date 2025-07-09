@@ -44,7 +44,7 @@
 
 <SessionProgressBar Completed="@ExercicesCompletes()" TotalDone="@ExercicesTotales()" />
 
-
+@* 
 @if (ExercicesTotales() > 0 && ExercicesCompletes() == ExercicesTotales())
 {
     <div>
@@ -52,7 +52,7 @@
             await JS.InvokeVoidAsync("launchFireworks");
         </script>
     </div>
-}
+} *@
 
 
 <!-- Sélecteurs Programme/Semaine/Jour -->
@@ -61,8 +61,6 @@
         <label class="form-label text-white">Programme : </label>
         @if (SelectedPlan is not null)
         {
-
-
 
             <button class="duo-icon-btn-small text-danger ms-2"
             title="Supprimer ce programme"
@@ -126,44 +124,7 @@
 @if (Exercises.Any())
 {
     <div class="d-flex flex-column gap-3 px-3">
-        @* @foreach (var ex in Exercises)
-        {
-            <div class="duo-card @(ex.ObjectifAtteint ? "objectif-atteint" : "")">
-
-                <div class="flex-1">
-                    <div class="duo-title">
-                        <span class="duo-title-text">@ex.ExerciseName</span>
-                        <a class="duo-video-icon" href="@($"https://www.youtube.com/results?search_query={ex.ExerciseName}+exercise")"
-                        target="_blank" title="Voir la vidéo">🎥</a>
-                        <button class="duo-icon-btn" data-bs-toggle="modal" data-bs-target="#modalRemplacement"
-                        @onclick="() => ProposerRemplacement(ex)" title="Changer d’exercice">
-                            🔁
-                        </button>
-                    </div>
-
-                    <div class="duo-info">@ex.Series série(s) de @ex.Repetitions répétition(s) – Repos : @ex.RestTimeSeconds s</div>
-                    <div class="duo-info">Charge : @ex.Pourcentage1RM % 1RM</div>
-
-                    <div class="input-group mt-3" style="max-width: 120px;">
-                        <input type="number" class="form-control form-control-sm rounded-pill text-center"
-                        step="0.5" @bind="ex.PoidsAffiche" />
-                        <span class="input-group-text bg-light border-0">@((ex.IsLb ? "lb" : "kg"))</span>
-                    </div>
-
-                    <div class="duo-objectif mt-2">
-                        🎯 <strong>Objectif : @(AfficherEnLb ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb" : $"{Math.Round(ex.Objectif, 1)} kg")</strong>
-                    </div>
-                </div>
-
-                <button class="checkmark" @onclick="() => MarquerAtteint(ex)">
-                    ✔️
-                </button>
-            </div>
-
-
-
-
-        } *@
+       
 
         @for (int i = 0; i < Exercises.Count; i++)
         {
@@ -288,9 +249,6 @@
 </div>
 
 
-@* -------------------------------------------------------------
-   SECTION 5 : Code C# (inchangé sauf suffix & mobile tweaks)
-------------------------------------------------------------- *@
 
 
 
