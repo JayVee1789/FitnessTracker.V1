@@ -1,6 +1,6 @@
 ﻿using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
     /// <summary>
     /// Générateur « Waterbury‐style » : full-body 4 à 6 séances / semaine,
@@ -67,7 +67,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
             for (int w = 1; w <= totalWeeks; w++)
             {
                 // progression : +2 % toutes les 2 semaines
-                int incr = ((w - 1) / 2) * 2;          // 0,2,4…
+                int incr = (w - 1) / 2 * 2;          // 0,2,4…
                 int pct = cfg.keyPct + incr;
 
                 var week = new WorkoutWeek

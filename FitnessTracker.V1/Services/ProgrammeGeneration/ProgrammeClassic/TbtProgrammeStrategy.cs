@@ -1,10 +1,8 @@
 ﻿using FitnessTracker.V1.Models;
-
-
 using static FitnessTracker.V1.Models.Model;
 
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
 
 
@@ -31,7 +29,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
             {
                 for (int d = 1; d <= 3; d++)
                 {
-                    int sets = (w % 2 == 1) ? 3 : 4;
+                    int sets = w % 2 == 1 ? 3 : 4;
                     int reps = d switch { 1 => 5, 2 => 8, 3 => 15, _ => 10 };
                     int rest = d switch { 1 => 60, 2 => 90, 3 => 120, _ => 90 };
 
@@ -39,7 +37,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
                     {
                         reps = d switch { 1 => 18, 2 => 8, 3 => 12, _ => 10 };
                         rest = d switch { 1 => 120, 2 => 60, 3 => 90, _ => 90 };
-                        sets = (w % 2 == 1) ? (d == 1 ? 2 + w % 4 : 2) : 3;
+                        sets = w % 2 == 1 ? d == 1 ? 2 + w % 4 : 2 : 3;
                     }
 
                     templates.Add(new WeekTemplate { Week = w, Day = d, Sets = sets, Reps = reps, RestSeconds = rest });
@@ -87,7 +85,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
                                 Series = tpl.Sets,
                                 Repetitions = tpl.Reps,
                                 RestTimeSeconds = tpl.RestSeconds,
-                                IsSuperset = (w % 2 == 0),
+                                IsSuperset = w % 2 == 0,
                                 Pourcentage1RM = week.ChargeIncrementPercent
                             });
                             usedThisWeek.Add(ex.Id);

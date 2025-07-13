@@ -72,7 +72,7 @@
             public bool BodyweightOnly { get; set; }
             public string PathologieMuscle { get; set; } = "";
             public string PriorityMuscle { get; set; } = "";
-
+            public  string? Unite { get; set; }
             public int RotationCycleWeeks =>
                 Level switch
                 {

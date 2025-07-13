@@ -188,7 +188,7 @@ public class SupabaseService2
         var url = programme.Source == "manuel"
             ? $"{_programmesManuelsUrl}?id=eq.{programme.Id}"
             : $"{_programmesUrl}?id=eq.{programme.Id}";
-
+        Console.WriteLine(programme.Contenu);
         var patch = new Dictionary<string, object>
         {
             ["nom"] = programme.Nom,

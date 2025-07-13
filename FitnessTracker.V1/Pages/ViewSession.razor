@@ -1,10 +1,13 @@
 ﻿@page "/view-session"
 @using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models.FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Helper
 @using FitnessTracker.V1.Services.ProgrammeGeneration
 @using System.Text.Json
 @using static FitnessTracker.V1.Models.Model
+@using FitnessTracker.V1.Mapping
+
 @* @using Progress = FitnessTracker.V1.Components.ProgressBar *@
 @using static FitnessTracker.V1.Components.SessionProgressBar
 @inject SupabaseService2 SupabaseService
@@ -14,6 +17,11 @@
 @inject AuthService AuthService
 @inject HttpClient Http
 @inject ViewSessionHelper viewSessionHelper
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+@inject ProfileService ProfileService  
+@inject FitnessTracker.V1.Models.AppState appState
+
 
 @code {
     private string progress => SelectedPlan?.TotalWeeks > 0
@@ -112,33 +120,23 @@
     }
 </div>
 
-@if (SelectedPlanAvailable)
-{
-    <div class="unit-toggle">
-        <button @onclick="ToggleUnite">
-            Affichage : @(AfficherEnLb ? "lb" : "kg")
-        </button>
-    </div>
-}
-
 @if (Exercises.Any())
 {
     <div class="d-flex flex-column gap-3 px-3">
-       
+
 
         @for (int i = 0; i < Exercises.Count; i++)
         {
             var ex = Exercises[i];
 
             <div class="duo-card @(ex.ObjectifAtteint ? "objectif-atteint" : "")">
-
                 <div class="flex-1">
                     <div class="duo-title">
                         <span class="duo-title-text">@ex.ExerciseName</span>
                         <a class="duo-video-icon" href="@($"https://www.youtube.com/results?search_query={ex.ExerciseName}+exercise")"
-                           target="_blank" title="Voir la vidéo">🎥</a>
+                        target="_blank" title="Voir la vidéo">🎥</a>
                         <button class="duo-icon-btn" data-bs-toggle="modal" data-bs-target="#modalRemplacement"
-                                @onclick="() => ProposerRemplacement(ex)" title="Changer d’exercice">
+                        @onclick="() => ProposerRemplacement(ex)" title="Changer d’exercice">
                             🔁
                         </button>
                     </div>
@@ -146,18 +144,20 @@
                     <div class="duo-info">@ex.Series série(s) de @ex.Repetitions répétition(s) – Repos : @ex.RestTimeSeconds s</div>
                     <div class="duo-info">Charge : @ex.Pourcentage1RM % 1RM</div>
 
-                    <div class="input-group mt-3" style="max-width: 120px;">
+                    <div class="input-group mt-3" style="max-width: 260px;">
                         <input type="number"
                                class="form-control form-control-sm rounded-pill text-center"
                                step="0.5"
                                value="@ex.PoidsAffiche"
-                               @oninput="e => ex.PoidsAffiche = Convert.ToDouble(e.Value)" />
-                        <span class="input-group-text bg-light border-0">@((ex.IsLb ? "lb" : "kg"))</span>
+                               @oninput="e => SetPoidsEtSale(e, ex)" />
+                        <span class="input-group-text bg-light border-0">@((appState.AfficherEnLb ? "lb" : "kg"))</span>
+                        <span class="input-group-text bg-light border-0 fw-bold" style="font-size: 0.85rem;">
+                            🎯 @(appState.AfficherEnLb
+                             ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                             : $"{Math.Round(ex.Objectif, 1)} kg")
+                        </span>
                     </div>
 
-                    <div class="duo-objectif mt-2">
-                        🎯 <strong>Objectif : @(AfficherEnLb ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb" : $"{Math.Round(ex.Objectif, 1)} kg")</strong>
-                    </div>
                 </div>
 
                 <button class="checkmark" @onclick="() => MarquerAtteint(ex)">
@@ -165,7 +165,6 @@
                 </button>
             </div>
 
-            @* 🔗 Lien entre deux supersets *@
             @if (i < Exercises.Count - 1 && ex.IsSuperset && Exercises[i + 1].IsSuperset)
             {
                 <div class="superset-link">
@@ -173,6 +172,7 @@
                 </div>
             }
         }
+
     </div>
 
     <div class="text-center mt-4">
@@ -195,11 +195,8 @@
 }
 
 @code {
-    private void OnSessionTerminee()
-    {
-        SaveEverything();
-        /* Nav.NavigateTo("/view-session", forceLoad: true); */
-    }
+
+
 }
 
 <!-- -------------------------------------------------------------
@@ -252,10 +249,6 @@
     </div>
 </div>
 
-
-
-
-
 @code {
     private List<ProgrammeModel> Programmes = new();
     private WorkoutPlan? SelectedPlan;
@@ -277,7 +270,14 @@
     private string toastMessage = "";
     private string toastClass = "";
 
-
+    protected override void OnInitialized()
+    {
+        appState.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        appState.OnChange -= StateHasChanged;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -301,6 +301,9 @@
             var supabaseEntries = await SupabaseService.GetEntriesAsync();
             await PoidsService.OverwriteEntriesAsync(supabaseEntries);
             Console.WriteLine($"✅ Synchro initiale : {supabaseEntries.Count} entrées chargées.");
+            var profile = await ProfileService.GetOrCreateUserProfileAsync();
+            appState.SetUnite(profile.Unite == "lb");
+
         }
         catch (Exception ex)
         {
@@ -311,11 +314,21 @@
         // ✅ Chargement des programmes comme avant
         // Programmes = await SupabaseService.GetAllProgrammesAsync();
         // ✅ Chargement des programmes par user
-        Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        // Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var supabaseProgrammes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var locaux = await ChargerProgrammesLocauxAutoAsync();
+        // On nettoie les doublons par ID, en gardant priorité à Supabase
+        var supabaseIds = supabaseProgrammes.Select(p => p.Id).ToHashSet();
 
-            
+        // On ne garde que les locaux qui n'existent pas dans Supabase
+        var locauxFiltrés = locaux.Where(l => !supabaseIds.Contains(l.Id)).ToList();
+
+        // Liste finale, aucun doublon
+        Programmes = supabaseProgrammes.Concat(locauxFiltrés).ToList();
     }
 
+    
+    #region SELECTION PROGRAMME
     private async Task OnProgrammeSelected(ChangeEventArgs e)
     {
         Exercises.Clear();
@@ -323,17 +336,30 @@
         if (Guid.TryParse(value, out var id))
         {
             var selectedProgramme = Programmes.FirstOrDefault(p => p.Id == id);
-
+            if (string.IsNullOrWhiteSpace(selectedProgramme.Contenu))
+            {
+                Console.WriteLine("❌ Contenu vide, on ne doit PAS lancer Generate ici !");
+                return;
+            }
             if (selectedProgramme is not null)
             {
                 SelectedProgrammeId = id;
                 SelectedProgrammeSource = selectedProgramme.Source;
-                SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(selectedProgramme.Contenu);
+                var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(selectedProgramme.Contenu,options);
+                Console.WriteLine("🎯 Premier exo jour 1 : " + SelectedPlan?.Weeks[0].Days[0].Exercises[0].ExerciseName);
+                Console.WriteLine("🔍 Type réel : " + SelectedPlan?.Weeks[0].Days[0].Exercises[0].GetType());
+
+
                 SelectedProgrammeDate = selectedProgramme.DateDebut;
 
                 // SelectedSemaineIndex = 0;
                 // SelectedJourIndex = 1;
-                TrouverProchaineSeance();
+                // TrouverProchaineSeance();
 
                 await ChargerSeance();
             }
@@ -352,96 +378,9 @@
         await ChargerSeance();
     }
 
+    #endregion
 
-    private async Task ChargerSeance()
-    {
-        Exercises.Clear();
-
-        if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
-            return;
-
-        var week = SelectedPlan.Weeks[SelectedSemaineIndex];
-        var jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
-
-        if (jour == null || jour.IsRest)
-        {
-            Exercises = new()
-            {
-                new ExerciceJour
-                {
-                    ExerciseName = "Repos",
-                    Series = 0,
-                    Repetitions = 0,
-                    RestTimeSeconds = 0,
-                    Objectif =0,
-                    Pourcentage1RM = 0,
-                    PoidsUtilisé = 0,
-                    ObjectifAtteint = false,
-                    IsLb = false
-                }
-            };
-        }
-        else
-        {
-            var date = DateTime.Today;
-            var localPoids = await PoidsService.GetAllLocalPoidsAsync();
-
-            foreach (var ex in jour.Exercises)
-            {
-                // chercher poids correspondant à l’exercice à la bonne date
-                var local = localPoids.FirstOrDefault(p =>
-                    p.Exercice == ex.ExerciseName && p.Date.Date == date.Date);
-
-                double poids = local?.Poids ?? 0;
-                double facteurObjectif = 1 + (ex.Pourcentage1RM / 100.0);
-                double objectif = poids * facteurObjectif;
-                //remettre cette variable dans grace au profil 
-                double coef = 2.5;
-                double pourcentageRm = calculerObjectif(poids, coef);
-
-                Exercises.Add(new ExerciceJour
-                    {
-                        ExerciseName = ex.ExerciseName,
-                        Series = ex.Series,
-                        Repetitions = ex.Repetitions,
-                        RestTimeSeconds = ex.RestTimeSeconds,
-                        Objectif = calculerObjectif(poids, coef),
-                        Pourcentage1RM = pourcentageRm,
-                        PoidsUtilisé = poids,
-                        ObjectifAtteint = false,
-                        IsLb = AfficherEnLb // ✅ ajout important ici
-
-                    });
-            }
-        }
-
-        StateHasChanged();
-    }
-
-
-
-    private void MarquerAtteint(ExerciceJour ex)
-    {
-        // Conversion en kg si saisi en lb
-        double poidsSaisiKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
-
-        // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
-        double objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
-
-        ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
-
-        _ = CheckFireworks(); // 🔥 déclenche sans bloquer
-    }
-
-    private void UpdatePoids(ChangeEventArgs e, ExerciceJour ex)
-    {
-        if (double.TryParse(e.Value?.ToString(), out double val))
-        {
-            // Toujours stocker en kg
-            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
-        }
-    }
-
+    #region SAUVEGARDE
     private async Task SauvegarderProgrammeModifié()
     {
         if (SelectedPlan is null || SelectedProgrammeId == Guid.Empty)
@@ -449,10 +388,18 @@
 
         try
         {
+
+
             var programme = Programmes.FirstOrDefault(p => p.Id == SelectedProgrammeId);
+
+            Console.WriteLine("🧠 Sauvegarde BD de : " + programme.Id);
+            Console.WriteLine("📦 Contenu JSON : " + programme.Contenu?.Substring(0, 200));
+
             if (programme is not null)
             {
                 programme.Contenu = JsonSerializer.Serialize(SelectedPlan);
+                Console.WriteLine("✅ Programme mis à jour (contenu):");
+                Console.WriteLine(programme.Contenu.Substring(0, 300));
                 var success = await SupabaseService.UpdateProgrammeUnifiedAsync(programme);
 
                 if (success)
@@ -471,95 +418,24 @@
         }
     }
 
-
-    private async Task ProposerRemplacement(ExerciceJour ex)
-    {
-        ExerciceCible = ex;
-        var version = DateTime.Now.Ticks;
-        allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
-        var original = allExercises.FirstOrDefault(e => e.Name == ex.ExerciseName);
-        if (original == null)
-        {
-            Console.WriteLine("⚠️ Exercice source introuvable dans la base.");
-            Suggestions = new(); return;
-        }
-
-        string baseCategory = original.Category?.Split('/').FirstOrDefault()?.Trim() ?? "";
-
-        Suggestions = allExercises
-            .Where(e =>
-                e.Name != original.Name &&
-                e.Origin == original.Origin &&
-                e.Description == original.Description &&
-                e.Category.StartsWith(baseCategory, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(_ => Guid.NewGuid())
-            .Select(e => e.Name)
-            .Take(2)
-            .ToList();
-
-        Console.WriteLine($"🔁 Suggestions trouvées pour {original.Name} : {string.Join(", ", Suggestions)}");
-    }
-
-
-    private async Task ConfirmerRemplacement(string nouveau)
-    {
-        if (ExerciceCible is null || SelectedPlan is null) return;
-
-        //  Mémoriser l'ancien nom AVANT le remplacement
-        string ancienNom = ExerciceCible.ExerciseName;
-
-        //  Remplacer dans la séance affichée
-        ExerciceCible.ExerciseName = nouveau;
-
-        //  Remplacer aussi dans le plan du programme (WorkoutPlan)
-        var semaine = SelectedPlan.Weeks.ElementAtOrDefault(SelectedSemaineIndex);
-        var jour = semaine?.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
-
-        var exOriginal = jour?.Exercises.FirstOrDefault(e => e.ExerciseName == ancienNom);
-        if (exOriginal is not null)
-        {
-            exOriginal.ExerciseName = nouveau;
-        }
-
-        try
-        {
-            // ✅ Sauvegarder le programme modifié après remplacement
-            await SauvegarderProgrammeModifié();
-            Console.WriteLine("✅ Programme mis à jour après remplacement.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-
-
-        ExerciceCible = null;
-        StateHasChanged();
-    }
-
-    private async Task RemplacerExercice(string nouveau)
-    {
-        if (ExerciceCible is null)
-            return;
-
-        ExerciceCible.ExerciseName = nouveau;
-        ExerciceCible = null;
-
-        // await JS.InvokeVoidAsync("hideModal", "modalRemplacement");
-        // 👉 Pas de await → compatible Hot Reload
-        JS.InvokeVoidAsync("hideModal", "modalRemplacement").AsTask();
-        StateHasChanged();
-    }
-
-
     private async Task SauvegarderSeance()
     {
         foreach (var ex in Exercises)
         {
-            if (ex.ExerciseName == "Repos") continue;
+            Console.WriteLine($"🔍 {ex.ExerciseName} | IsDirty = {ex.IsDirty} | Poids = {ex.PoidsUtilisé}");
 
+            if (ex.ExerciseName == "Repos") continue;
+            double poidsKg = 0;
             // ⚠️ Utiliser IsLb (pas AfficherEnLb)
-            var poidsKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+            if (ex.IsLb)
+            {
+                poidsKg = ex.PoidsAffiche * 0.453592;
+            }
+            else
+            {
+                poidsKg = ex.PoidsAffiche;
+            }
+            // var poidsKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
 
             var entry = new PoidsEntry
                 {
@@ -567,7 +443,8 @@
                     Date = DateTime.Today,
                     Poids = poidsKg,
                     UserId = userId,
-                    EnLb  = ex.IsLb
+
+                    EnLb = ex.IsLb
                 };
 
             var local = new PoidsEntryLocal
@@ -596,37 +473,325 @@
         Console.WriteLine("✅ Séance et programme sauvegardés avec succès.");
     }
 
-    private string message = ""; // Affichage du message de succès ou erreur
+    private bool HasPerformanceChanged() => Exercises.Any(e => e.IsDirty);
+    private async Task SaveEverything()
+    {
+        AppliquerModificationsDansSelectedPlan(); // ✅ important
+
+        if (HasPerformanceChanged())
+        {
+            Console.WriteLine("🔁 Des performances ont changé");
+            await SauvegarderSeance();          // ← enregistre Poids + programme
+            foreach (var ex in Exercises) ex.AcceptChanges();
+            toastMessage = "✅ Données enregistrées";
+        }
+        else
+        {
+            Console.WriteLine("📄 Aucune modif → on sauvegarde juste le plan");
+            await SauvegarderProgrammeModifié(); // ← programme seul
+            toastMessage = "ℹ️ Aucun changement à enregistrer";
+
+        }
+        // MarquerSeanceCommeComplete();
+        // await JS.InvokeVoidAsync("showToast", "✅ Session enregistrées");
+        toastClass = "show";
+        MarquerSeanceCommeComplete();
+        StateHasChanged();
+        await Task.Delay(2500);
+        toastClass = "";
+        StateHasChanged();
+    }
+
+    #endregion
+    
+    #region MODULE REMPLACEMENT EXERCICE AVEC MODAL ET MODAL CONFIRMATION SUPPRESSION
+    private async Task ProposerRemplacement(ExerciceJour ex)
+    {
+        ExerciceCible = ex;
+        var version = DateTime.Now.Ticks;
+        allExercises = await Http.GetFromJsonAsync<List<ExerciseDefinition>>($"data/ExercicesListeLocal.json?v={version}") ?? new();
+        var original = allExercises.FirstOrDefault(e => e.Name == ex.ExerciseName);
+        if (original == null)
+        {
+            Console.WriteLine("⚠️ Exercice source introuvable dans la base.");
+            Suggestions = new(); return;
+        }
+
+        string baseCategory = original.Category?.Split('/').FirstOrDefault()?.Trim() ?? "";
+
+        Suggestions = allExercises
+            .Where(e =>
+                e.Name != original.Name &&
+                e.Origin == original.Origin &&
+                e.Description == original.Description &&
+                e.Category.StartsWith(baseCategory, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(_ => Guid.NewGuid())
+            .Select(e => e.Name)
+            .Take(2)
+            .ToList();
+
+        Console.WriteLine($"🔁 Suggestions trouvées pour {original.Name} : {string.Join(", ", Suggestions)}");
+    }
+
+    // private async Task ConfirmerRemplacement(string nouveau)
+    // {
+    //     if (ExerciceCible is null || SelectedPlan is null) return;
+
+    //     //  Mémoriser l'ancien nom AVANT le remplacement
+    //     string ancienNom = ExerciceCible.ExerciseName;
+
+    //     //  Remplacer dans la séance affichée
+    //     ExerciceCible.ExerciseName = nouveau;
+
+    //     //  Remplacer aussi dans le plan du programme (WorkoutPlan)
+    //     var semaine = SelectedPlan.Weeks.ElementAtOrDefault(SelectedSemaineIndex);
+    //     var jour = semaine?.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+
+    //     var exOriginal = jour?.Exercises.FirstOrDefault(e => e.ExerciseName == ancienNom);
+    //     if (exOriginal is not null)
+    //     {
+    //         exOriginal.ExerciseName = nouveau;
+    //     }
+
+    //     try
+    //     {
+    //         // ✅ Sauvegarder le programme modifié après remplacement
+    //         await SauvegarderProgrammeModifié();
+    //         Console.WriteLine("✅ Programme mis à jour après remplacement.");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine(ex);
+    //     }
 
 
+    //     ExerciceCible = null;
+    //     StateHasChanged();
+    // }
+    private async Task ConfirmerRemplacement(string nouveau)
+    {
+        if (ExerciceCible is null || SelectedPlan is null) return;
 
+        // Met à jour l'exercice affiché
+        ExerciceCible.ExerciseName = nouveau;
+
+        // Met à jour l'exercice dans le plan enregistré
+        var semaine = SelectedPlan.Weeks.ElementAtOrDefault(SelectedSemaineIndex);
+        var jour = semaine?.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+
+        if (jour is not null)
+        {
+            // Supprimer l'exercice existant
+            jour.Exercises.RemoveAll(e => e.ExerciseName == ExerciceCible.ExerciseName);
+
+            // Ajouter la nouvelle version (à mapper)
+            jour.Exercises.Add(ExerciseMapper.MapToSession(ExerciceCible));
+        }
+
+        await SauvegarderProgrammeModifié();
+        ExerciceCible = null;
+        StateHasChanged();
+    }
+
+    private async Task RemplacerExercice(string nouveau)
+    {
+        if (ExerciceCible is null)
+            return;
+
+        ExerciceCible.ExerciseName = nouveau;
+        ExerciceCible = null;
+
+        // await JS.InvokeVoidAsync("hideModal", "modalRemplacement");
+        // 👉 Pas de await → compatible Hot Reload
+        await JS.InvokeVoidAsync("hideModal", "modalRemplacement").AsTask();
+        StateHasChanged();
+    }
 
     private async Task ConfirmerSuppression()
     {
         var modal = await JS.InvokeAsync<IJSObjectReference>("bootstrap.Modal.getInstance", "#confirmModal");
         await modal.InvokeVoidAsync("hide");
 
-        if (SelectedProgrammeId != Guid.Empty)
+        if (SelectedProgrammeId == Guid.Empty)
+            return;
+
+        bool supabaseOk = false;
+        bool localOk = false;
+
+        // ✅ Supprimer côté Supabase si ce n'est pas un programme purement local
+        if (SelectedProgrammeSource is "auto" or "manuel")
         {
-            var success = await SupabaseService.DeleteProgrammeUnifiedAsync(SelectedProgrammeId, SelectedProgrammeSource);
+            supabaseOk = await SupabaseService.DeleteProgrammeUnifiedAsync(SelectedProgrammeId, SelectedProgrammeSource);
+            Console.WriteLine($"Supabase suppression status : {supabaseOk}");
+        }
 
-            if (success)
-            {
-                // Réinitialisation complète
-                SelectedPlan = null;
-                SelectedProgrammeId = Guid.Empty;
-                SelectedProgrammeSource = "auto";
-                Exercises.Clear();
+        // ✅ Supprimer côté localStorage dans tous les cas
+        var key = $"programme_{SelectedProgrammeId}";
+        var keys = await LocalStorage.KeysAsync();
+        if (keys.Contains(key))
+        {
+            await LocalStorage.RemoveItemAsync(key);
+            Console.WriteLine($"Programme supprimé du localStorage : {key}");
+            localOk = true;
+        }
 
-                Programmes = await SupabaseService.GetAllProgrammesAsync();
+        if (supabaseOk || localOk)
+        {
+            Console.WriteLine("✅ Programme supprimé avec succès");
 
-                // Forcer le rendu
-                StateHasChanged();
-            }
+            // Reset affichage
+            SelectedPlan = null;
+            SelectedProgrammeId = Guid.Empty;
+            SelectedProgrammeSource = "auto";
+            Exercises.Clear();
+
+            // 🔄 Rechargement propre
+            var supabaseProgrammes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+            var locaux = await ChargerProgrammesLocauxAutoAsync();
+
+            Programmes = supabaseProgrammes.Concat(locaux).DistinctBy(p => p.Id).ToList();
+
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("❌ Échec suppression : aucune source supprimée");
         }
     }
 
 
+
+    #endregion
+    
+
+    private string message = ""; // Affichage du message de succès ou erreur
+
+    #region CHARGER SEANCE
+    private void SetPoidsEtSale(ChangeEventArgs e, ExerciceJour ex)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double val))
+        {
+            ex.PoidsAffiche = val; // ça déclenche le setter ⇒ isDirty
+        }
+    }
+    private async Task ChargerSeance()
+    {
+        Exercises.Clear();
+
+        if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
+            return;
+
+        var week = SelectedPlan.Weeks[SelectedSemaineIndex];
+        var jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+
+        if (jour == null || jour.IsRest)
+        {
+            Exercises = new()
+            {
+                new ExerciceJour
+                {
+                    ExerciseName = "Repos",
+                    Series = 0,
+                    Repetitions = 0,
+                    RestTimeSeconds = 0,
+                    Objectif =0,
+                    Pourcentage1RM = 0,
+                    PoidsUtilisé = 0,
+                    ObjectifAtteint = false,
+                    IsLb = appState.AfficherEnLb,
+
+                }
+            };
+        }
+        else
+        {
+            var date = DateTime.Today;
+            var localPoids = await PoidsService.GetAllLocalPoidsAsync();
+
+            foreach (var ex in jour.Exercises)
+            {
+
+                var local = localPoids.FirstOrDefault(p =>
+                    p.Exercice == ex.ExerciseName && p.Date.Date == date.Date);
+
+                double? poids = local?.Poids;
+
+                var mapped = ExerciseMapper.MapToExerciceJour(ex, appState.AfficherEnLb, poids);
+                mapped.IsLb = appState.AfficherEnLb;
+                Exercises.Add(mapped);
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task<List<ProgrammeModel>> ChargerProgrammesLocauxAutoAsync()
+    {
+        var localProgrammes = new List<ProgrammeModel>();
+
+        var keys = await LocalStorage.KeysAsync();
+        var autoKeys = keys.Where(k => k.StartsWith("programme_"));
+
+        foreach (var key in autoKeys)
+        {
+            try
+            {
+                var local = await LocalStorage.GetItemAsync<ProgrammeModelLocal>(key);
+                if (local != null)
+                {
+                    localProgrammes.Add(new ProgrammeModel
+                        {
+                            Id = local.Id,
+                            Nom = local.Nom,
+                            DateDebut = local.DateDebut,
+                            Contenu = local.Contenu,
+                            Source = local.Source,
+                            UserId = SupabaseService.GetCurrentUserId() ?? ""
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Lecture locale échouée pour {key} : {ex.Message}");
+            }
+        }
+
+        return localProgrammes;
+    }
+   #endregion
+    
+    private void OnSessionTerminee()
+    {
+        SaveEverything();
+        /* Nav.NavigateTo("/view-session", forceLoad: true); */
+    }
+
+    
+    
+    private void MarquerAtteint(ExerciceJour ex)
+    {
+        // Conversion en kg si saisi en lb
+        double poidsSaisiKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+
+        // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
+        double objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
+
+        ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
+
+        _ = CheckFireworks(); // 🔥 déclenche sans bloquer
+    }
+
+    private void UpdatePoids(ChangeEventArgs e, ExerciceJour ex)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double val))
+        {
+            // Toujours stocker en kg
+            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
+        }
+    }
+
+
+    #region CONVERSIONS LB KG A VERIFIER
     private double ConvertToDisplayUnit(double poidsKg) =>
     AfficherEnLb ? Math.Round(poidsKg / 0.453592, 1) : poidsKg;
 
@@ -657,16 +822,32 @@
             ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
         }
     }
+    private double GetPoidsAffiché(ExerciceJour ex) =>
+    AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
 
-    private async void ToggleUnite()
+    private void SetPoidsAffiché(ExerciceJour ex, string? val)
     {
-        AfficherEnLb = !AfficherEnLb;
-
-        foreach (var ex in Exercises)        // 2) on reflète le choix
-            ex.IsLb = AfficherEnLb;
-
-        StateHasChanged();
+        if (double.TryParse(val, out double result))
+            ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
     }
+    private string FormatPoids(double poidsKg)
+    {
+        return appState.AfficherEnLb
+            ? $"{Math.Round(poidsKg / 0.453592, 1)} lb"
+            : $"{Math.Round(poidsKg, 1)} kg";
+    }
+   
+    #endregion
+   
+    // private async void ToggleUnite()
+    // {
+    //     AfficherEnLb = !AfficherEnLb;
+
+    //     foreach (var ex in Exercises)        // 2) on reflète le choix
+    //         ex.IsLb = AfficherEnLb;
+
+    //     StateHasChanged();
+    // }
 
 
     /// <summary>
@@ -684,40 +865,30 @@
         // assure 1.25 → 1.3 plutôt que 1.2 si jamais vous êtes à mi‐chemin.
     }
 
-    private double GetPoidsAffiché(ExerciceJour ex) =>
-    AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
-
-    private void SetPoidsAffiché(ExerciceJour ex, string? val)
+    private void AppliquerModificationsDansSelectedPlan()
     {
-        if (double.TryParse(val, out double result))
-            ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
-    }
-    private bool HasPerformanceChanged() => Exercises.Any(e => e.IsDirty);
+        if (SelectedPlan is null) return;
 
-    private async Task SaveEverything()
-    {
-        if (HasPerformanceChanged())
-        {
-            await SauvegarderSeance();          // ← enregistre Poids + programme
-            foreach (var ex in Exercises) ex.AcceptChanges();
-            toastMessage = "✅ Données enregistrées";
-        }
-        else
-        {
-            await SauvegarderProgrammeModifié(); // ← programme seul
-            toastMessage = "ℹ️ Aucun changement à enregistrer";
-           
-        }
-        // MarquerSeanceCommeComplete();
-        // await JS.InvokeVoidAsync("showToast", "✅ Session enregistrées");
-        toastClass = "show";
-        MarquerSeanceCommeComplete();
-        StateHasChanged();
-        await Task.Delay(2500);
-        toastClass = "";
-        StateHasChanged();
+        var semaine = SelectedPlan.Weeks[SelectedSemaineIndex];
+        var jour = semaine.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+        if (jour is null) return;
+
+        // ⚠️ On écrase le contenu avec la version modifiée (sauf Repos)
+        jour.Exercises = Exercises
+            .Where(e => e.ExerciseName != "Repos")
+            .Select(e => new ExerciseSession
+                {
+                    ExerciseName = e.ExerciseName,
+                    Series = e.Series,
+                    Repetitions = e.Repetitions,
+                    RestTimeSeconds = e.RestTimeSeconds,
+                    Pourcentage1RM = e.Pourcentage1RM,
+                    IsSuperset = e.IsSuperset,
+                })
+            .ToList();
     }
 
+    #region MARQUAGE SEANCE SEMAINE COMPLETE
     private void MarquerSeanceCommeComplete()
     {
         if (SelectedProgrammeId == Guid.Empty)
@@ -795,5 +966,5 @@
         SelectedSemaineIndex = 0;
         SelectedJourIndex = 1;
     }
-    
+   #endregion
 }

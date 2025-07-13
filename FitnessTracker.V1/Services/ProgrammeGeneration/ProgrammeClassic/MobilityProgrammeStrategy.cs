@@ -1,6 +1,6 @@
 ﻿using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
     /// <summary>
     /// Programme Mobilité – 6 semaines – 3 séances (Lun-Mer-Ven)

@@ -43,4 +43,7 @@ public class SportProfileModel : BaseModel
 
     [Column("priority_muscle")]
     public string PriorityMuscle { get; set; } = "";
+
+    [Column("unite")]
+    public string Unite { get; set; } = "kg"; // ou "lb"
 }

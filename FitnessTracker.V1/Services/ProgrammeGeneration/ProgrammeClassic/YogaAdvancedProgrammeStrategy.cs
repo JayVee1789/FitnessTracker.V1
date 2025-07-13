@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
     /// <summary>
     /// Power / Ashtanga-inspired : 12 semaines • 6 séances / semaine

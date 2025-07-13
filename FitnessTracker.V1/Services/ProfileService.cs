@@ -56,7 +56,9 @@ public class ProfileService
             WantsSuperset = record.WantsSuperset,
             BodyweightOnly = record.BodyweightOnly,
             PathologieMuscle = record.PathologieMuscle,
-            PriorityMuscle = record.PriorityMuscle
+            PriorityMuscle = record.PriorityMuscle,
+            Unite = record.Unite
+
         };
     }
 

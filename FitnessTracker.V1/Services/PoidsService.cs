@@ -19,29 +19,7 @@ namespace FitnessTracker.V1.Services
             _supabase = supabase;
         }
 
-        //public async Task<List<PoidsEntry>> GetEntriesAsync()
-        //{
-        //    var userId = _supabase.GetCurrentUserId();
-        //    try
-        //    {
-        //        var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
-        //        return local?.Select(e => new PoidsEntry
-        //        {
-        //            Id = e.Id,
-        //            Date = e.Date,
-        //            Exercice = e.Exercice,
-        //            Poids = e.Poids,
-        //            UserId = userId ?? ""
-        //        }).ToList() ?? new();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("❌ Erreur lecture localStorage, reset...");
-        //        Console.WriteLine(ex);
-        //        await _localStorage.RemoveItemAsync(StorageKey);
-        //        return new();
-        //    }
-        //}
+        
         public async Task<List<PoidsEntry>> GetEntriesAsync()
         {
             var userId = _supabase.GetCurrentUserId();
@@ -91,7 +69,9 @@ namespace FitnessTracker.V1.Services
             {
                 Exercice = entry.Exercice,
                 Date = entry.Date,
-                Poids = entry.Poids
+                Poids = entry.Poids,
+                UserId = userId,        // ✅ Ajout
+                EnLb = entry.EnLb       // ✅ Ajout
             };
 
             try
@@ -99,7 +79,6 @@ namespace FitnessTracker.V1.Services
                 await _localStorage.SetItemAsync(key, local);
                 Console.WriteLine($"✅ Local enregistré : {key}");
 
-                // 🔐 Enregistrer la clé si elle n'existe pas déjà
                 var allKeys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
                 if (!allKeys.Contains(key))
                 {
@@ -112,11 +91,9 @@ namespace FitnessTracker.V1.Services
                 Console.WriteLine("❌ Erreur localStorage : " + ex.Message);
             }
 
-            entry.UserId = userId;
-
             try
             {
-                entry.UserId = _supabase.GetCurrentUserId() ?? "";
+                entry.UserId = userId;
                 await _supabase.AddEntryAsync(entry);
                 Console.WriteLine("✅ Synchro Supabase réussie");
             }
@@ -125,6 +102,7 @@ namespace FitnessTracker.V1.Services
                 Console.WriteLine("❌ Erreur lors de l'ajout dans Supabase : " + ex.Message);
             }
         }
+
         public async Task<List<PoidsEntryLocal>> GetAllLocalPoidsAsync()
         {
             var list = new List<PoidsEntryLocal>();

@@ -9,11 +9,11 @@ namespace FitnessTracker.V1.Services;
 
 public class ProgrammeService
 {
-    private readonly SupabaseService _supabase;         // ↩︎ déjà fourni
+    private readonly SupabaseService2 _supabase;         // ↩︎ déjà fourni
     private readonly ILocalStorageService _localStorage;
     private readonly HttpClient _http;
 
-    public ProgrammeService(SupabaseService supabase,
+    public ProgrammeService(SupabaseService2 supabase,
                             ILocalStorageService localStorage, HttpClient http) 
     {
         _supabase = supabase;

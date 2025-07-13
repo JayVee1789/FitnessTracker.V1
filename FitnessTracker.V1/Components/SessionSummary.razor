@@ -1,6 +1,8 @@
 ﻿@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models.FitnessTracker.V1.Models
 @using static FitnessTracker.V1.Pages.ViewSession
 @using static FitnessTracker.V1.Models.Model
+@inject FitnessTracker.V1.Models.AppState appState
 @code {
     [Parameter] public List<ExerciceJour> Exercises { get; set; } = new();
     [Parameter] public TimeSpan Duree { get; set; }
@@ -23,7 +25,7 @@
                 return poidsKg * e.Series * e.Repetitions;
             });
 
-        if (AfficherEnLb)
+        if (appState.AfficherEnLb)
             return $"{Math.Round(totalKg / 0.453592, 1)} lb";
 
         return $"{Math.Round(totalKg, 1)} kg";

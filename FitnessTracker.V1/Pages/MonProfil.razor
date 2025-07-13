@@ -92,7 +92,13 @@ else
             <div class="duo-title">Muscle prioritaire</div>
             <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
         </div>
-
+        <div class="duo-card">
+            <div class="duo-title">Unité préférée</div>
+            <InputSelect class="form-select" @bind-Value="profile.Unite">
+                <option value="kg">Kilogrammes (kg)</option>
+                <option value="lb">Livres (lb)</option>
+            </InputSelect>
+        </div>
         <div class="text-center mt-4">
             <button class="duo-btn">💾 Sauvegarder</button>
         </div>
@@ -154,7 +160,8 @@ else
                     WantsSuperset = false,
                     BodyweightOnly = false,
                     PathologieMuscle = "",
-                    PriorityMuscle = ""
+                    PriorityMuscle = "",
+                        Unite = "kg"
                 };
                 await Supabase.From<SportProfileModel>().Upsert(profile);
             }

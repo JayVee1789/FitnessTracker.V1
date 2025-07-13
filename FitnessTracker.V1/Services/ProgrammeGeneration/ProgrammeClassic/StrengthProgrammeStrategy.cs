@@ -1,7 +1,7 @@
 ﻿using FitnessTracker.V1.Models;
 using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
     public class StrengthProgrammeStrategy : IProgrammeStrategy
     {

@@ -13,4 +13,6 @@ public class SupabaseUserProfile : BaseModel
 
     [Column("role")]
     public string Role { get; set; } = "user";
+
+
 }

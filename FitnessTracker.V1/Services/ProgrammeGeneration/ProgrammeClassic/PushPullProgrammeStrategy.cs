@@ -1,7 +1,7 @@
 ﻿using FitnessTracker.V1.Models;
 using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 {
     public class PushPullProgrammeStrategy : IProgrammeStrategy
     {
@@ -51,7 +51,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration
 
                     // volume & intensité progressifs
                     int sets = w <= 4 ? 4 : 5;
-                    int reps = (d == 1 || d == 2) ? (w <= 4 ? 6 : 8) : (w <= 4 ? 10 : 12);
+                    int reps = d == 1 || d == 2 ? w <= 4 ? 6 : 8 : w <= 4 ? 10 : 12;
                     int rest = reps <= 6 ? 150 : 90;
 
                     var day = new WorkoutDay

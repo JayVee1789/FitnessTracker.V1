@@ -1,5 +1,7 @@
 ﻿@page "/generate-programme"
+@using Blazored.LocalStorage
 @using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 @inject ProgrammeGeneratorService Generator
 @inject HttpClient Http
 @inject SupabaseService2 SupabaseService
@@ -8,6 +10,8 @@
 @inject Supabase.Client Supabase
 @inject ProfileService profileService
 @inject PoidsService poidsService
+@inject Blazored.LocalStorage.ILocalStorageService Blazored
+
 
 <div class="mobile-container app-main">
     <h2 class="session-header text-center mb-4">💪 Programme généré</h2>
@@ -24,10 +28,10 @@
                 <div class="w-100">
                     <div class="duo-title mb-2">
                         <span class="duo-title-text">Semaine @week.WeekNumber</span>
-                       @*  <span class="ms-auto text-muted">+@week.ChargeIncrementPercent% charge</span> *@
+                        @*  <span class="ms-auto text-muted">+@week.ChargeIncrementPercent% charge</span> *@
                     </div>
 
-                  @*   <div class="duo-info mb-2">
+                    @*   <div class="duo-info mb-2">
                         Séries: <strong>@week.SeriesWeek</strong> • Reps: <strong>@week.RepetitionsWeek</strong> • Repos: <strong>@week.RestTimeWeek</strong> sec
                     </div> *@
 
@@ -137,6 +141,7 @@
             var poids = await poidsService.GetLastPoidsForExerciceAsync(nom);
             derniersPoids[nom] = poids > 0 ? poids : null;
         }
+
     }
 
     private void OpenSaveModal()
@@ -163,25 +168,52 @@
             return;
         }
 
+        var id = Guid.NewGuid();
+        var contenuJson = JsonSerializer.Serialize(planToSave);
+
+        // 1️⃣ Modèle principal pour Supabase
         var model = new ProgrammeModel
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Nom = nom,
                 DateDebut = DateTime.Today,
-                Contenu = JsonSerializer.Serialize(planToSave),
+                Contenu = contenuJson,
                 UserId = Supabase.Auth.CurrentUser?.Id ?? "",
                 Source = "auto"
             };
 
-        bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
+        // 2️⃣ Version locale sans attribut bloquant
+        var localModel = new ProgrammeModelLocal
+            {
+                Id = id,
+                Nom = nom,
+                DateDebut = DateTime.Today,
+                Contenu = contenuJson,
+                Source = "auto"
+            };
 
-        if (ok)
+        try
         {
-            Nav.NavigateTo("/view-session");
+            // 💾 Sauvegarde locale propre
+            await Blazored.SetItemAsync($"programme_{id}", localModel);
+            Console.WriteLine($"✅ Programme auto stocké localement : programme_{id}");
+
+            // ☁️ Sauvegarde dans Supabase
+            bool ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
+
+            if (ok)
+            {
+                Console.WriteLine("✅ Programme enregistré dans Supabase");
+                Nav.NavigateTo("/view-session");
+            }
+            else
+            {
+                Console.WriteLine("❌ Échec sauvegarde Supabase.");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("❌ Erreur lors de l’enregistrement du programme");
+            Console.WriteLine("❌ Exception EnregistrementProgrammeAsync : " + ex.Message);
         }
     }
 

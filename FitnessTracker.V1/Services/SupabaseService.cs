@@ -126,7 +126,7 @@ public class SupabaseService
         await _http.SendAsync(request);
 
     }
-    
+
     public async Task DeleteByExerciceAndDateAsync(string exercice, DateTime date)
     {
         var url = $"{_tableUrl}?exercice=eq.{Uri.EscapeDataString(exercice)}&date=eq.{date:yyyy-MM-dd}";
@@ -323,7 +323,7 @@ public class SupabaseService
     //    Console.WriteLine($"[UPDATE MANUEL] {url} → {response.StatusCode}");
     //    return response.IsSuccessStatusCode;
     ////}
-    
+
     public async Task<bool> SaveProgrammeAsync(ProgrammeModel p, bool isManual)
     {
         var userId = _supabase.Auth.CurrentUser?.Id;
@@ -359,7 +359,7 @@ public class SupabaseService
 
         return response.IsSuccessStatusCode;
     }
-    
+
     public async Task<bool> UpdateProgrammeUnifiedAsync(ProgrammeModel programme)
     {
         RefreshAuthHeaders();
@@ -382,7 +382,7 @@ public class SupabaseService
         Console.WriteLine($"[PATCH programme] {url} → {response.StatusCode}");
         return response.IsSuccessStatusCode;
     }
-
+    
     #endregion
 
     public string? GetCurrentUserId()

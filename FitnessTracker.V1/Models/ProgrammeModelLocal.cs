@@ -4,19 +4,10 @@ namespace FitnessTracker.V1.Models
 {
     public class ProgrammeModelLocal
     {
-        [JsonPropertyName("id")]
-        public Guid Id { get; set; }
-
-        [JsonPropertyName("nom")]
-        public string Nom { get; set; } = "";
-
-        [JsonPropertyName("date_debut")]
-        public DateTime DateDebut { get; set; }
-
-        [JsonPropertyName("contenu")]
-        public string Contenu { get; set; } = "";
-
-        [JsonPropertyName("source")]
-        public string Source { get; set; } = "auto";
+         public Guid Id { get; set; }
+    public string Nom { get; set; } = "";
+    public DateTime DateDebut { get; set; }
+    public string Contenu { get; set; } = "";
+    public string Source { get; set; } = "auto";
     }
 }
