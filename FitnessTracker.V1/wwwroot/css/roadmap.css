@@ -1,0 +1,73 @@
+﻿html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.roadmap-background {
+    background: url('/images/BackgroundRoadmapWeek1.png') no-repeat center/cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.roadmap-title {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.roadmap-track {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.roadmap-step-container {
+    display: flex;
+    margin: 3rem 0;
+    position: relative;
+}
+
+    .roadmap-step-container.right {
+        justify-content: flex-end;
+    }
+
+.roadmap-step {
+    width: 80px;
+    height: 80px;
+    background: #bdf98f;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    transition: transform 0.3s;
+}
+
+    .roadmap-step.completed {
+        background: #a1e69c;
+    }
+
+.roadmap-avatar {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    transition: top 0.5s, left 0.5s;
+}
+
+.avatar-icon {
+    width: 100%;
+}
+
+@media (max-width: 480px) {
+    .roadmap-step {
+        width: 80px;
+        height: 80px;
+        font-size: 1.2rem;
+    }
+}

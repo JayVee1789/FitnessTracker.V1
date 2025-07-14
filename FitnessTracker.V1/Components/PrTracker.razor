@@ -4,15 +4,19 @@
 @using FitnessTracker.V1.Models
 
 <div class="container-fluid overflow-x-auto">
+    <div class="duo-card mb-3 p-3">
+        <p class="duo-objectif">
+            🏆 Ce graphique affiche vos meilleurs records sur les 10 exercices où vous avez levé le plus lourd.
+            
+        </p>
+    </div>
     <BarChart @ref="chart" Width="@Width" Height="@Height" />
 </div>
 
 @code {
     [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
-    // ← NOUVEAU : Width/Height paramétrables
     [Parameter] public int Width { get; set; } = 400;
     [Parameter] public int Height { get; set; } = 300;
-
 
     private BarChart? chart;
     private ChartData? chartData;
@@ -28,7 +32,6 @@
 
     private void BuildChart()
     {
-        // 1) Calcul des records max par exercice
         var records = Entries
             .GroupBy(e => e.Exercice)
             .Select(g => new
@@ -37,29 +40,23 @@
                 Record = g.Max(e => e.Poids)
             })
             .OrderByDescending(x => x.Record)
-            .Take(10)  // ← on ne garde que les 10 premiers
+            .Take(10)
             .ToList();
 
-        // 2) Labels et data
         var labels = records.Select(r => r.Exercice).ToList();
         var dataPoints = records.Select(r => (double?)r.Record).ToList();
 
-        // 3) Couleurs (une couleur différente par barre)
-        var colors = labels
-            .Select((_, i) => ColorUtility.CategoricalTwelveColors[i % ColorUtility.CategoricalTwelveColors.Length])
-            .ToList();
+        var colors = labels.Select((_, i) => DuoColors(i)).ToList();
 
-        // 4) Dataset
         var dataset = new BarChartDataset
             {
                 Label = "Record personnel",
                 Data = dataPoints,
                 BackgroundColor = colors,
                 BorderColor = colors,
-                BorderWidth = dataPoints.Select(_ => 1d).ToList()
+                BorderWidth = dataPoints.Select(_ => 2d).ToList()
             };
 
-        // 5) Construction de ChartData et Options
         chartData = new ChartData
             {
                 Labels = labels,
@@ -72,15 +69,38 @@
                 MaintainAspectRatio = false,
                 Plugins = new()
                 {
-                    Title = new() { Display = true, Text = "Top 10 de vos records" }
+                    Title = new()
+                    {
+                        Display = true,
+                        Text = "Top 10 de vos records personnels 🏋️",
+                        Color = "#1CB0F6",
+                        Font = new ChartFont { Size = 20 }
+                    }
                 },
                 Scales = new()
                 {
-                    X = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Exercice" } },
-                    Y = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)" } }
+                    X = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Exercice", Color = "#1CB0F6" }
+                    },
+                    Y = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)", Color = "#1CB0F6" }
+                    }
                 }
             };
     }
+
+    private string DuoColors(int index)
+    {
+        string[] colors = new[]
+        {
+            "#1CB0F6", "#FFD700", "#00C48C", "#FF6B6B", "#FFA500", "#9C27B0",
+            "#1CB0F6", "#FFD700", "#00C48C", "#FF6B6B"
+        };
+        return colors[index % colors.Length];
+    }
+
     public async Task RefreshAsync()
     {
         if (chart is not null && chartData is not null && chartOptions is not null)

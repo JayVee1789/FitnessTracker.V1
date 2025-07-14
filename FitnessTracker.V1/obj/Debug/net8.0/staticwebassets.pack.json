@@ -45,6 +45,10 @@
       "PackagePath": "staticwebassets\\css\\mobile-native.css"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\roadmap.css",
+      "PackagePath": "staticwebassets\\css\\roadmap.css"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\style.css",
       "PackagePath": "staticwebassets\\css\\style.css"
     },
@@ -67,6 +71,10 @@
     {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\icon-512.png",
       "PackagePath": "staticwebassets\\icon-512.png"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\BackgroundRoadmapWeek1.png",
+      "PackagePath": "staticwebassets\\images\\BackgroundRoadmapWeek1.png"
     },
     {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\arnold.png",
@@ -93,8 +101,20 @@
       "PackagePath": "staticwebassets\\images\\programmes\\rock.png"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\programmes\\zone_background.svg",
+      "PackagePath": "staticwebassets\\images\\programmes\\zone_background.svg"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\images\\zone_background2.png",
+      "PackagePath": "staticwebassets\\images\\zone_background2.png"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\js\\roadmap.js",
+      "PackagePath": "staticwebassets\\js\\roadmap.js"
     },
     {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\manifest.webmanifest",
@@ -103,6 +123,10 @@
     {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\my-toast.js",
       "PackagePath": "staticwebassets\\my-toast.js"
+    },
+    {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\pwa-update.js",
+      "PackagePath": "staticwebassets\\pwa-update.js"
     },
     {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\sample-data\\weather.json",

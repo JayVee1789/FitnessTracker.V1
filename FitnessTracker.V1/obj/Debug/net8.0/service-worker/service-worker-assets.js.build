@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "ZhgpvW9J",
+  "version": "EmsAR2YU",
   "assets": [
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
@@ -50,11 +50,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-uo0U/wtfsNQ96AYe/2dodPxhw/krv42bpJPJtbJWtYk=",
+      "hash": "sha256-gGUvKe7flsCSfje3fsGznpoi5JkFFnYJaMG0bjsxKH4=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-C4TTW9BryWwOYcnluqiOd8mwbKTEuVO4IPsjnqBATnc=",
+      "hash": "sha256-PAdYp7H8wy58qErSBogAamCc7nTdHBBTsOKV8O4WrBY=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-m7IqQrCUt9NOxjiScmW2lH3+P0uz7eDDmZ68/jdEdMk=",
+      "hash": "sha256-xZnNlDdDOBdHUDgnDhUeI8vTm+1sMXOGwBxNH5UHOnU=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -974,7 +974,7 @@ self.assetsManifest = {
       "url": "css/bootstrap/bootstrap.min.css.map"
     },
     {
-      "hash": "sha256-Mdq7r3BNRwIKsmgD/74uDlQGtGM/72sW1VZyy3Ag/tA=",
+      "hash": "sha256-BXa/5b1TZ/yDYujkdd2e+XayP1y6xbQjdPgp+cPCwbE=",
       "url": "css/components.css"
     },
     {
@@ -988,6 +988,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-TdLdycCr4UZhsgeGpDlrTh7NlYitzRxVEZ8bY2RYPXw=",
       "url": "css/mobile-native.css"
+    },
+    {
+      "hash": "sha256-DjMJiY7rRYUxp1s3yKGQWhafWjmsawJFtSkC+8xf49A=",
+      "url": "css/roadmap.css"
     },
     {
       "hash": "sha256-tbOSOHeXNlDmoVbbwl/I0l6AA5Bj7L/ihOZcr1Vj7Rs=",
@@ -1014,6 +1018,10 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
+      "hash": "sha256-p5lGHSBVCGB270HaYJbzR1/AubXCzgPMVZ6TYB47KcY=",
+      "url": "images/BackgroundRoadmapWeek1.png"
+    },
+    {
       "hash": "sha256-gVv3TltbGwAjL9++/21rwTEWZNAYkWqTlIL6fP0xVuY=",
       "url": "images/programmes/arnold.png"
     },
@@ -1038,8 +1046,20 @@ self.assetsManifest = {
       "url": "images/programmes/rock.png"
     },
     {
-      "hash": "sha256-2J8naxHnCJzcJt9Acpf3wUQL5DIR8qA8cyHVtzU8IaU=",
+      "hash": "sha256-ux9VWFnMqT61VXtUJTXw1I4FdJpNb+3XL4LEP9WlmsU=",
+      "url": "images/programmes/zone_background.svg"
+    },
+    {
+      "hash": "sha256-mNHwoO+I+SZqJtuY3k4BIW6Ie3GCEQFdbYFCg8Mi5pI=",
+      "url": "images/zone_background2.png"
+    },
+    {
+      "hash": "sha256-fZ9yNYrXpq9FSdqx1IkG4upwTScFmP702nA9SOTK+Gg=",
       "url": "index.html"
+    },
+    {
+      "hash": "sha256-wgn/nVRpCUhi17GuGmUbx6PrH5gIaW2xouWHTiy9MTU=",
+      "url": "js/roadmap.js"
     },
     {
       "hash": "sha256-BcU3MSqhHDswVWSYBfrN3EamihNWLWgltrHAUbu0TwQ=",
@@ -1048,6 +1068,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-1ug7XTE/ioRlIuV/eGzNdkieVmTsc6Gf5IiQCvZ4iIo=",
       "url": "my-toast.js"
+    },
+    {
+      "hash": "sha256-ntRVlQelFFO0UtKn+qiuqWJfETx8bdYPKJm6Fh3JMZs=",
+      "url": "pwa-update.js"
     },
     {
       "hash": "sha256-enKgCMkYmCpfEcmg6Annbmc40VZ/A6aYYSQjZfVn2cU=",

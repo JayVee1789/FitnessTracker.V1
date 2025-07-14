@@ -29,5 +29,7 @@ public class PoidsEntry : BaseModel
     [Column("en_lb")]
     [JsonPropertyName("en_lb")]
     public bool EnLb { get; set; } = false;
-
+    [Column("objectif_atteint")]
+    [JsonPropertyName("objectif_atteint")]
+    public bool ObjectifAtteint { get; set; } = false;
 }

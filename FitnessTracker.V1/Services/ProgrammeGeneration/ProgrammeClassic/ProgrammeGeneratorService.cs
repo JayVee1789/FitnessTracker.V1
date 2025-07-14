@@ -1,4 +1,8 @@
-﻿using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
+﻿using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Mobility;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Pilates;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Yoga;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
 using static FitnessTracker.V1.Models.Model;
 
 namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic

@@ -4,7 +4,13 @@
 @using FitnessTracker.V1.Models
 
 <div class="container-fluid overflow-x-auto">
+    
     <LineChart @ref="chart" Width="@Width" Height="@Height" />
+    <div class="alert alert-info">
+        Ce graphique affiche l'évolution des poids utilisés pour les exercices les plus fréquents ou les plus marquants.
+        Chaque courbe représente un exercice distinct, et l'axe horizontal correspond aux dates d'entraînement.
+        Cela permet de visualiser rapidement la progression ou les périodes sans enregistrement pour chaque exercice.
+    </div>
 </div>
 
 @code {
@@ -40,21 +46,28 @@
             .Distinct()
             .Take(4)
             .ToList();
+
         if (selection.Count == 0)
-            selection = Entries.Select(e => e.Exercice).Distinct().Take(4).ToList();
+        {
+            selection = Entries.GroupBy(e => e.Exercice)
+                .OrderByDescending(g => g.Count())
+                .Take(4)
+                .Select(g => g.Key)
+                .ToList();
+        }
 
         var datasets = new List<IChartDataset>();
         int idx = 0;
         foreach (var ex in selection)
         {
-            var serie = jours
+            // ✅ Correction : génération de List<double?> avec gestion de null
+            List<double?> serie = jours
                 .Select(label => Entries
                     .FirstOrDefault(e => e.Exercice == ex && e.Date.ToString("yyyy-MM-dd") == label)
                     ?.Poids)
-                .Cast<double?>()
                 .ToList();
 
-            var color = ColorUtility.CategoricalTwelveColors[idx % ColorUtility.CategoricalTwelveColors.Length];
+            var color = DuoColors(idx);
             idx++;
 
             datasets.Add(new LineChartDataset
@@ -63,7 +76,11 @@
                     Data = serie,
                     BackgroundColor = color,
                     BorderColor = color,
-                    BorderWidth = 2,
+                    BorderWidth = 3,
+                    BorderCapStyle = "round",
+                    BorderJoinStyle = "round",
+                    Tension = 0.4,
+                    Fill = false,
                     SpanGaps = true
                 });
         }
@@ -78,14 +95,36 @@
             {
                 Responsive = true,
                 MaintainAspectRatio = false,
-                Interaction = new Interaction { Mode = InteractionMode.Index, Intersect = false },
-                Plugins = new() { Title = new() { Display = true, Text = "Progression du poids (kg)" } },
+                Plugins = new()
+                {
+                    Title = new() { Display = true, Text = "Progression du poids (kg)" }
+                },
                 Scales = new()
                 {
-                    X = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Date" } },
-                    Y = new ChartAxes { Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)" } }
+                    X = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Date" }
+                    },
+                    Y = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)" }
+                    }
                 }
             };
+    }
+
+    private string DuoColors(int index)
+    {
+        string[] colors = new[]
+        {
+            "#1CB0F6", // bleu Duo
+            "#FFD700", // jaune or
+            "#00C48C", // vert vif
+            "#FF6B6B", // rouge clair
+            "#FFA500", // orange
+            "#9C27B0"  // violet
+        };
+        return colors[index % colors.Length];
     }
 
     public async Task RefreshAsync()

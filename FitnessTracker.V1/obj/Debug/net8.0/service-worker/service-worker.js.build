@@ -1,20 +1,20 @@
-/* Manifest version: ZhgpvW9J */
-// In development, always fetch from the network and do not enable offline support.
-// This is because caching would make development more difficult (changes would not
-// be reflected on the first load after each change).
-self.addEventListener('fetch', () => { });
-self.addEventListener('install', () => self.skipWaiting());
+/* Manifest version: EmsAR2YU */
+self.addEventListener('install', () => {
+    console.log("📦 Service worker installé");
+    self.skipWaiting(); // active immédiatement
+});
 
 self.addEventListener('activate', (event) => {
+    console.log("✅ Service worker activé");
     event.waitUntil(clients.claim());
 });
 
-//self.addEventListener('message', async event => {
-//    if (event.data === 'check-for-update') {
-//        const clients = await self.clients.matchAll({ type: 'window' });
-//        for (const client of clients) {
-//            client.postMessage({ type: 'update-available' });
-//        }
-//    }
-//});
+// Pour recevoir un message depuis l’app Blazor et forcer l’activation
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        console.log("🚀 Forçage de mise à jour via message");
+        self.skipWaiting();
+    }
+});
+
 

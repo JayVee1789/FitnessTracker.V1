@@ -8,5 +8,6 @@
         public double Poids { get; set; }
         public string UserId { get; set; } = "";
         public bool EnLb { get; set; } = false;
+        public bool ObjectifAtteint { get; set; } = false;
     }
 }

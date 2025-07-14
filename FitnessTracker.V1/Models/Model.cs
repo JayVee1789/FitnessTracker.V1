@@ -1,50 +1,12 @@
-﻿namespace FitnessTracker.V1.Models
+﻿using FitnessTracker.V1.Models.Enumeration;
+
+namespace FitnessTracker.V1.Models
 {
     public class Model
     
         
     {
-        // ================= ENUMS =================
-        public enum TrainingObjective
-        {
-            Force,
-            Endurance,
-            Hypertrophy,
-            Fat_loss,
-            Yoga,
-            Mobility,
-            Pilates,
-            Strength,
-            SuperStar,
-            Glutes,
-            Calistenie
-
-        }
-
-        public enum UserLevel
-        {
-            Debutant,
-            Intermediaire,
-            Avance
-        }
-
-        public enum ProgrammeType
-        {
-            FullBody,
-            Split,
-            Half,
-            PushPull,
-            Mixte,
-            Rest,
-            Mobility,
-            Yoga,
-            Pilates,
-            Cardio,
-            Core
-
-        }
-
-        // ================= MODELES =================
+       // ================= MODELES =================
 
         public class ExerciseDefinition
         {

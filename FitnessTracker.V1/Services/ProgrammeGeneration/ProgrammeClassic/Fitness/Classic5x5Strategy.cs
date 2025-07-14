@@ -1,7 +1,8 @@
-﻿using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
+﻿using FitnessTracker.V1.Models.Enumeration;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
 using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness
 {
     public class Classic5x5Strategy : IProgrammeStrategy
     {

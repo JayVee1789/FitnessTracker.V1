@@ -50,6 +50,9 @@
         {
             SupabaseService.RefreshAuthHeaders();
             Console.WriteLine("✅ Connexion réussie");
+            // 🔵 Sauvegarde locale pour la prochaine session
+            await SupabaseService.SaveSessionAsync(); 
+            Console.WriteLine("✅ Enregistrement session réussie");
             Nav.NavigateTo("/view-session");
         }
         else

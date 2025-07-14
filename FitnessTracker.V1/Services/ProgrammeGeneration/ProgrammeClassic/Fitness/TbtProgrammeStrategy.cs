@@ -1,8 +1,9 @@
 ﻿using FitnessTracker.V1.Models;
+using FitnessTracker.V1.Models.Enumeration;
 using static FitnessTracker.V1.Models.Model;
 
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness
 {
 
 

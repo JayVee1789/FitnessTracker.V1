@@ -144,6 +144,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3JhbW1lc1ByZWRlZmluaXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphique/ProgressionMap.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVcUHJvZ3Jlc3Npb25NYXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphique/Roadmap.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVcUm9hZG1hcC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ViewSession.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmlld1Nlc3Npb24ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

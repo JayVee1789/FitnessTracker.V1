@@ -26,7 +26,7 @@ public class SupabaseService2
     private readonly string _entriesUrl;
     private readonly string _programmesUrl;
     private readonly string _programmesManuelsUrl;
-
+    private const string SessionKey = "supabase_session";
     // ─── constructeur ─────────────────────────────────────────────
     public SupabaseService2(
         HttpClient http,
@@ -223,4 +223,29 @@ public class SupabaseService2
     }
 
     #endregion
+    public async Task SaveSessionAsync()
+    {
+        var session = _supabase.Auth.CurrentSession;
+        if (session != null)
+        {
+            var json = JsonSerializer.Serialize(session);
+            await _localStorage.SetItemAsync("supabase_session", json);
+        }
+    }
+
+    public async Task<bool> LoadSessionAsync()
+    {
+        var json = await _localStorage.GetItemAsync<string>("supabase_session");
+        if (!string.IsNullOrEmpty(json))
+        {
+            var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(json);
+            if (session != null)
+            {
+                await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -1,6 +1,7 @@
-﻿using static FitnessTracker.V1.Models.Model;
+﻿using FitnessTracker.V1.Models.Enumeration;
+using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness
 {
     /// <summary>
     /// Générateur « Waterbury‐style » : full-body 4 à 6 séances / semaine,

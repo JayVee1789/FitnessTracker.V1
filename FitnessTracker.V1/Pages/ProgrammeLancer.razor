@@ -2,7 +2,9 @@
 @inject NavigationManager Nav
 
 @page "/programme-lancer/{NomProgramme}"
+@using FitnessTracker.V1.Models.Enumeration
 @using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness
 @using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar
 
 @code {
@@ -35,11 +37,11 @@
 
         var profile = new Model.UserProfile
             {
-                Level = Model.UserLevel.Debutant,
+                Level = UserLevel.Debutant,
                 Sexe = "H",
                 Age = 25,
                 SeancesPerWeek = 4,
-                Objective = Model.TrainingObjective.Hypertrophy
+                Objective = TrainingObjective.Hypertrophy
             };
 
         var plan = strategy.GeneratePlan(profile, allExercises);

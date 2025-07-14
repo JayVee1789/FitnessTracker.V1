@@ -1,0 +1,66 @@
+﻿@page "/roadmap"
+@inject IJSRuntime JS
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<div class="roadmap-background">
+    <h1 class="roadmap-title">Ta progression 🏆</h1>
+
+    <div class="roadmap-track" id="roadmap-track">
+        @for (int i = 1; i <= 7; i++)
+        {
+            <div class="roadmap-step-container @(i % 2 == 0 ? "right" : "left")" id="step-@i">
+                <div class="roadmap-step @(SeancesCompletes.Contains(i) ? "completed" : "")">
+                    <span class="roadmap-icon">@((SeancesCompletes.Contains(i)) ? "✅" : "🔒")</span>
+                    <div class="roadmap-label">Séance @i</div>
+                </div>
+            </div>
+        }
+
+        <div class="roadmap-avatar" style="top:@AvatarTop; left:@AvatarLeft;">
+            <img src="/images/avatar.png" class="avatar-icon" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private HashSet<int> SeancesCompletes = new();
+    private string AvatarTop = "0px";
+    private string AvatarLeft = "calc(50% - 25px)";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ChargerSeances();
+            await UpdateAvatarPositionAsync();
+        }
+    }
+
+    private async Task ChargerSeances()
+    {
+        var done = await LocalStorage.GetItemAsync<string>("seancesCompletes") ?? "";
+        SeancesCompletes = done.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                               .Select(x => int.TryParse(x.Split(':').Last(), out int id) ? id : 0)
+                               .Where(x => x > 0).ToHashSet();
+    }
+
+    private async Task UpdateAvatarPositionAsync()
+    {
+        int position = SeancesCompletes.Count + 1;
+        if (position > 7) position = 7;
+
+        var rect = await JS.InvokeAsync<DomRect>("getStepPosition", $"step-{position}");
+        AvatarTop = $"{rect.Top + rect.Height / 2}px";
+        AvatarLeft = $"{rect.Left + rect.Width / 2 - 25}px";
+
+        StateHasChanged();
+    }
+
+    public class DomRect
+    {
+        public double Top { get; set; }
+        public double Left { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+}

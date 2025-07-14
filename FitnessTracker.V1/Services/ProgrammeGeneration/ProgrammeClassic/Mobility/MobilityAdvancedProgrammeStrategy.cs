@@ -3,8 +3,9 @@ using static FitnessTracker.V1.Models.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FitnessTracker.V1.Models.Enumeration;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Mobility
 {
     public class MobilityAdvancedProgrammeStrategy : IProgrammeStrategy
     {

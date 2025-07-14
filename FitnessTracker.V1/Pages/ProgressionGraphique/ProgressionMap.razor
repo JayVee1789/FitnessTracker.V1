@@ -1,0 +1,52 @@
+﻿@page "/progression-map"
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<h3 class="text-center text-white mb-4">Ta progression 🏆</h3>
+
+<div class="map-container">
+    @for (var i = 0; i < ProgressSteps.Count; i++)
+    {
+        <div class="step-wrapper @(i % 2 == 0 ? "left" : "right")">
+            <div class="connector"></div>
+            <div class="map-step @(ProgressSteps[i].Completed ? "completed" : "")">
+                <span class="step-icon">@GetIcon(ProgressSteps[i])</span>
+                <div class="step-label">@ProgressSteps[i].Label</div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    private List<MapStep> ProgressSteps = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var done = await LocalStorage.GetItemAsync<string>("seancesCompletes") ?? "";
+        var seances = done.Split(',').ToList();
+
+        ProgressSteps = Enumerable.Range(1, 10).Select(i => new MapStep
+            {
+                Label = $"Séance {i}",
+                Completed = seances.Any(x => x.EndsWith($":{i}")),
+                Type = i % 5 == 0 ? "chest" : "normal"
+            }).ToList();
+    }
+
+    public class MapStep
+    {
+        public string Label { get; set; } = "";
+        public bool Completed { get; set; }
+        public string Type { get; set; } = "normal";
+    }
+    private string GetIcon(MapStep step)
+    {
+        return step.Type switch
+        {
+            "chest" => "🎁",
+            "goal" => "🎯",
+            _ => step.Completed ? "✅" : "🔒"
+        };
+    }
+
+}

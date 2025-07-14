@@ -1,4 +1,5 @@
-﻿using static FitnessTracker.V1.Models.Model;
+﻿using FitnessTracker.V1.Models.Enumeration;
+using static FitnessTracker.V1.Models.Model;
 
 namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar
 {

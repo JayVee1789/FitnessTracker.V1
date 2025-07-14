@@ -21,6 +21,7 @@
 
 @inject ProfileService ProfileService  
 @inject FitnessTracker.V1.Models.AppState appState
+@inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
 
 
 @code {
@@ -48,7 +49,17 @@
 <div class="session-header">
     Session du Jour 💪
 </div>
+@if (Gamification?.State != null)
+{
+    <div class="progress-container" style="display: flex; align-items: center;">
+        <span>Niveau @Gamification.State.Level</span>
+        <div class="progress-bar flex-fill mx-2" style="position: relative;">
+            <div class="progress-fill" style="width:@((Gamification.State.TotalXP % 1000) / 10)%"></div>
+        </div>
+        <span class="trophy-icon">🏆</span>
+    </div>
 
+}
 
 <SessionProgressBar Completed="@ExercicesCompletes()" TotalDone="@ExercicesTotales()" />
 
@@ -146,15 +157,15 @@
 
                     <div class="input-group mt-3" style="max-width: 260px;">
                         <input type="number"
-                               class="form-control form-control-sm rounded-pill text-center"
-                               step="0.5"
-                               value="@ex.PoidsAffiche"
-                               @oninput="e => SetPoidsEtSale(e, ex)" />
+                        class="form-control form-control-sm rounded-pill text-center"
+                        step="0.5"
+                        value="@ex.PoidsAffiche"
+                        @oninput="e => SetPoidsEtSale(e, ex)" />
                         <span class="input-group-text bg-light border-0">@((appState.AfficherEnLb ? "lb" : "kg"))</span>
                         <span class="input-group-text bg-light border-0 fw-bold" style="font-size: 0.85rem;">
                             🎯 @(appState.AfficherEnLb
-                             ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
-                             : $"{Math.Round(ex.Objectif, 1)} kg")
+                                ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                                : $"{Math.Round(ex.Objectif, 1)} kg")
                         </span>
                     </div>
 
@@ -289,6 +300,7 @@
 
         try
         {
+            await Gamification.InitializeAsync();
             userId = SupabaseService.GetCurrentUserId();
             Console.WriteLine("🔑 Utilisateur actuel : " + userId);
             var data = await JS.InvokeAsync<string>("localStorage.getItem", "seancesCompletes");
@@ -327,7 +339,7 @@
         Programmes = supabaseProgrammes.Concat(locauxFiltrés).ToList();
     }
 
-    
+
     #region SELECTION PROGRAMME
     private async Task OnProgrammeSelected(ChangeEventArgs e)
     {
@@ -461,6 +473,7 @@
                 // 🔁 méthode unifiée pour gérer doublons + synchro
                 await PoidsService.SaveEntryUnifiedAsync(entry, local);
                 Console.WriteLine($"✅ Entrée sauvegardée : {entry.Exercice} - {entry.Poids} kg");
+
             }
             catch (Exception exerer)
             {
@@ -503,7 +516,7 @@
     }
 
     #endregion
-    
+
     #region MODULE REMPLACEMENT EXERCICE AVEC MODAL ET MODAL CONFIRMATION SUPPRESSION
     private async Task ProposerRemplacement(ExerciceJour ex)
     {
@@ -662,7 +675,7 @@
 
 
     #endregion
-    
+
 
     private string message = ""; // Affichage du message de succès ou erreur
 
@@ -717,6 +730,7 @@
                 double? poids = local?.Poids;
 
                 var mapped = ExerciseMapper.MapToExerciceJour(ex, appState.AfficherEnLb, poids);
+                mapped.ObjectifAtteint = local?.ObjectifAtteint ?? false;
                 mapped.IsLb = appState.AfficherEnLb;
                 Exercises.Add(mapped);
             }
@@ -758,98 +772,47 @@
 
         return localProgrammes;
     }
-   #endregion
-    
-    private void OnSessionTerminee()
+    #endregion
+
+    private async Task OnSessionTerminee()
     {
-        SaveEverything();
-        /* Nav.NavigateTo("/view-session", forceLoad: true); */
+        await SaveEverything();
+        if (Exercises.All(e => e.ObjectifAtteint))
+        {
+            await Gamification.AddXP(100, "Objectif atteint sur tous les exercices");
+        }
+
+        StateHasChanged();
     }
 
-    
-    
     private void MarquerAtteint(ExerciceJour ex)
     {
+        //si le poids en livre
+        //convertir en kg 
+
+
         // Conversion en kg si saisi en lb
-        double poidsSaisiKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+        double poidsSaisiKg = ex.IsLb ? ex.PoidsAffiche * 0.453592 : ex.PoidsAffiche;
 
         // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
-        double objectifKg = ex.Objectif * (1 + ex.Pourcentage1RM / 100.0);
+       
 
-        ex.ObjectifAtteint = poidsSaisiKg >= objectifKg;
-
+        ex.ObjectifAtteint = poidsSaisiKg >= ex.Objectif;
+        var local = new PoidsEntryLocal
+            {
+                Id = Guid.NewGuid(),
+                Exercice = ex.ExerciseName,
+                Date = DateTime.Today,
+                Poids = poidsSaisiKg,
+                UserId = userId ?? "",
+                EnLb = ex.IsLb,
+                ObjectifAtteint = ex.ObjectifAtteint
+            };
+        PoidsService.AddOrUpdateLocal(local);
         _ = CheckFireworks(); // 🔥 déclenche sans bloquer
     }
 
-    private void UpdatePoids(ChangeEventArgs e, ExerciceJour ex)
-    {
-        if (double.TryParse(e.Value?.ToString(), out double val))
-        {
-            // Toujours stocker en kg
-            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
-        }
-    }
-
-
-    #region CONVERSIONS LB KG A VERIFIER
-    private double ConvertToDisplayUnit(double poidsKg) =>
-    AfficherEnLb ? Math.Round(poidsKg / 0.453592, 1) : poidsKg;
-
-
-    private double ConvertToKg(double valeurAffichee) =>
-        AfficherEnLb ? Math.Round(valeurAffichee * 0.453592, 2) : valeurAffichee;
-
-
-    private void OnPoidsChanged(string? valueStr, ExerciceJour ex)
-    {
-        if (double.TryParse(valueStr, out double val))
-        {
-            ex.PoidsUtilisé = ConvertToKg(val);
-            
-        }
-    }
-
-
-    private double GetDisplayPoids(ExerciceJour ex)
-    {
-        return AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
-    }
-
-    private void SetDisplayPoids(ChangeEventArgs e, ExerciceJour ex)
-    {
-        if (double.TryParse(e.Value?.ToString(), out double val))
-        {
-            ex.PoidsUtilisé = AfficherEnLb ? val * 0.453592 : val;
-        }
-    }
-    private double GetPoidsAffiché(ExerciceJour ex) =>
-    AfficherEnLb ? Math.Round(ex.PoidsUtilisé / 0.453592, 1) : Math.Round(ex.PoidsUtilisé, 1);
-
-    private void SetPoidsAffiché(ExerciceJour ex, string? val)
-    {
-        if (double.TryParse(val, out double result))
-            ex.PoidsUtilisé = AfficherEnLb ? Math.Round(result * 0.453592, 2) : result;
-    }
-    private string FormatPoids(double poidsKg)
-    {
-        return appState.AfficherEnLb
-            ? $"{Math.Round(poidsKg / 0.453592, 1)} lb"
-            : $"{Math.Round(poidsKg, 1)} kg";
-    }
-   
-    #endregion
-   
-    // private async void ToggleUnite()
-    // {
-    //     AfficherEnLb = !AfficherEnLb;
-
-    //     foreach (var ex in Exercises)        // 2) on reflète le choix
-    //         ex.IsLb = AfficherEnLb;
-
-    //     StateHasChanged();
-    // }
-
-
+  
     /// <summary>
     /// Ajoute un pourcentage au poids de départ.
     /// Exemple : poids = 100, pourcentage = 2.5  → 102.5

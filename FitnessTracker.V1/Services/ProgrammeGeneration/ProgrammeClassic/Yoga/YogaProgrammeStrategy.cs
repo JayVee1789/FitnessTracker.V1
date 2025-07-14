@@ -1,6 +1,7 @@
-﻿using static FitnessTracker.V1.Models.Model;
+﻿using FitnessTracker.V1.Models.Enumeration;
+using static FitnessTracker.V1.Models.Model;
 
-namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
+namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Yoga
 {
     /// <summary>
     /// Yoga Flow – 8 semaines – 5 séances (Lun-Mar-Jeu-Ven-Sam)

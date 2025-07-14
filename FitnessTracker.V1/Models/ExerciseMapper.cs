@@ -1,5 +1,4 @@
-﻿using FitnessTracker.V1.Models;
-using FitnessTracker.V1.Models.FitnessTracker.V1.Models;
+﻿using FitnessTracker.V1.Models.FitnessTracker.V1.Models;
 using FitnessTracker.V1.Services;
 using static FitnessTracker.V1.Models.Model;
 
@@ -24,6 +23,7 @@ namespace FitnessTracker.V1.Mapping
                 //Objectif = poidsKg * (1 + session.Pourcentage1RM / 100.0),
                 Objectif = ObjectifService.DefinirObjectif(poidsKg),
                 IsLb = afficherEnLb
+                
             };
         }
 

@@ -3,7 +3,9 @@ using FitnessTracker.V1;
 using FitnessTracker.V1.Helper;
 using FitnessTracker.V1.Models;
 using FitnessTracker.V1.Services;
+using FitnessTracker.V1.Services.Gamification;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Options;
@@ -36,6 +38,7 @@ builder.Services.AddScoped(sp =>
     {
         AutoRefreshToken = true,
         AutoConnectRealtime = false
+       
     };
     return new Client(cfg.Url, cfg.AnonKey, sdkOpts);
 });
@@ -48,6 +51,7 @@ builder.Services.AddSingleton<ProgrammeGeneratorService>();
 builder.Services.AddSingleton<IProgrammeStrategy, TbtProgrammeStrategy>();
 builder.Services.AddScoped<ViewSessionHelper>();
 builder.Services.AddSingleton<AppState>();
+
 // ───────── HttpClient typé pour SupabaseService2 (REST v1) ───────
 builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
 {
@@ -55,6 +59,7 @@ builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
     http.BaseAddress = new Uri($"{cfg.Url}/rest/v1/");
     http.DefaultRequestHeaders.Add("apikey", cfg.AnonKey);
 });
+builder.Services.AddScoped<GamificationManager>();
 
 // ───────────────────── SERVICES MÉTIER ───────────────────────────
 builder.Services.AddBlazoredLocalStorage();

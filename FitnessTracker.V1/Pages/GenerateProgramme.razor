@@ -1,6 +1,7 @@
 ﻿@page "/generate-programme"
 @using Blazored.LocalStorage
 @using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models.Enumeration
 @using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
 @inject ProgrammeGeneratorService Generator
 @inject HttpClient Http
@@ -241,24 +242,25 @@
                 _ => "Split5"
             },
             TrainingObjective.Fat_loss => "FatLoss",
-            TrainingObjective.Mobility => p.Level switch
-            {
-                UserLevel.Avance => "MobilityAdv",
-                UserLevel.Intermediaire => "MobilityInt",
-                _ => "Mobility"
-            },
-            TrainingObjective.Yoga => p.Level switch
-            {
-                UserLevel.Avance => "YogaAdv",
-                UserLevel.Intermediaire => "YogaInt",
-                _ => "Yoga"
-            },
-            TrainingObjective.Pilates => p.Level switch
-            {
-                UserLevel.Avance => "PilatesAdv",
-                UserLevel.Intermediaire => "PilatesInt",
-                _ => "Pilates"
-            },
+
+            // TrainingObjective.Mobility => p.Level switch
+            // {
+            //     UserLevel.Avance => "MobilityAdv",
+            //     UserLevel.Intermediaire => "MobilityInt",
+            //     _ => "Mobility"
+            // },
+            // TrainingObjective.Yoga => p.Level switch
+            // {
+            //     UserLevel.Avance => "YogaAdv",
+            //     UserLevel.Intermediaire => "YogaInt",
+            //     _ => "Yoga"
+            // },
+            // TrainingObjective.Pilates => p.Level switch
+            // {
+            //     UserLevel.Avance => "PilatesAdv",
+            //     UserLevel.Intermediaire => "PilatesInt",
+            //     _ => "Pilates"
+            // },
             _ => "TBT"
         };
     }

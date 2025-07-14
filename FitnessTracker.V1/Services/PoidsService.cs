@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using FitnessTracker.V1.Models;
+using FitnessTracker.V1.Services.Gamification;
 using System.Text.Json;
 
 namespace FitnessTracker.V1.Services
@@ -257,6 +258,40 @@ namespace FitnessTracker.V1.Services
                 Console.WriteLine("❌ Erreur SaveEntryUnifiedAsync : " + ex.Message);
             }
         }
+
+        public async Task AddEntryAndGamifyAsync(PoidsEntry entry, PoidsEntryLocal local, GamificationManager gamification)
+        {
+            await AddEntryAsync(entry, local);
+            await gamification.AddXP(100, "Séance complétée");
+        }
+        public async Task AddOrUpdateLocal(PoidsEntryLocal entry)
+        {
+            var all = await GetAllLocalPoidsAsync();
+
+            var existing = all.FirstOrDefault(e =>
+                e.Exercice == entry.Exercice &&
+                e.Date.Date == entry.Date.Date);
+
+            if (existing is not null)
+            {
+                // Update existant
+                existing.Poids = entry.Poids;
+                existing.EnLb = entry.EnLb;
+                existing.ObjectifAtteint = entry.ObjectifAtteint;
+            }
+            else
+            {
+                all.Add(entry);
+            }
+
+            await SaveAllLocalPoidsAsync(all);
+        }
+        public async Task SaveAllLocalPoidsAsync(List<PoidsEntryLocal> all)
+        {
+            await _localStorage.SetItemAsync("poids_entries", all);
+        }
+
+       
 
     }
 }

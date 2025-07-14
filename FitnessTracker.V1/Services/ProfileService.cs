@@ -1,6 +1,7 @@
 ﻿using static FitnessTracker.V1.Models.Model;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
+using FitnessTracker.V1.Models.Enumeration;
 
 public class ProfileService
 {
