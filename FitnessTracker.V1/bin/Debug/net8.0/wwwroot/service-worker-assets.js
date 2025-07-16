@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "EmsAR2YU",
+  "version": "K7gqibmR",
   "assets": [
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
@@ -50,11 +50,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-gGUvKe7flsCSfje3fsGznpoi5JkFFnYJaMG0bjsxKH4=",
+      "hash": "sha256-R+VTVAPF0oqB5nP7Q0XGUrAe6IR558h1TNsqHpQIl5Y=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-PAdYp7H8wy58qErSBogAamCc7nTdHBBTsOKV8O4WrBY=",
+      "hash": "sha256-sKDp9+WHIY3xho2A5g01U25Y8q3vWAOLUrH5HQ6g6b4=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-xZnNlDdDOBdHUDgnDhUeI8vTm+1sMXOGwBxNH5UHOnU=",
+      "hash": "sha256-dA9e6/k4z/jCyBty/z+Wiw+WleRl3BXtaanI6HK1RIY=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -978,7 +978,7 @@ self.assetsManifest = {
       "url": "css/components.css"
     },
     {
-      "hash": "sha256-ffGmjk6QYSQoMXU/yAaNjJXF0RQowGRp4Gcpirjdwgw=",
+      "hash": "sha256-2IX68y8yy1g0xmO1TeJ1Co5f/dgtGlOgow2DakuZwNw=",
       "url": "css/duo-theme.css"
     },
     {
@@ -986,7 +986,7 @@ self.assetsManifest = {
       "url": "css/layout-core.css"
     },
     {
-      "hash": "sha256-TdLdycCr4UZhsgeGpDlrTh7NlYitzRxVEZ8bY2RYPXw=",
+      "hash": "sha256-Lob3P1PzaWC37XBZyKXuiMmIP2WZOuk67QJc/kXrc8Y=",
       "url": "css/mobile-native.css"
     },
     {

@@ -4,7 +4,7 @@
 <div class="mobile-container app-main">
     <h2 class="session-header text-center mb-4">🚀 Choisis ton aventure fitness !</h2>
 
-    <!-- Bulle explicative pour programme perso -->
+    <!-- Programme personnalisé -->
     <div class="duo-bubble text-start mb-3">
         🎨 <b>Programme personnalisé</b><br />
         Tu fabriques ton propre super-héros ! Niveau, objectifs, dispo... C’est ton plan, ton style 🧪
@@ -12,17 +12,25 @@
     </div>
     <button class="duo-btn mb-4" @onclick="OnProgrammePersoClick">🎯 Programme personnalisé</button>
 
+    <!-- Programme classic -->
+    <div class="duo-bubble text-start mb-3">
+        🎨 <b>Programme classic</b><br />
+        Les programmes d'entraînement standard faits pour tout le monde, déjà prêts à être utilisés 🧪
+        <div class="duo-quote mt-1">🧑‍🔬 « Je commence maintenant ! »</div>
+    </div>
+    <button class="duo-btn mb-4" @onclick="OnProgrammeClassicClick">📚 Programme classic</button>
+
+    <!-- Programme prédéfini -->
     <div class="duo-bubble text-start mb-3">
         ⭐ <b>Programme prédéfini</b><br />
         T'entraîner comme The Rock, Arnold ou Megan ? Clique, choisis, transpire 💦
         <div class="duo-quote mt-1">🌟 « Fais-moi transpirer comme Brad Pitt dans Snatch »</div>
     </div>
-    <button class="duo-btn mb-4" @onclick="OnProgrammePredefClick">📚 Programme prédéfini</button>
+    <button class="duo-btn mb-4" @onclick="OnProgrammePredefClick">📚 Programme de star</button>
 
     <div class="duo-bubble text-center mt-4">
         🐣 ou 🐉 ? Peu importe ton niveau… choisis ton style et deviens la star de ton propre film d'action 🎬💥
     </div>
-
 </div>
 
 @code {
@@ -32,9 +40,15 @@
         Nav.NavigateTo("/generate-programme");
     }
 
-    private async Task OnProgrammePredefClick()
+    private async Task OnProgrammeClassicClick()
     {
         await Task.Yield();
         Nav.NavigateTo("/programmes-predefinis");
+    }
+
+    private async Task OnProgrammePredefClick()
+    {
+        await Task.Yield();
+        Nav.NavigateTo("/programmes-star");
     }
 }

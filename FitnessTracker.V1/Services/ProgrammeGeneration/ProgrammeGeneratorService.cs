@@ -2,6 +2,7 @@
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Mobility;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Pilates;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Yoga;
+using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeSpecial;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeStar;
 using static FitnessTracker.V1.Models.Model;
 
@@ -32,6 +33,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
             RegisterStrategy(new RockProgrammeStrategy());
             RegisterStrategy(new ArnoldProgrammeStrategy());
             RegisterStrategy(new CalisthenicsProgrammeStrategy());
+            RegisterStrategy(new WageningenProgramme());
         }
         public void RegisterStrategy(IProgrammeStrategy strategy)
         {

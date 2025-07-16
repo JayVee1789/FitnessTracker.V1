@@ -1,4 +1,4 @@
-/* Manifest version: EmsAR2YU */
+/* Manifest version: K7gqibmR */
 self.addEventListener('install', () => {
     console.log("📦 Service worker installé");
     self.skipWaiting(); // active immédiatement

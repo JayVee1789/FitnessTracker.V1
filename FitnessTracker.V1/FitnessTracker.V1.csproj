@@ -32,10 +32,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\ViewSession\SeanceCompleteHelper\" />
-    <Folder Include="Services\ProgrammeGeneration\ProgrammePredefini\" />
-  </ItemGroup>
 	
 </Project>

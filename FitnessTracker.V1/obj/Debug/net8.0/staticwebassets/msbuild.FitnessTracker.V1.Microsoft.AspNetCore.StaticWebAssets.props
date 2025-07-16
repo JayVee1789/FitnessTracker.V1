@@ -120,8 +120,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>d4ekhjlttl</Fingerprint>
-      <Integrity>ffGmjk6QYSQoMXU/yAaNjJXF0RQowGRp4Gcpirjdwgw=</Integrity>
+      <Fingerprint>4hf2ntgfc9</Fingerprint>
+      <Integrity>2IX68y8yy1g0xmO1TeJ1Co5f/dgtGlOgow2DakuZwNw=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\duo-theme.css'))</OriginalItemSpec>
@@ -156,8 +156,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>9tjogmf1sr</Fingerprint>
-      <Integrity>TdLdycCr4UZhsgeGpDlrTh7NlYitzRxVEZ8bY2RYPXw=</Integrity>
+      <Fingerprint>yopzxfnlo9</Fingerprint>
+      <Integrity>Lob3P1PzaWC37XBZyKXuiMmIP2WZOuk67QJc/kXrc8Y=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\mobile-native.css'))</OriginalItemSpec>

@@ -1,0 +1,36 @@
+﻿@page "/programmes-predefinis"
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
+@inject NavigationManager Navigation
+
+<h3 class="duo-title mb-3">📚 Programmes prédéfinis</h3>
+
+@if (Programmes != null && Programmes.Any())
+{
+    <div class="row g-3">
+        @foreach (var programme in Programmes)
+        {
+            <div class="col-12 col-md-6">
+                <div class="prog-card prog-clickable p-3" @onclick="() => GoTo(programme)">
+                    <div class="d-flex flex-column gap-2 align-items-center text-center">
+                        <span style="font-size: 2rem;">🏆</span>
+                        <h5 class="prog-title">@programme.ToUpper()</h5>
+                        <button class="duo-btn w-100">Voir le programme</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">Chargement des programmes...</div>
+}
+
+@code {
+    private List<string> Programmes = ProgrammePredefiniStrategy.ProgrammesDisponibles;
+
+    private void GoTo(string name)
+    {
+        Navigation.NavigateTo($"/programme-predefini-preview/{name}");
+    }
+}

@@ -205,7 +205,7 @@
             if (ok)
             {
                 Console.WriteLine("✅ Programme enregistré dans Supabase");
-                Nav.NavigateTo("/view-session");
+                Nav.NavigateTo("/view-prog");
             }
             else
             {
@@ -224,6 +224,10 @@
             p.PriorityMuscle.Contains("glute", StringComparison.OrdinalIgnoreCase))
             return "GluteFocus";
 
+        if(p.Age > 60)
+        {
+            return "ForceMobiliteWageningen";
+        }
         return p.Objective switch
         {
             TrainingObjective.Glutes => "GluteFocus",

@@ -247,5 +247,10 @@ public class SupabaseService2
         }
         return false;
     }
+    public string? GetUserId()
+    {
+        return _supabase.Auth.CurrentUser?.Id;
+    }
+
 
 }

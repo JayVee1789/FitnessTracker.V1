@@ -1,0 +1,137 @@
+﻿@page "/programme-predefini-preview/{Nom}"
+@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeSpecial
+@inject NavigationManager Nav
+@inject SupabaseService2 SupabaseService
+@inject Supabase.Client Supabase
+@inject AuthService AuthService
+@inject PoidsService poidsService
+
+<div class="mobile-container app-main">
+    <h2 class="session-header text-center mb-4">🎯 Programme : @Nom.ToUpper()</h2>
+
+    @if (plan == null)
+    {
+        <p class="text-center"><em>Chargement du programme...</em></p>
+    }
+    else
+    {
+        @foreach (var week in plan.Weeks)
+        {
+            <div class="duo-card mb-4">
+                <div class="w-100">
+                    <div class="duo-title mb-2">
+                        <span class="duo-title-text">Semaine @week.WeekNumber</span>
+                    </div>
+
+                    @foreach (var day in week.Days.OrderBy(d => d.DayIndex))
+                    {
+                        <div class="mb-3">
+                            <div class="duo-title">
+                                Jour @day.DayIndex - @day.TypeProgramme
+                            </div>
+
+                            @if (!day.IsRest)
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var ex in day.Exercises)
+                                    {
+                                        <li class="list-group-item">
+                                            <b>@ex.ExerciseName</b> (@ex.Series × @ex.Repetitions reps | @ex.RestTimeSeconds s)
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <div class="text-muted">Repos</div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        <div class="text-center">
+            <button class="duo-btn mt-3" @onclick="OpenSaveModal">📥 Enregistrer ce programme</button>
+        </div>
+    }
+
+    @if (showModal)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nom du programme</h5>
+                        <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input class="form-control" @bind="newProgrammeName" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CloseModal">Annuler</button>
+                        <button class="btn btn-primary" @onclick="ConfirmSaveAsync">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Nom { get; set; } = "";
+
+    private WorkoutPlan? plan;
+    private string newProgrammeName = "Programme prédéfini";
+    private bool showModal = false;
+
+    protected override void OnInitialized()
+    {
+        plan = Nom.ToLower() switch
+        {
+            "wageningen" => new WageningenProgramme().GeneratePlan(null, null),
+            _ => null
+        };
+        newProgrammeName = $"Programme {Nom} ({DateTime.Today:dd/MM})";
+    }
+
+    private void OpenSaveModal() => showModal = true;
+    private void CloseModal() => showModal = false;
+
+    private async Task ConfirmSaveAsync()
+    {
+        if (plan == null) return;
+
+        if (!AuthService.IsAuthenticated)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        var model = new ProgrammeModel
+            {
+                Id = Guid.NewGuid(),
+                Nom = newProgrammeName,
+                DateDebut = DateTime.Today,
+                Contenu = System.Text.Json.JsonSerializer.Serialize(plan),
+                UserId = Supabase.Auth.CurrentUser?.Id ?? "",
+                Source = "predefini"
+            };
+
+        var ok = await SupabaseService.SaveProgrammeAsync(model, isManual: false);
+
+        if (ok)
+        {
+            Nav.NavigateTo("/view-prog");
+        }
+        else
+        {
+            Console.WriteLine("❌ Erreur lors de l’enregistrement du programme");
+        }
+
+        CloseModal();
+    }
+}

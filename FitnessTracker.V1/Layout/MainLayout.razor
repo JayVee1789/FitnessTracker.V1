@@ -45,7 +45,7 @@
     @if (AuthService.IsAuthenticated)
     {
         <nav class="bottom-nav d-md-none">
-            <NavLink href="/view-session" class="bottom-item">
+            <NavLink href="/view-prog" class="bottom-item">
                 <i class="bi bi-clipboard"></i>@* <span class="small">Entrainement</span> *@
             </NavLink>
             <NavLink href="/analyse" class="bottom-item">
@@ -57,12 +57,16 @@
             <NavLink href="/mon-profil" class="bottom-item">
                 <i class="bi bi-person fs-5"></i>@* <span class="small">Profil</span> *@
             </NavLink>
-            <NavLink href="/create-programme" class="bottom-item">
-                <i class="bi bi-bricks"></i>@* <span class="small">Manuel</span> *@
-            </NavLink>
+            @* <NavLink href="/create-programme" class="bottom-item">
+                <i class="bi bi-bricks"></i><span class="small">Manuel</span>
+            </NavLink> *@
             @* <NavLink href="/Roadmap" class="bottom-item">
                 <i class="bi bi-cpu fs-5"></i><span class="small">Map</span>
             </NavLink> *@
+            <NavLink href="/create-programme" class="bottom-item">
+                <i class="bi bi-bricks"></i>
+            </NavLink>
+            
         </nav>
     }
 </div>
