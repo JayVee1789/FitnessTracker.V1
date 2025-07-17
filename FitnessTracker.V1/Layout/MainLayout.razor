@@ -2,7 +2,6 @@
 @inject AuthService AuthService
 @inject SupabaseService2 SupabaseService
 
-
 @if (_updateAvailable)
 {
     <div class="alert alert-warning text-center fixed-bottom m-0">
@@ -11,7 +10,7 @@
     </div>
 }
 
-<div class="d-flex flex-column min-vh-100" style="background-color:#1CB0F6;">
+<div class="d-flex flex-column min-vh-100" >
     <!-- ░▒▓ BARRE DU HAUT ▓▒░ -->
     <nav class="navbar navbar-dark shadow-sm" style="background:#1CB0F6;border-bottom-left-radius: 14px;border-bottom-right-radius: 14px; --bs-navbar-padding-y:.4rem;">
         <div class="container-fluid">
@@ -34,9 +33,7 @@
     </nav>
 
     <div class="d-flex flex-grow-1" style="min-height:0;">
-        <aside class="d-none d-md-flex flex-column bg-white border-end overflow-auto" style="width:260px;min-height:0;">
-            <NavMenu CssClass="p-3" />
-        </aside>
+        <!-- ASIDE SUPPRIMÉ -->
         <main class="app-main">
             @Body
         </main>
@@ -44,59 +41,43 @@
 
     @if (AuthService.IsAuthenticated)
     {
-        <nav class="bottom-nav d-md-none">
+        <!-- BOTTOM NAV TOUJOURS VISIBLE -->
+        <nav class="bottom-nav">
             <NavLink href="/view-prog" class="bottom-item">
-                <i class="bi bi-clipboard"></i>@* <span class="small">Entrainement</span> *@
+                <i class="bi bi-clipboard"></i>
             </NavLink>
             <NavLink href="/analyse" class="bottom-item">
-                <i class="bi bi-graph-up fs-5"></i>@* <span class="small">Analyse</span> *@
+                <i class="bi bi-graph-up fs-5"></i>
             </NavLink>
             <NavLink href="/choix-programme" class="bottom-item">
-                <i class="bi bi-calendar-week"></i>@* <span class="small">Auto</span> *@
+                <i class="bi bi-calendar-week"></i>
             </NavLink>
             <NavLink href="/mon-profil" class="bottom-item">
-                <i class="bi bi-person fs-5"></i>@* <span class="small">Profil</span> *@
+                <i class="bi bi-person fs-5"></i>
             </NavLink>
-            @* <NavLink href="/create-programme" class="bottom-item">
-                <i class="bi bi-bricks"></i><span class="small">Manuel</span>
-            </NavLink> *@
-            @* <NavLink href="/Roadmap" class="bottom-item">
-                <i class="bi bi-cpu fs-5"></i><span class="small">Map</span>
-            </NavLink> *@
             <NavLink href="/create-programme" class="bottom-item">
                 <i class="bi bi-bricks"></i>
             </NavLink>
-            
         </nav>
     }
 </div>
 
-<!-- CE Modal sert de "container" aux modals lancés par ModalService -->
 <Modal IsServiceModal="true" />
 
-<!-- MENU LATÉRAL DUO -->
 @code {
     [Parameter] public string? CssClass { get; set; }
     private string role = "user";
 
-
     protected override async Task OnInitializedAsync()
     {
-        // 🔵 Essayer de restaurer la session
         var restored = await SupabaseService.LoadSessionAsync();
 
-        if (restored)
-        {
-            Console.WriteLine("✅ Session restaurée automatiquement");
-        }
-        else
-        {
-            Console.WriteLine("❌ Pas de session trouvée, utilisateur déconnecté");
-        }
+        if (restored) Console.WriteLine("✅ Session restaurée automatiquement");
+        else Console.WriteLine("❌ Pas de session trouvée, utilisateur déconnecté");
 
-        // 🟣 Ton rôle utilisateur ensuite
         role = await AuthService.GetCurrentUserRoleAsync();
     }
+
     [Inject] public IJSRuntime JS { get; set; } = default!;
     private bool _updateAvailable = false;
 
@@ -120,5 +101,4 @@
     {
         await JS.InvokeVoidAsync("pwaUpdate.reload");
     }
-
 }

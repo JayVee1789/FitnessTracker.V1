@@ -1,61 +1,64 @@
 ﻿@page "/view-prog"
 @using FitnessTracker.V1.Models
-
 @inject NavigationManager Nav
 @inject FitnessTracker.V1.Services.SupabaseService2 SupabaseService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
-@if (Gamification?.State != null)
-{
-    <div class="progress-container" style="display: flex; align-items: center;">
-        <span>Niveau @Gamification.State.Level</span>
-        <div class="progress-bar flex-fill mx-2" style="position: relative;">
-            <div class="progress-fill" style="width:@((Gamification.State.TotalXP % 1000) / 10)%"></div>
+
+<div class="mobile-container">
+
+    @if (Gamification?.State != null)
+    {
+        <div class="progress-container">
+            <span>Niveau @Gamification.State.Level</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:@((Gamification.State.TotalXP % 1000) / 10)%"></div>
+            </div>
+            <span class="trophy-icon">🏆</span>
         </div>
-        <span class="trophy-icon">🏆</span>
-    </div>
-}
+    }
 
-<h3 class="duo-title">Choisissez un programme</h3>
+    <h2 class="session-header">Vos Programmes</h2>
 
-@if (Programmes.Count == 0)
-{
-    <div class="alert alert-info">Aucun programme trouvé.</div>
-}
-else
-{
-    <div class="row g-3">
-      @foreach (var prog in Programmes)
-        {
-            var plan = JsonSerializer.Deserialize<FitnessTracker.V1.Models.Model.WorkoutPlan>(prog.Contenu);
-            var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString())).ToList();
-            int totalSeances = (plan?.TotalWeeks ?? 0) * 7;
+    @if (Programmes.Count == 0)
+    {
+        <div class="alert alert-light text-center mt-5">
+            😕 Aucun programme trouvé.<br />
+            Créez-en un pour commencer votre transformation !
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
+            @foreach (var prog in Programmes)
+            {
+                var plan = JsonSerializer.Deserialize<FitnessTracker.V1.Models.Model.WorkoutPlan>(prog.Contenu);
+                var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString())).ToList();
+                int totalSeances = (plan?.TotalWeeks ?? 0) * 7;
 
-            <div class="prog-card prog-clickable position-relative" @onclick="() => LancerSeance(prog.Id)">
-                <button class="prog-btn-small text-danger position-absolute end-0 top-0 m-1"
-                        @onclick="@(e => OnSupprimerProgramme(prog))"
-                        @onclick:stopPropagation
-                        title="Supprimer">
-                    🗑️
-                </button>
+                <div class="cartoon-card position-relative prog-clickable" @onclick="() => LancerSeance(prog.Id)">
+                    <button class="cartoon-delete-btn position-absolute end-0 top-0 m-2"
+                            @onclick="@(e => OnSupprimerProgramme(prog))"
+                    @onclick:stopPropagation>
+                        🗑️
+                    </button>
 
-                <div class="d-flex flex-column gap-1 px-3 pt-2">
-                    <h6 class="prog-title text-center mb-2">🏋️ @prog.Nom</h6>
+                    <div class="cartoon-header">🏋️</div>
 
-                    <div class="row text-center gx-1 gy-1 small">
-                        <div class="col-6">📆<div>@plan?.TotalWeeks sem.</div></div>
-                        <div class="col-6">🎯<div>@totalSeances séances</div></div>
-                        <div class="col-6">✅<div>@seancesCompletes.Count/@totalSeances</div></div>
-                        <div class="col-6">📅<div>@prog.DateDebut.ToShortDateString()</div></div>
+                    <div class="cartoon-title">@prog.Nom</div>
+
+                    <div class="cartoon-bubbles">
+                        <span class="bubble">📅 @prog.DateDebut.ToShortDateString()</span>
+                        <span class="bubble">📆 @plan?.TotalWeeks sem.</span>
+                        <span class="bubble">🎯 @totalSeances séances</span>
+                        <span class="bubble">✅ @seancesCompletes.Count / @totalSeances</span>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
 
-
-    </div>
-
-}
+    }
+</div>
 
 @code {
     private List<ProgrammeModel> Programmes = new();
@@ -75,20 +78,19 @@ else
         try
         {
             await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
-        Nav.NavigateTo("/view-seance", true);
-        }catch(Exception ex)
-        {
-            Console.WriteLine(  ex);
+            Nav.NavigateTo("/view-seance", true);
         }
-        
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
+
     private async Task OnSupprimerProgramme(ProgrammeModel prog)
-{
-    await SupabaseService.DeleteProgrammeUnifiedAsync(prog.Id, prog.Source);
-    await LocalStorage.RemoveItemAsync($"programme_{prog.Id}");
-    Programmes.Remove(prog);
-    StateHasChanged();
+    {
+        await SupabaseService.DeleteProgrammeUnifiedAsync(prog.Id, prog.Source);
+        await LocalStorage.RemoveItemAsync($"programme_{prog.Id}");
+        Programmes.Remove(prog);
+        StateHasChanged();
+    }
 }
-
-}
-

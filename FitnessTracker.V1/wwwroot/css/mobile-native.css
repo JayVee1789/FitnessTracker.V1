@@ -12,11 +12,11 @@
 }
 
 /* Sur desktop on n’a pas la bottom-bar */
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
     :root {
         --bottom-bar-h: 0px;
     }
-}
+}*/
 
 /* ===== Typographie système ===== */
 body, button, input, select {
@@ -36,7 +36,9 @@ body, button, input, select {
     border-top-right-radius: var(--radius);
     border-bottom-right-radius: var(--radius);
 }
-
+.offcanvas, aside {
+    display: none !important;
+}
 /* Sidebar & offcanvas : scroll interne propre */
 .offcanvas-body,
 aside.overflow-auto {
@@ -54,7 +56,7 @@ aside.overflow-auto {
     height: var(--bottom-bar-h);
     background: var(--clr-surface);
     border-top: 1px solid rgba(0,0,0,.1);
-    display: flex;
+    display: flex !important;
     justify-content: space-around;
     align-items: center;
     z-index: 1030; /* au-dessus du contenu */
