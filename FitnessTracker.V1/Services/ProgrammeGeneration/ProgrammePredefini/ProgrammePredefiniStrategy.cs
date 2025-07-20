@@ -7,12 +7,14 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
     {
         public static List<string> ProgrammesDisponibles => new()
         {
-            "wageningen"
+            "wageningen",
+    "tnation"
         };
 
         public static List<ProgrammePredefiniInfo> GetProgrammesInfos() => new()
         {
-            new ProgrammePredefiniInfo("Wageningen", 6, "Remise en forme générale pour senior")
+            new ProgrammePredefiniInfo("Wageningen", 6, "Remise en forme générale pour senior"),
+         new ProgrammePredefiniInfo("Tnation", 8, "Programme T-Nation sur 8 semaines")
         };
 
         public static WorkoutPlan GetProgrammeByName(string nom)
@@ -20,6 +22,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
             return nom.ToLower() switch
             {
                 "wageningen" => new ProgrammeWageningen().GeneratePlan(),
+                "tnation" => new ProgrammeTnation().GeneratePlan(),
                 _ => throw new System.Exception($"Programme inconnu : {nom}")
             };
         }

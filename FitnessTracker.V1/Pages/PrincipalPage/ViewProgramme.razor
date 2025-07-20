@@ -3,62 +3,75 @@
 @inject NavigationManager Nav
 @inject FitnessTracker.V1.Services.SupabaseService2 SupabaseService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
-@inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
 
-<div class="mobile-container">
+@* <div class="mobile-container"> *@
+@* 
+    <div class="greeting-section">
+        <div class="greeting-text">Salut 👋</div>
+        <div class="greeting-subtext">Prêt pour ton entraînement ?</div>
+    </div> *@
 
-    @if (Gamification?.State != null)
-    {
-        <div class="progress-container">
-            <span>Niveau @Gamification.State.Level</span>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:@((Gamification.State.TotalXP % 1000) / 10)%"></div>
-            </div>
-            <span class="trophy-icon">🏆</span>
+<div class="section-container">
+    <div class="section-title">📚 Mes Programmes</div>
+</div>
+
+@if (Programmes.Count == 0)
+{
+    <div class="empty-state">
+        <div class="empty-icon">😕</div>
+        <div class="empty-title">Aucun programme</div>
+        <div class="empty-text">
+            Crée ton premier programme pour commencer ta progression !
         </div>
-    }
+    </div>
+}
+else
+{
+    <div class="programs-grid">
+        @foreach (var prog in Programmes)
+        {
+            var plan = JsonSerializer.Deserialize<FitnessTracker.V1.Models.Model.WorkoutPlan>(prog.Contenu);
+            var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString())).ToList();
+            int totalSeances = (plan?.TotalWeeks ?? 0) * 7;
+            double progressPercent = totalSeances > 0 ? (double)seancesCompletes.Count / totalSeances * 100 : 0;
+            var datedebutformate = prog.DateDebut.ToString("d");
 
-    <h2 class="session-header">Vos Programmes</h2>
 
-    @if (Programmes.Count == 0)
-    {
-        <div class="alert alert-light text-center mt-5">
-            😕 Aucun programme trouvé.<br />
-            Créez-en un pour commencer votre transformation !
-        </div>
-    }
-    else
-    {
-        <div class="d-flex flex-column gap-3">
-            @foreach (var prog in Programmes)
-            {
-                var plan = JsonSerializer.Deserialize<FitnessTracker.V1.Models.Model.WorkoutPlan>(prog.Contenu);
-                var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString())).ToList();
-                int totalSeances = (plan?.TotalWeeks ?? 0) * 7;
 
-                <div class="cartoon-card position-relative prog-clickable" @onclick="() => LancerSeance(prog.Id)">
-                    <button class="cartoon-delete-btn position-absolute end-0 top-0 m-2"
-                            @onclick="@(e => OnSupprimerProgramme(prog))"
+
+            <div class="program-card" @onclick="@(() => LancerSeance(prog.Id))">
+                    <button class="delete-btn"
+                            @onclick="@(() => OnSupprimerProgramme(prog))"
                     @onclick:stopPropagation>
                         🗑️
                     </button>
 
-                    <div class="cartoon-header">🏋️</div>
+                    <div class="card-header strength">💪</div>
+                    <div class="card-title">@prog.Nom</div>
 
-                    <div class="cartoon-title">@prog.Nom</div>
+                    <div class="card-stats">
 
-                    <div class="cartoon-bubbles">
-                        <span class="bubble">📅 @prog.DateDebut.ToShortDateString()</span>
-                        <span class="bubble">📆 @plan?.TotalWeeks sem.</span>
-                        <span class="bubble">🎯 @totalSeances séances</span>
-                        <span class="bubble">✅ @seancesCompletes.Count / @totalSeances</span>
+
+
+
+                    <span class="stat-bubble">📅 @datedebutformate</span>
+                        <span class="stat-bubble">📆 @(plan?.TotalWeeks ?? 0) sem.</span>
+                        <span class="stat-bubble">🎯 @totalSeances séances</span>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-text">@seancesCompletes.Count/@totalSeances terminées</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width:@(progressPercent)%"></div>
+                        </div>
                     </div>
                 </div>
             }
         </div>
-
     }
-</div>
+
+<button class="floating-add" @onclick="@(() => Nav.NavigateTo("/choix-programme"))">+</button>
+@* </div> *@
 
 @code {
     private List<ProgrammeModel> Programmes = new();
@@ -70,20 +83,12 @@
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))
             SeancesCompletes = data.Split(',').ToList();
-        await Gamification.InitializeAsync();
     }
 
     private async Task LancerSeance(Guid programmeId)
     {
-        try
-        {
-            await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
-            Nav.NavigateTo("/view-seance", true);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
+        await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
+        Nav.NavigateTo("/view-seance", true);
     }
 
     private async Task OnSupprimerProgramme(ProgrammeModel prog)

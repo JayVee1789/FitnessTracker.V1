@@ -102,8 +102,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>bo125wjd77</Fingerprint>
-      <Integrity>BXa/5b1TZ/yDYujkdd2e+XayP1y6xbQjdPgp+cPCwbE=</Integrity>
+      <Fingerprint>bsw5678dwa</Fingerprint>
+      <Integrity>OzdyulqMH7M28Esn4g3q1RDKlFAujEyzWSfLYt7M25E=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\components.css'))</OriginalItemSpec>
@@ -120,8 +120,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>0wd0go9yr4</Fingerprint>
-      <Integrity>sDnfsHerEp7lTCHwJj3lrjpRk6HywY3l0++FU8Ygtg8=</Integrity>
+      <Fingerprint>ho4od7bi5i</Fingerprint>
+      <Integrity>T/lD8a2OXnyQv4i+KMI1P+OlQ5JznlCWFQAkb9Tbfc8=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\duo-theme.css'))</OriginalItemSpec>
@@ -480,8 +480,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>5q9dxbaj9q</Fingerprint>
-      <Integrity>fZ9yNYrXpq9FSdqx1IkG4upwTScFmP702nA9SOTK+Gg=</Integrity>
+      <Fingerprint>k0doupqjv9</Fingerprint>
+      <Integrity>HGaqUM5T02PiX6Dm/EkVwp+lNTwQcd/ljm/Kjc8/t/s=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</OriginalItemSpec>

@@ -1,0 +1,12 @@
+﻿@inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
+
+<div class="duo-header">
+    <div class="profile-section">
+        <div class="profile-avatar">👤</div>
+        @if (Gamification?.State != null)
+        {
+            <div class="level-badge">Niv. @Gamification.State.Level</div>
+        }
+    </div>
+    <div class="streak-badge">🔥 5 jours</div>
+</div>

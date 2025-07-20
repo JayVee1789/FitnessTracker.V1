@@ -12,7 +12,9 @@
         Yoga,
         Pilates,
         Cardio,
-        Core
+        Core,
+        Strength,
+        UpperBody
 
     }
 }

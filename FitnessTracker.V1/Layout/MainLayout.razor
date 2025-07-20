@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject AuthService AuthService
 @inject SupabaseService2 SupabaseService
+@inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
+@inject IJSRuntime JS
 
 @if (_updateAvailable)
 {
@@ -10,76 +12,70 @@
     </div>
 }
 
-<div class="d-flex flex-column min-vh-100" >
-    <!-- ░▒▓ BARRE DU HAUT ▓▒░ -->
-    <nav class="navbar navbar-dark shadow-sm" style="background:#1CB0F6;border-bottom-left-radius: 14px;border-bottom-right-radius: 14px; --bs-navbar-padding-y:.4rem;">
-        <div class="container-fluid">
-            <span class="navbar-brand ms-2 fw-bold fs-4" style="color:white;">🏋️ FitnessTracker</span>
-            <div class="ms-auto">
-                @if (AuthService.IsAuthenticated)
-                {
-                    <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
-                        <i class="bi bi-box-arrow-right"></i>
-                    </a>
-                }
-                else
-                {
-                    <a class="btn btn-light btn-sm" href="/login" title="Se connecter">
-                        <i class="bi bi-box-arrow-in-right"></i>
-                    </a>
-                }
-            </div>
+<div class="d-flex flex-column min-vh-100">
+    <!-- HEADER DUOLINGO STYLE -->
+    <div class="duo-header">
+        <div class="profile-section">
+            <div class="profile-avatar">👤</div>
+            @if (Gamification?.State != null)
+            {
+                <div class="level-badge">Niv. @Gamification.State.Level</div>
+            }
         </div>
-    </nav>
-
-    <div class="d-flex flex-grow-1" style="min-height:0;">
-        <!-- ASIDE SUPPRIMÉ -->
-        <main class="app-main">
-            @Body
-        </main>
+        <div class="streak-badge">🔥 5 jours</div>
+        @if (AuthService.IsAuthenticated)
+        {
+            <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-light btn-sm" href="/login" title="Se connecter">
+                <i class="bi bi-box-arrow-in-right"></i>
+            </a>
+        }
     </div>
+
+    <main class="app-main">
+        @Body
+    </main>
 
     @if (AuthService.IsAuthenticated)
     {
-        <!-- BOTTOM NAV TOUJOURS VISIBLE -->
-        <nav class="bottom-nav">
-            <NavLink href="/view-prog" class="bottom-item">
-                <i class="bi bi-clipboard"></i>
+        <div class="bottom-nav">
+            <NavLink href="/view-prog" class="nav-item" Match="NavLinkMatch.All">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Accueil</div>
             </NavLink>
-            <NavLink href="/analyse" class="bottom-item">
-                <i class="bi bi-graph-up fs-5"></i>
+            <NavLink href="/analyse" class="nav-item">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Stats</div>
             </NavLink>
-            <NavLink href="/choix-programme" class="bottom-item">
-                <i class="bi bi-calendar-week"></i>
+            <NavLink href="/choix-programme" class="nav-item">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-label">Objectifs</div>
             </NavLink>
-            <NavLink href="/mon-profil" class="bottom-item">
-                <i class="bi bi-person fs-5"></i>
+            <NavLink href="/mon-profil" class="nav-item">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profil</div>
             </NavLink>
-            <NavLink href="/create-programme" class="bottom-item">
-                <i class="bi bi-bricks"></i>
-            </NavLink>
-        </nav>
+        </div>
     }
 </div>
 
 <Modal IsServiceModal="true" />
 
 @code {
-    [Parameter] public string? CssClass { get; set; }
+    private bool _updateAvailable = false;
     private string role = "user";
 
     protected override async Task OnInitializedAsync()
     {
         var restored = await SupabaseService.LoadSessionAsync();
-
-        if (restored) Console.WriteLine("✅ Session restaurée automatiquement");
-        else Console.WriteLine("❌ Pas de session trouvée, utilisateur déconnecté");
-
+        Console.WriteLine(restored ? "✅ Session restaurée automatiquement" : "❌ Pas de session trouvée");
         role = await AuthService.GetCurrentUserRoleAsync();
     }
-
-    [Inject] public IJSRuntime JS { get; set; } = default!;
-    private bool _updateAvailable = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -92,7 +88,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Erreur détection MAJ PWA : " + ex.Message);
+                Console.WriteLine($"❌ Erreur PWA : {ex.Message}");
             }
         }
     }

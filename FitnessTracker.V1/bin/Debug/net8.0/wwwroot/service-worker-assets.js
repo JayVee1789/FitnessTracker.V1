@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "mgrWSM5b",
+  "version": "82O1Ywcg",
   "assets": [
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
@@ -50,11 +50,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-688Xrk7Q9iLA+j4GCMxMqZl9aI3dDpE8bvw1GARhthY=",
+      "hash": "sha256-P0KYICZqB6V4r231Vrh/x0Sm82xRYPhmWVCqqXGpc4Q=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-SqgUZQJ1EbN0AAS8U0GTt9F1b01Ui5KSoc9V3NS4xFM=",
+      "hash": "sha256-75BRQKGItyHGetqe/rJnrsJqJnTNf97tcueoZD8OREo=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +898,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-/jrLre0yOh/oqYFWzn1KjSR4tG48iHxOeTKHtm/hmu8=",
+      "hash": "sha256-QQ4sMyQpgakjuZIp25WTtKpygIgwC4WJRiXOqKjWLEo=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -974,11 +974,11 @@ self.assetsManifest = {
       "url": "css/bootstrap/bootstrap.min.css.map"
     },
     {
-      "hash": "sha256-BXa/5b1TZ/yDYujkdd2e+XayP1y6xbQjdPgp+cPCwbE=",
+      "hash": "sha256-OzdyulqMH7M28Esn4g3q1RDKlFAujEyzWSfLYt7M25E=",
       "url": "css/components.css"
     },
     {
-      "hash": "sha256-sDnfsHerEp7lTCHwJj3lrjpRk6HywY3l0++FU8Ygtg8=",
+      "hash": "sha256-T/lD8a2OXnyQv4i+KMI1P+OlQ5JznlCWFQAkb9Tbfc8=",
       "url": "css/duo-theme.css"
     },
     {
@@ -1054,7 +1054,7 @@ self.assetsManifest = {
       "url": "images/zone_background2.png"
     },
     {
-      "hash": "sha256-fZ9yNYrXpq9FSdqx1IkG4upwTScFmP702nA9SOTK+Gg=",
+      "hash": "sha256-HGaqUM5T02PiX6Dm/EkVwp+lNTwQcd/ljm/Kjc8/t/s=",
       "url": "index.html"
     },
     {

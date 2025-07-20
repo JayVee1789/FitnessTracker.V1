@@ -7,9 +7,9 @@
 @using System.Text.Json
 @using static FitnessTracker.V1.Models.Model
 @using FitnessTracker.V1.Mapping
-
+@using FitnessTracker.V1.Components
 @* @using Progress = FitnessTracker.V1.Components.ProgressBar *@
-@using static FitnessTracker.V1.Components.Graphique.SessionProgressBar
+@using  FitnessTracker.V1.Components.Graphique
 @inject SupabaseService2 SupabaseService
 @inject PoidsService PoidsService
 @inject IJSRuntime JS
@@ -24,8 +24,9 @@
 @inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
 
 <div class="row gy-2 gx-3 mb-4 px-3">
-    <SessionProgressBar Completed="@ExercicesCompletes()" TotalDone="@ExercicesTotales()" />
 
+    <SessionProgressBar Completed="@ExercicesCompletes()" TotalDone="@ExercicesTotales()" />
+   
     @if (SelectedPlan is not null)
     {
         <div class="col-6 col-md-4">

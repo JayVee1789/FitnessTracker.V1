@@ -1,10 +1,3 @@
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.csproj.AssemblyReference.cache
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.AssemblyInfoInputs.cache
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.AssemblyInfo.cs
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.csproj.CoreCompileInputs.cache
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.sourcelink.json
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\wwwroot\_framework\blazor.webassembly.js
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\wwwroot\_framework\BlazorBootstrap.wasm
@@ -694,6 +687,13 @@ C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\icudt_EFIGS.dat
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\icudt_no_CJK.dat
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\bin\Debug\net8.0\emcc-props.json
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.csproj.AssemblyReference.cache
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.AssemblyInfoInputs.cache
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.AssemblyInfo.cs
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.csproj.CoreCompileInputs.cache
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.sourcelink.json
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\webcil\BlazorBootstrap.wasm
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\webcil\Blazored.LocalStorage.wasm
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Authorization.wasm
@@ -1157,6 +1157,6 @@ C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\refint\FitnessTracker.V1.dll
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.pdb
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\ref\FitnessTracker.V1.dll
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-26v26i19md.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-5g9ldcjgiu.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-ae4nf493nw.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-1488ojta83.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-zjz18caes8.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-hwb02sy6tb.gz

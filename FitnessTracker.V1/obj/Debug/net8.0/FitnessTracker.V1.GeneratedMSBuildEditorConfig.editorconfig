@@ -72,6 +72,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcV29ya291dEZyZXF1ZW5jeUJhci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/PagePrincipal/BottomNavDuolingo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlUHJpbmNpcGFsXEJvdHRvbU5hdkR1b2xpbmdvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/PagePrincipal/HeaderDuolingo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlUHJpbmNpcGFsXEhlYWRlckR1b2xpbmdvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/CoachingPage/Dashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29hY2hpbmdQYWdlXERhc2hib2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,28 @@
+﻿@inject NavigationManager Nav
+
+<div class="bottom-nav">
+    <div class="nav-item @(IsActive("/") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/"))">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Accueil</div>
+    </div>
+    <div class="nav-item @(IsActive("/stats") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/stats"))">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Stats</div>
+    </div>
+    <div class="nav-item @(IsActive("/goals") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/goals"))">
+        <div class="nav-icon">🎯</div>
+        <div class="nav-label">Objectifs</div>
+    </div>
+    <div class="nav-item @(IsActive("/profile") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/profile"))">
+        <div class="nav-icon">👤</div>
+        <div class="nav-label">Profil</div>
+    </div>
+</div>
+
+@code {
+    private bool IsActive(string path)
+    {
+        var current = Nav.Uri.Replace(Nav.BaseUri, "/");
+        return current.StartsWith(path);
+    }
+}
