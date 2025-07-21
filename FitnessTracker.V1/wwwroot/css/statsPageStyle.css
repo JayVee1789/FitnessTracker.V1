@@ -181,8 +181,7 @@
 
 .chart-wrapper {
     width: 100%;
-    max-width: 400px;
-    margin-top: 0.8rem;
+    min-height: 300px;
 }
 
 .chart-fullsize canvas {
@@ -190,3 +189,5 @@
     height: auto !important;
 }
 
+
+/* Version mobile — réduire espace et tailles */

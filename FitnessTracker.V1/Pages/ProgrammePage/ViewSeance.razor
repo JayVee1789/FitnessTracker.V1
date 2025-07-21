@@ -58,6 +58,8 @@
                 }
             </select>
         </div>
+
+        <Chronometre @ref="chronoRef" />
     }
 </div>
 
@@ -72,12 +74,12 @@
                     <div class="duo-title">
                         <span class="duo-title-text">@ex.ExerciseName</span>
                         <a class="duo-video-icon"
-                           href="@($"https://www.youtube.com/results?search_query={ex.ExerciseName}+exercise")"
-                           target="_blank" title="Voir la vidéo">🎥</a>
+                        href="@($"https://www.youtube.com/results?search_query={ex.ExerciseName}+exercise")"
+                        target="_blank" title="Voir la vidéo">🎥</a>
                         <button class="duo-icon-btn" data-bs-toggle="modal"
-                                data-bs-target="#modalRemplacement"
-                                @onclick="() => ProposerRemplacement(ex)"
-                                title="Changer d’exercice">
+                        data-bs-target="#modalRemplacement"
+                        @onclick="() => ProposerRemplacement(ex)"
+                        title="Changer d’exercice">
                             🔁
                         </button>
                     </div>
@@ -85,14 +87,14 @@
                     <div class="duo-info">Charge : @ex.Pourcentage1RM % 1RM</div>
                     <div class="input-group mt-3" style="max-width: 260px;">
                         <input type="number" class="form-control form-control-sm rounded-pill text-center"
-                               step="0.5"
-                               value="@ex.PoidsAffiche"
-                               @oninput="e => SetPoidsEtSale(e, ex)" />
+                        step="0.5"
+                        value="@ex.PoidsAffiche"
+                        @oninput="e => SetPoidsEtSale(e, ex)" />
                         <span class="input-group-text bg-light border-0">@((appState.AfficherEnLb ? "lb" : "kg"))</span>
                         <span class="input-group-text bg-light border-0 fw-bold" style="font-size: 0.85rem;">
                             🎯 @(appState.AfficherEnLb
-                             ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
-                             : $"{Math.Round(ex.Objectif, 1)} kg")
+                              ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                              : $"{Math.Round(ex.Objectif, 1)} kg")
                         </span>
                     </div>
                 </div>
@@ -178,7 +180,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     private string SemaineLabel => $"Semaine {SelectedSemaineIndex + 1}";
     private string JourLabel => $"Jour {SelectedJourIndex}";
     private GamificationDbModel? Gamification;
-
+    private Chronometre? chronoRef;
 
     // protected override async Task OnInitializedAsync()
     // {
@@ -210,7 +212,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     protected override async Task OnInitializedAsync()
     {
         Gamification = await GamificationDbService.GetGamificationAsync();
-       
+
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))
         {
@@ -360,34 +362,33 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
     private async Task OnSessionTerminee()
     {
+        chronoRef?.StopChronoFromParent(); // stoppe au cas où
+
+        var tempsTotal = chronoRef?.ElapsedTime ?? TimeSpan.Zero;
+        int minutes = (int)Math.Round(tempsTotal.TotalMinutes);
+
         await SaveEverything();
 
         if (Gamification is null)
         {
             Console.WriteLine("⚠️ Gamification null ➡️ rechargement...");
             Gamification = await GamificationDbService.GetGamificationAsync();
-
-            if (Gamification is null)
-            {
-                Console.WriteLine("❌ Gamification toujours null ➡️ abandon de l'opération.");
-                return;
-            }
+            if (Gamification is null) return;
         }
 
         Gamification.TotalSeances++;
         Gamification.TotalXP += 100;
         Gamification.StreakDays++;
         Gamification.LastSessionDate = DateTime.UtcNow;
+        Gamification.TotalTrainingTimeMinutes += minutes;
 
         await GamificationDbService.UpsertGamificationAsync(Gamification);
-
-        // ✅ Recharge après sauvegarde pour toujours être synchro avec la base
         Gamification = await GamificationDbService.GetGamificationAsync();
 
-
-        Console.WriteLine("✅ Gamification sauvegardée avec succès.");
+        Console.WriteLine($"✅ Session sauvegardée - durée : {minutes} min");
         StateHasChanged();
     }
+
 
 
     private string toastMessage = "";

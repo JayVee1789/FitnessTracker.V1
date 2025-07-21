@@ -1,6 +1,11 @@
 ﻿@page "/analyse"
+@using FitnessTracker.V1.Components.Graphique
+@using FitnessTracker.V1.Models.Gamification
 @inject PoidsService PoidsService
 @inject ProgrammeService ProgService
+@inject GamificationDbService GamificationDbService
+
+
 <div class="app-main">
     <div class="section-header d-flex justify-content-between align-items-center">
         📊 Statistiques
@@ -10,17 +15,17 @@
     <div class="main-stats mb-3">
         <div class="duo-card text-center flex-column">
             <div class="stat-icon streak">🔥</div>
-            <div class="stat-value">5</div>
+            <div class="stat-value">@getNbStreakDay()</div>
             <div class="stat-label">Jours consécutifs</div>
         </div>
         <div class="duo-card text-center flex-column">
             <div class="stat-icon total">💪</div>
-            <div class="stat-value">47</div>
+            <div class="stat-value">456</div>
             <div class="stat-label">Séances totales</div>
         </div>
         <div class="duo-card text-center flex-column">
             <div class="stat-icon time">⏱️</div>
-            <div class="stat-value">23h</div>
+            <div class="stat-value">@getTempsTotal()</div>
             <div class="stat-label">Temps d'exercice</div>
         </div>
         <div class="duo-card text-center flex-column">
@@ -48,7 +53,9 @@
     <div class="records-grid">
         <div class="duo-card flex-column text-center">
             <div class="fw-bold">🏋️ Poids max : 85kg</div>
-            <PrTracker Entries="entries" Width="380" Height="300" />
+            <PrTracker Entries="entries" />
+
+
         </div>
 
         <div class="duo-card flex-column text-center">
@@ -76,84 +83,65 @@
         ("L", 60), ("M", 40), ("M", 80), ("J", 100), ("V", 70), ("S", 90), ("D", 30)
     };
     private List<PoidsEntry> entries = new();
-    private BarChart? chart;
-    private ChartData? chartData;
-    private BarChartOptions? chartOptions;
+    private GamificationDbModel? gamificationDbModel;
     protected override async Task OnInitializedAsync()
     {
         entries = await PoidsService.GetEntriesAsync();
-        
+        Console.WriteLine($"✅ Analyse loaded entries : {entries.Count}");
+        gamificationDbModel = await GamificationDbService.GetGamificationAsync();
     }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    private int getNbStreakDay()
     {
-        if (chart is null) return;
-        BuildChart();
-        await chart.InitializeAsync(chartData!, chartOptions!);
+        return gamificationDbModel.StreakDays;
     }
-    private void BuildChart()
+
+    private int getNbSeanceTotal()
     {
-        var records = entries
-            .GroupBy(e => e.Exercice)
-            .Select(g => new
-            {
-                Exercice = g.Key,
-                Record = g.Max(e => e.Poids)
-            })
-            .OrderByDescending(x => x.Record)
-            .Take(10)
-            .ToList();
-
-        var labels = records.Select(r => r.Exercice).ToList();
-        var dataPoints = records.Select(r => (double?)r.Record).ToList();
-
-        var colors = labels.Select((_, i) => DuoColors(i)).ToList();
-
-        var dataset = new BarChartDataset
-            {
-                Label = "Records",
-                Data = dataPoints,
-                BackgroundColor = colors,
-                BorderColor = colors,
-                BorderWidth = dataPoints.Select(_ => 2d).ToList()
-            };
-
-        chartData = new ChartData
-            {
-                Labels = labels,
-                Datasets = new List<IChartDataset> { dataset }
-            };
-
-        chartOptions = new BarChartOptions
-            {
-                Responsive = true,
-                MaintainAspectRatio = false,
-                Plugins = new()
-                {
-                    Title = new()
-                    {
-                        Display = true,
-                        Text = "Top 10 Records",
-                        Color = "#1CB0F6",
-                        Font = new ChartFont { Size = 20 }
-                    }
-                },
-                Scales = new()
-                {
-                    X = new ChartAxes
-                    {
-                        Title = new ChartAxesTitle { Display = true, Text = "Exercice", Color = "#1CB0F6" }
-                    },
-                    Y = new ChartAxes
-                    {
-                        Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)", Color = "#1CB0F6" }
-                    }
-                }
-            };
+        return gamificationDbModel.TotalSeances;
     }
 
-    private string DuoColors(int index)
+    private string getTempsTotal()
     {
-        string[] colors = new[] { "#1CB0F6", "#FFD700", "#00C48C", "#FF6B6B", "#FFA500", "#9C27B0" };
-        return colors[index % colors.Length];
+        int tempstotalminute = gamificationDbModel.TotalTrainingTimeMinutes;
+        string retour = FormatMinutesLisible(tempstotalminute);
+
+
+        return retour;
     }
+
+
+    public static string FormatMinutesLisible(int totalMinutes)
+    {
+        var temps = TimeSpan.FromMinutes(totalMinutes);
+        int jours = (int)temps.TotalDays;
+        int heures = temps.Hours;
+        int minutes = temps.Minutes;
+
+        List<string> parties = new();
+
+        if (jours > 0)
+            parties.Add($"{jours}j");
+        if (heures > 0)
+            parties.Add($"{heures}h");
+        if (minutes > 0 || parties.Count == 0)
+            parties.Add($"{minutes}mn");
+
+        return string.Join(" ", parties);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

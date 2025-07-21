@@ -430,17 +430,32 @@ body {
     margin: 0 auto;
 }
 
-.duo-header {
+/*.duo-header {
     height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+    padding: 20px;*/
     /*background: linear-gradient(135deg, #58cc02 0%, #89e219 100%);*/
-    background: linear-gradient(135deg, #00aaff 0%, #66ddff 100%);
+    /*background: linear-gradient(135deg, #00aaff 0%, #66ddff 100%);
     color: white;
+}*/
+.full-width {
+    width: 100%;
+    max-width: 100%;
 }
 
+.duo-header {
+    width: 100%;
+    background: radial-gradient(circle, #58cc02 0%, #ffffff 100%);
+    padding: 1rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
 .profile-section {
     display: flex;
     align-items: center;
@@ -514,6 +529,7 @@ body {
     gap: 15px;
     margin: 0 20px 100px;
 }
+
 
 .program-card {
     background: white;

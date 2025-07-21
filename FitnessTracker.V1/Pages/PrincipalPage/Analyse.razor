@@ -175,9 +175,9 @@ else
 <Modal @ref="prModal" Size="ModalSize.Regular" OnShownAsync="OnPrModalShown">
     <HeaderTemplate><h5>Records personnels</h5></HeaderTemplate>
     <BodyTemplate>
-        <PrTracker @ref="largePrChart"
+    @*     <PrTracker @ref="largePrChart"
                    Entries="entries"
-                   Width="380" Height="400" />
+                   Width="380" Height="400" /> *@
     </BodyTemplate>
     <FooterTemplate>
         <Button class="duo-btn" @onclick="HidePrModal">Fermer</Button>
@@ -199,7 +199,7 @@ else
     private BmiGauge largeBmiGauge;
     private ProgrammeTimeline largeProgTimeline;
     private MuscleSplitPie largePieChart;
-    private PrTracker largePrChart;
+    // private PrTracker largePrChart;
 
     protected override async Task OnInitializedAsync()
     {
@@ -232,5 +232,5 @@ else
     private Task OnBmiModalShown() => largeBmiGauge.RefreshAsync();
     private Task OnProgModalShown() => largeProgTimeline.RefreshAsync();
     private Task OnPieModalShown() => largePieChart.RefreshAsync();
-    private Task OnPrModalShown() => largePrChart.RefreshAsync();
+    // private Task OnPrModalShown() => largePrChart.RefreshAsync();
 }
