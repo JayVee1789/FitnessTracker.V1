@@ -4,7 +4,7 @@
 @inject PoidsService PoidsService
 @inject ProgrammeService ProgService
 @inject GamificationDbService GamificationDbService
-
+@inject ProfileService profileService
 
 <div class="app-main">
     <div class="section-header d-flex justify-content-between align-items-center">
@@ -89,27 +89,24 @@
         entries = await PoidsService.GetEntriesAsync();
         Console.WriteLine($"✅ Analyse loaded entries : {entries.Count}");
         gamificationDbModel = await GamificationDbService.GetGamificationAsync();
+        var profile = await profileService.GetOrCreateUserProfileAsync();
     }
 
     private int getNbStreakDay()
     {
-        return gamificationDbModel.StreakDays;
+        return gamificationDbModel?.StreakDays ?? 0;
     }
 
     private int getNbSeanceTotal()
     {
-        return gamificationDbModel.TotalSeances;
+        return gamificationDbModel?.TotalSeances ?? 0;
     }
 
     private string getTempsTotal()
     {
-        int tempstotalminute = gamificationDbModel.TotalTrainingTimeMinutes;
-        string retour = FormatMinutesLisible(tempstotalminute);
-
-
-        return retour;
+        int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
+        return FormatMinutesLisible(totalMinutes);
     }
-
 
     public static string FormatMinutesLisible(int totalMinutes)
     {
@@ -130,17 +127,11 @@
         return string.Join(" ", parties);
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    public static double CalculerCalories(int dureeMinutes, double met, double poidsKg)
+    {
+        double calories = dureeMinutes * met * poidsKg * 0.0175;
+        return Math.Round(calories, 1); // arrondi à une décimale
+    }
 
 
 

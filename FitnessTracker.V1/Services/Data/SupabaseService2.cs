@@ -3,11 +3,15 @@ using Blazored.LocalStorage;
 using FitnessTracker.V1.Models;
 using Microsoft.Extensions.Options;
 using Supabase;
+using Supabase.Interfaces;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using static FitnessTracker.V1.Models.Model;
 using FTOptions = FitnessTracker.V1.Options.SupabaseOptions;   // 👈 alias anti-conflit
+
+
+
 
 namespace FitnessTracker.V1.Services.Data;
 
@@ -251,6 +255,37 @@ public class SupabaseService2
     {
         return _supabase.Auth.CurrentUser?.Id;
     }
+
+
+public async Task<List<PoidsEntry>> GetPoidsEntriesFromSupabaseAsync()
+{
+    var userId = GetCurrentUserId();
+    if (string.IsNullOrEmpty(userId))
+    {
+        Console.WriteLine("❌ Aucun utilisateur connecté ➡️ aucun poids récupéré.");
+        return new();
+    }
+
+    try
+    {
+        var userGuid = Guid.Parse(userId);
+
+        var result = await _supabase
+            .From<PoidsEntry>()
+            .Where(x => x.UserId == userGuid.ToString())
+            .Get();
+
+        var entries = result.Models.ToList();
+
+        Console.WriteLine($"✅ {entries.Count} entrées poids récupérées depuis Supabase.");
+        return entries;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erreur GetPoidsEntriesFromSupabaseAsync : {ex.Message}");
+        return new();
+    }
+}
 
 
 

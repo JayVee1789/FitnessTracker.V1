@@ -1,84 +1,102 @@
-﻿@using System.Timers
+﻿@using BlazorBootstrap
+@using FitnessTracker.V1.Models
 
-<div class="chrono-container">
-    <button class="chrono-start-btn" @onclick="StartChrono">⏱️ Start</button>
-    <div class="chrono-time">@DisplayTime</div>
-    <button class="chrono-stop-btn" @onclick="StopChrono">🛑 Stop</button>
+<div class="chart-wrapper">
+    <BarChart @ref="chart" class="chart-fullsize" />
 </div>
 
 @code {
-    private Timer? _timer;
-    private TimeSpan _elapsed = TimeSpan.Zero;
-    private DateTime? _startTime;
-    private bool _isRunning = false;
+    [Parameter] public List<PoidsEntry> Entries { get; set; } = new();
 
-    public TimeSpan ElapsedTime => _elapsed;
+    private BarChart? chart;
+    private ChartData? chartData;
+    private BarChartOptions? chartOptions;
 
-    public void StopChronoFromParent()
+    protected override async Task OnParametersSetAsync()
     {
-        if (_isRunning)
+        Console.WriteLine($"🔄 PrTracker : OnParametersSetAsync entries={Entries?.Count}");
+
+        if (chart != null && Entries.Any(e => e.Poids > 0))
         {
-            StopChrono();
-            Console.WriteLine($"⏹️ Chronomètre stoppé via appel parent. Temps final: {_elapsed}");
+            BuildChart();
+            await chart.InitializeAsync(chartData!, chartOptions!);
+            Console.WriteLine("✅ Chart initialized with valid data");
         }
     }
 
-    private string DisplayTime => _elapsed.ToString(@"hh\:mm\:ss");
-
-    private void StartChrono()
+    private void BuildChart()
     {
-        if (_isRunning) return;
-        _startTime = DateTime.UtcNow;
-        _isRunning = true;
+        var filteredEntries = Entries.Where(e => e.Poids > 0).ToList();
 
-        _timer = new Timer(1000);
-        _timer.Elapsed += (sender, args) =>
-        {
-            if (_startTime != null)
-                _elapsed = DateTime.UtcNow - _startTime.Value;
-            InvokeAsync(StateHasChanged);
-        };
-        _timer.Start();
+        var records = filteredEntries
+            .GroupBy(e => e.Exercice)
+            .Select(g => new
+            {
+                Exercice = g.Key,
+                Record = g.Max(e => e.Poids)
+            })
+            .OrderByDescending(x => x.Record)
+            .Take(10)
+            .ToList();
+
+        var labels = records.Select(r => r.Exercice).ToList();
+        var dataPoints = records.Select(r => (double?)r.Record).ToList();
+        var colors = labels.Select((_, i) => DuoColors(i)).ToList();
+
+        chartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>
+            {
+                new BarChartDataset
+                {
+                    Label = "Records",
+                    Data = dataPoints, // List<double?>
+                    BackgroundColor = colors,
+                    BorderColor = colors,
+                    BorderWidth = dataPoints.Select(_ => 2d).ToList() // List<double>
+                }
+            }
+            };
+
+
+        var maxValue = records.Any() ? records.Max(r => r.Record) : 10;
+
+        chartOptions = new BarChartOptions
+            {
+                Responsive = true,
+                MaintainAspectRatio = false,
+                Plugins = new()
+                {
+                    Title = new()
+                    {
+                        Display = true,
+                        Text = "Top 10 Records",
+                        Color = "#1CB0F6",
+                        Font = new ChartFont { Size = 20 }
+                    }
+                },
+                Scales = new()
+                {
+                    Y = new ChartAxes
+                    {
+                        BeginAtZero = true,
+                        SuggestedMin = 0,
+                        SuggestedMax = maxValue + 10,
+                        Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)", Color = "#1CB0F6" }
+                    },
+                    X = new ChartAxes
+                    {
+                        Type = "category",
+                        Title = new ChartAxesTitle { Display = true, Text = "Exercice", Color = "#1CB0F6" }
+                    }
+                }
+            };
     }
 
-    private void StopChrono()
+    private string DuoColors(int index)
     {
-        _timer?.Stop();
-        _timer?.Dispose();
-        _timer = null;
-        _isRunning = false;
+        string[] colors = new[] { "#1CB0F6", "#FFD700", "#00C48C", "#FF6B6B", "#FFA500", "#9C27B0" };
+        return colors[index % colors.Length];
     }
 }
-
-<style>
-    .chrono-container {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .chrono-start-btn, .chrono-stop-btn {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        font-weight: bold;
-        border: none;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        color: white;
-    }
-
-    .chrono-start-btn {
-        background: linear-gradient(135deg, #ff6b35, #ff8c42);
-    }
-
-    .chrono-stop-btn {
-        background: linear-gradient(135deg, #ff0000, #ff4d4d);
-    }
-
-    .chrono-time {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #2b2d42;
-    }
-</style>

@@ -87,5 +87,38 @@ namespace FitnessTracker.V1.Services
 
         public async Task<bool> IsAdminAsync() =>
             (await GetCurrentUserRoleAsync()) is "admin" or "coach";
+
+        public async Task<bool> RestaurerSessionAsync()
+        {
+            try
+            {
+                var session = _supabase.Auth.CurrentSession;
+
+                if (session?.AccessToken is not null)
+                {
+                    Console.WriteLine("✅ Session active détectée");
+                    return true;
+                }
+
+                // tentative de refresh
+                var refreshed = await _supabase.Auth.RefreshSession();
+
+                if (refreshed?.AccessToken is not null)
+                {
+                    Console.WriteLine("✅ Session rafraîchie avec succès");
+                    return true;
+                }
+
+                Console.WriteLine("❌ Session absente ou invalide");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erreur restauration session : {ex.Message}");
+                return false;
+            }
+        }
+
+
     }
 }

@@ -21,40 +21,72 @@ namespace FitnessTracker.V1.Services
             _supabase = supabase;
         }
 
-        
+
+        //public async Task<List<PoidsEntry>> GetEntriesAsync()
+        //{
+        //    var userId = _supabase.GetCurrentUserId();
+        //    if (string.IsNullOrEmpty(userId))
+        //    {
+        //        Console.WriteLine("❌ Aucun utilisateur connecté pour filtrer les poids.");
+        //        return new();
+        //    }
+
+        //    try
+        //    {
+        //        var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
+        //        return local?
+        //            .Where(e => e.UserId == userId)
+        //            .Select(e => new PoidsEntry
+        //            {
+        //                Id = e.Id,
+        //                Date = e.Date,
+        //                Exercice = e.Exercice,
+        //                Poids = e.Poids,
+        //                UserId = e.UserId
+        //            })
+        //            .ToList() ?? new();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("❌ Erreur lecture localStorage, reset...");
+        //        Console.WriteLine(ex);
+        //        await _localStorage.RemoveItemAsync(StorageKey);
+        //        return new();
+        //    }
+        //}
         public async Task<List<PoidsEntry>> GetEntriesAsync()
         {
-            var userId = _supabase.GetCurrentUserId();
-            if (string.IsNullOrEmpty(userId))
+            var remoteEntries = await _supabase.GetPoidsEntriesFromSupabaseAsync();
+
+            if (remoteEntries.Any())
             {
-                Console.WriteLine("❌ Aucun utilisateur connecté pour filtrer les poids.");
-                return new();
+                Console.WriteLine($"✅ {remoteEntries.Count} entrées synchronisées depuis Supabase.");
+                await OverwriteEntriesAsync(remoteEntries); // ⬅️ met à jour le local
+                return remoteEntries;
             }
 
-            try
-            {
-                var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
-                return local?
-                    .Where(e => e.UserId == userId)
-                    .Select(e => new PoidsEntry
-                    {
-                        Id = e.Id,
-                        Date = e.Date,
-                        Exercice = e.Exercice,
-                        Poids = e.Poids,
-                        UserId = e.UserId
-                    })
-                    .ToList() ?? new();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Erreur lecture localStorage, reset...");
-                Console.WriteLine(ex);
-                await _localStorage.RemoveItemAsync(StorageKey);
-                return new();
-            }
+            Console.WriteLine("⚠️ Supabase vide ➡️ fallback local activé.");
+            return await GetEntriesFromLocalAsync();
         }
 
+        private async Task<List<PoidsEntry>> GetEntriesFromLocalAsync()
+        {
+            var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
+            var userId = _supabase.GetCurrentUserId();
+            var list = local?
+                .Where(e => e.UserId == userId)
+                .Select(e => new PoidsEntry
+                {
+                    Id = e.Id,
+                    Date = e.Date,
+                    Exercice = e.Exercice,
+                    Poids = e.Poids,
+                    UserId = e.UserId
+                }).ToList() ?? new();
+
+            Console.WriteLine($"✅ {list.Count} entrées récupérées en local.");
+            return list;
+        }
 
         public async Task AddEntryAsync(PoidsEntry entry, PoidsEntryLocal local)
         {
@@ -202,11 +234,23 @@ namespace FitnessTracker.V1.Services
 
         public async Task SyncFromSupabaseAsync()
         {
-            var remote = await _supabase.GetEntriesAsync();
-            if (remote != null)
+            var remote = await _supabase.GetPoidsEntriesFromSupabaseAsync();
+
+            if (remote.Any())
             {
                 await OverwriteEntriesAsync(remote);
+                Console.WriteLine($"✅ Synchro locale mise à jour avec {remote.Count} entrées Supabase.");
             }
+            else
+            {
+                Console.WriteLine("⚠️ Pas d’entrées à synchroniser depuis Supabase.");
+            }
+        }
+
+        public async Task<List<PoidsEntry>> GetEntriesFromSupabaseAsync()
+        {
+            var entries = await _supabase.GetPoidsEntriesFromSupabaseAsync();
+            return entries;
         }
 
         public async Task<double?> GetPoidsForExerciceAtDateAsync(string exercice, DateTime date)
