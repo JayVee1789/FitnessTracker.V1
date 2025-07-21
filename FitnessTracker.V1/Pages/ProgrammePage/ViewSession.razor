@@ -1,15 +1,17 @@
 ﻿@page "/view-session"
+@using System.Text.Json
+@using FitnessTracker.V1.Helper
+@using FitnessTracker.V1.Mapping
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models.FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
-@using FitnessTracker.V1.Helper
+@using FitnessTracker.V1.Services.Data
 @using FitnessTracker.V1.Services.ProgrammeGeneration
-@using System.Text.Json
 @using static FitnessTracker.V1.Models.Model
-@using FitnessTracker.V1.Mapping
 
 @* @using Progress = FitnessTracker.V1.Components.ProgressBar *@
-@using static FitnessTracker.V1.Components.Graphique.SessionProgressBar
+@using static FitnessTracker.V1.Components.Gamification.SessionProgressBar
+
 @inject SupabaseService2 SupabaseService
 @inject PoidsService PoidsService
 @inject IJSRuntime JS

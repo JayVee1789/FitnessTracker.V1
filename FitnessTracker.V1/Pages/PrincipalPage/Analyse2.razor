@@ -1,0 +1,159 @@
+﻿@page "/analyse"
+@inject PoidsService PoidsService
+@inject ProgrammeService ProgService
+<div class="app-main">
+    <div class="section-header d-flex justify-content-between align-items-center">
+        📊 Statistiques
+        <span class="badge bg-orange text-white">7 jours</span>
+    </div>
+
+    <div class="main-stats mb-3">
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon streak">🔥</div>
+            <div class="stat-value">5</div>
+            <div class="stat-label">Jours consécutifs</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon total">💪</div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Séances totales</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon time">⏱️</div>
+            <div class="stat-value">23h</div>
+            <div class="stat-label">Temps d'exercice</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon calories">🔥</div>
+            <div class="stat-value">1240</div>
+            <div class="stat-label">Calories brûlées</div>
+        </div>
+    </div>
+
+    <div class="section-header">📈 Progression hebdomadaire</div>
+    <div class="duo-card">
+        <div class="w-100 text-center mb-2 fw-bold">Séances par jour</div>
+        <div class="d-flex justify-content-around w-100">
+            @foreach (var jour in Jours)
+            {
+                <div class="d-flex flex-column align-items-center">
+                    <div class="rounded-pill bg-success" style="width:20px; height:@jour.Height%;"></div>
+                    <div style="font-size: 0.8rem;">@jour.Label</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="section-header">🏆 Records</div>
+    <div class="records-grid">
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">🏋️ Poids max : 85kg</div>
+            <PrTracker Entries="entries" Width="380" Height="300" />
+        </div>
+
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">🏃 Longue course : 12.5km</div>
+        </div>
+
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">⏱️ Séance longue : 90 min</div>
+        </div>
+    </div>
+
+
+
+    <div class="section-header">🎖️ Badges débloqués</div>
+    <div class="achievements-grid">
+        <div class="achievement-badge unlocked">🔥</div>
+        <div class="achievement-badge unlocked">💪</div>
+        <div class="achievement-badge unlocked">🎯</div>
+    </div>
+</div>
+
+@code {
+    List<(string Label, int Height)> Jours = new()
+    {
+        ("L", 60), ("M", 40), ("M", 80), ("J", 100), ("V", 70), ("S", 90), ("D", 30)
+    };
+    private List<PoidsEntry> entries = new();
+    private BarChart? chart;
+    private ChartData? chartData;
+    private BarChartOptions? chartOptions;
+    protected override async Task OnInitializedAsync()
+    {
+        entries = await PoidsService.GetEntriesAsync();
+        
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (chart is null) return;
+        BuildChart();
+        await chart.InitializeAsync(chartData!, chartOptions!);
+    }
+    private void BuildChart()
+    {
+        var records = entries
+            .GroupBy(e => e.Exercice)
+            .Select(g => new
+            {
+                Exercice = g.Key,
+                Record = g.Max(e => e.Poids)
+            })
+            .OrderByDescending(x => x.Record)
+            .Take(10)
+            .ToList();
+
+        var labels = records.Select(r => r.Exercice).ToList();
+        var dataPoints = records.Select(r => (double?)r.Record).ToList();
+
+        var colors = labels.Select((_, i) => DuoColors(i)).ToList();
+
+        var dataset = new BarChartDataset
+            {
+                Label = "Records",
+                Data = dataPoints,
+                BackgroundColor = colors,
+                BorderColor = colors,
+                BorderWidth = dataPoints.Select(_ => 2d).ToList()
+            };
+
+        chartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset> { dataset }
+            };
+
+        chartOptions = new BarChartOptions
+            {
+                Responsive = true,
+                MaintainAspectRatio = false,
+                Plugins = new()
+                {
+                    Title = new()
+                    {
+                        Display = true,
+                        Text = "Top 10 Records",
+                        Color = "#1CB0F6",
+                        Font = new ChartFont { Size = 20 }
+                    }
+                },
+                Scales = new()
+                {
+                    X = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Exercice", Color = "#1CB0F6" }
+                    },
+                    Y = new ChartAxes
+                    {
+                        Title = new ChartAxesTitle { Display = true, Text = "Poids (kg)", Color = "#1CB0F6" }
+                    }
+                }
+            };
+    }
+
+    private string DuoColors(int index)
+    {
+        string[] colors = new[] { "#1CB0F6", "#FFD700", "#00C48C", "#FF6B6B", "#FFA500", "#9C27B0" };
+        return colors[index % colors.Length];
+    }
+}

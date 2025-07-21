@@ -1,7 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using FitnessTracker.V1.Components.PagePrincipal
+@using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Models.Gamification
+@inherits LayoutComponentBase
 @inject AuthService AuthService
 @inject SupabaseService2 SupabaseService
 @inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
+@inject GamificationDbService GamificationDbService
 @inject IJSRuntime JS
 
 @if (_updateAvailable)
@@ -14,7 +18,7 @@
 
 <div class="d-flex flex-column min-vh-100">
     <!-- HEADER DUOLINGO STYLE -->
-    <div class="duo-header">
+    @* <div class="duo-header">
         <div class="profile-section">
             <div class="profile-avatar">👤</div>
             @if (Gamification?.State != null)
@@ -23,6 +27,15 @@
             }
         </div>
         <div class="streak-badge">🔥 5 jours</div>
+        @if (Gamification != null)
+            {
+          
+          <div class="streak-badge">🔥 @Gamification.State.Streak jours</div>
+           
+            }
+
+
+
         @if (AuthService.IsAuthenticated)
         {
             <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
@@ -35,13 +48,13 @@
                 <i class="bi bi-box-arrow-in-right"></i>
             </a>
         }
-    </div>
-
+    </div> *@
+    <FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo></FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo>
     <main class="app-main">
         @Body
     </main>
-
-    @if (AuthService.IsAuthenticated)
+    <BottomNavDuolingo />
+    @* @if (AuthService.IsAuthenticated)
     {
         <div class="bottom-nav">
             <NavLink href="/view-prog" class="nav-item" Match="NavLinkMatch.All">
@@ -61,7 +74,7 @@
                 <div class="nav-label">Profil</div>
             </NavLink>
         </div>
-    }
+    } *@
 </div>
 
 <Modal IsServiceModal="true" />
@@ -70,12 +83,16 @@
     private bool _updateAvailable = false;
     private string role = "user";
 
-    protected override async Task OnInitializedAsync()
-    {
-        var restored = await SupabaseService.LoadSessionAsync();
-        Console.WriteLine(restored ? "✅ Session restaurée automatiquement" : "❌ Pas de session trouvée");
-        role = await AuthService.GetCurrentUserRoleAsync();
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     // if (!AuthService.IsAuthenticated)
+    //     // {
+    //     //     var restored = await SupabaseService.LoadSessionAsync();
+    //     //     Console.WriteLine($"🟢 Session restaurée dans layout : {restored}");
+    //     // }
+
+    //     // Gamification = await GamificationDbService.GetGamificationAsync();
+    // }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

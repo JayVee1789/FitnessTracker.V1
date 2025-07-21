@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using FitnessTracker.V1.Models;
+using FitnessTracker.V1.Services.Data;
 using FitnessTracker.V1.Services.Gamification;
 using System.Text.Json;
 

@@ -9,7 +9,7 @@ using System.Text.Json;
 using static FitnessTracker.V1.Models.Model;
 using FTOptions = FitnessTracker.V1.Options.SupabaseOptions;   // 👈 alias anti-conflit
 
-namespace FitnessTracker.V1.Services;
+namespace FitnessTracker.V1.Services.Data;
 
 /// <summary>
 /// Accès / synchronisation Supabase : entrées de poids & programmes.

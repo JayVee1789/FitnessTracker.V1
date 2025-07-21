@@ -28,6 +28,14 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Gamification/SessionProgressBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHYW1pZmljYXRpb25cU2Vzc2lvblByb2dyZXNzQmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Gamification/SessionSummary.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHYW1pZmljYXRpb25cU2Vzc2lvblN1bW1hcnkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Graphique/BmiGauge.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcQm1pR2F1Z2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -52,14 +60,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcUHJUcmFja2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Graphique/SessionProgressBar.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcU2Vzc2lvblByb2dyZXNzQmFyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Graphique/SessionSummary.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcU2Vzc2lvblN1bW1hcnkucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Components/Graphique/StrengthRadar.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xHcmFwaGlxdWVcU3RyZW5ndGhSYWRhci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -80,6 +80,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlUHJpbmNpcGFsXEhlYWRlckR1b2xpbmdvLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/AuthentificationPage/ChangerMotDePasse.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGlmaWNhdGlvblBhZ2VcQ2hhbmdlck1vdERlUGFzc2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/AuthentificationPage/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGlmaWNhdGlvblBhZ2VcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/AuthentificationPage/Logout.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGlmaWNhdGlvblBhZ2VcTG9nb3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/AuthentificationPage/MotDePasseOublie.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGlmaWNhdGlvblBhZ2VcTW90RGVQYXNzZU91YmxpZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/AuthentificationPage/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGlmaWNhdGlvblBhZ2VcUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/CoachingPage/Dashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29hY2hpbmdQYWdlXERhc2hib2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -96,28 +116,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29hY2hpbmdQYWdlXFByb2dyYW1tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/Login_logout_registerPage/ChangerMotDePasse.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5fbG9nb3V0X3JlZ2lzdGVyUGFnZVxDaGFuZ2VyTW90RGVQYXNzZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/Login_logout_registerPage/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5fbG9nb3V0X3JlZ2lzdGVyUGFnZVxMb2dpbi5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/Login_logout_registerPage/Logout.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5fbG9nb3V0X3JlZ2lzdGVyUGFnZVxMb2dvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/Login_logout_registerPage/MotDePasseOublie.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5fbG9nb3V0X3JlZ2lzdGVyUGFnZVxNb3REZVBhc3NlT3VibGllLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/Login_logout_registerPage/Register.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5fbG9nb3V0X3JlZ2lzdGVyUGFnZVxSZWdpc3Rlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/PrincipalPage/Analyse.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbmNpcGFsUGFnZVxBbmFseXNlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/PrincipalPage/Analyse2.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbmNpcGFsUGFnZVxBbmFseXNlMi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/PrincipalPage/ChoixProgramme.razor]
@@ -172,12 +176,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3JhbW1lU3RhclBhZ2VcUHJvZ3JhbW1lU3RhckxhbmNlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphique/ProgressionMap.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVcUHJvZ3Jlc3Npb25NYXAucmF6b3I=
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphiquePage/ProgressionMap.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVQYWdlXFByb2dyZXNzaW9uTWFwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphique/Roadmap.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVcUm9hZG1hcC5yYXpvcg==
+[C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/Pages/ProgressionGraphiquePage/Roadmap.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZ3Jlc3Npb25HcmFwaGlxdWVQYWdlXFJvYWRtYXAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jvere/source/repos/FitnessTracker.V1/FitnessTracker.V1/_Imports.razor]

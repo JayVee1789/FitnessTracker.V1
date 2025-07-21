@@ -3,6 +3,7 @@ using FitnessTracker.V1;
 using FitnessTracker.V1.Helper;
 using FitnessTracker.V1.Models;
 using FitnessTracker.V1.Services;
+using FitnessTracker.V1.Services.Data;
 using FitnessTracker.V1.Services.Gamification;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic;
 using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic.Fitness;
@@ -52,6 +53,7 @@ builder.Services.AddSingleton<IProgrammeStrategy, TbtProgrammeStrategy>();
 builder.Services.AddScoped<ViewSessionHelper>();
 builder.Services.AddSingleton<AppState>();
 
+
 // ───────── HttpClient typé pour SupabaseService2 (REST v1) ───────
 builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
 {
@@ -66,7 +68,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PoidsService>();
 builder.Services.AddScoped<ProfileService>();
-
+builder.Services.AddScoped<GamificationDbService>();
 // ────────────────────────── LOGGING ──────────────────────────────
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 

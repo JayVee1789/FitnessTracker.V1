@@ -1,9 +1,13 @@
 ﻿@page "/view-prog"
 @using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models.Gamification
+@using FitnessTracker.V1.Services.Data
 @inject NavigationManager Nav
-@inject FitnessTracker.V1.Services.SupabaseService2 SupabaseService
+@inject SupabaseService2 SupabaseService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject FitnessTracker.V1.Models.AppState appState
 
+@inject GamificationDbService GamificationDbService
 @* <div class="mobile-container"> *@
 @* 
     <div class="greeting-section">
@@ -76,9 +80,11 @@ else
 @code {
     private List<ProgrammeModel> Programmes = new();
     private List<string> SeancesCompletes = new();
+    private GamificationDbModel? Gamification;
 
     protected override async Task OnInitializedAsync()
     {
+        Gamification = await GamificationDbService.GetGamificationAsync();
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))
@@ -88,6 +94,7 @@ else
     private async Task LancerSeance(Guid programmeId)
     {
         await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
+       
         Nav.NavigateTo("/view-seance", true);
     }
 

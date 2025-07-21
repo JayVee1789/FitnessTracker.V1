@@ -4,6 +4,7 @@ using System.Text.Json;
 using static FitnessTracker.V1.Models.Model;
 using static System.Net.WebRequestMethods;
 using System.Net.Http.Json;
+using FitnessTracker.V1.Services.Data;
 
 namespace FitnessTracker.V1.Services;
 

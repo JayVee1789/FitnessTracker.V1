@@ -49,6 +49,10 @@
       "PackagePath": "staticwebassets\\css\\roadmap.css"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\statsPageStyle.css",
+      "PackagePath": "staticwebassets\\css\\statsPageStyle.css"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\style.css",
       "PackagePath": "staticwebassets\\css\\style.css"
     },

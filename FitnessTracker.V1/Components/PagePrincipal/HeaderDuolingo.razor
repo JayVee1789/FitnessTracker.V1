@@ -1,12 +1,48 @@
-﻿@inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
+﻿@using FitnessTracker.V1.Models.Gamification
+@using FitnessTracker.V1.Services.Data
+@inject AuthService AuthService
+@inject GamificationDbService GamificationDbService
+@inject SupabaseService2 SupabaseService
 
 <div class="duo-header">
-    <div class="profile-section">
-        <div class="profile-avatar">👤</div>
-        @if (Gamification?.State != null)
+    @if (AuthService.IsAuthenticated)
+    {
+        <div class="profile-section">
+            <div class="profile-avatar">👤</div>
+        </div>
+
+        @if (Gamification != null)
         {
-            <div class="level-badge">Niv. @Gamification.State.Level</div>
+            <div class="level-badge">Niv. @Gamification.TotalXP XP</div>
+            <div class="streak-badge">🔥 @Gamification.StreakDays jours</div>
         }
-    </div>
-    <div class="streak-badge">🔥 5 jours</div>
+
+        <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
+            <i class="bi bi-box-arrow-right"></i>
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-light btn-sm" href="/login" title="Se connecter">
+            <i class="bi bi-box-arrow-in-right"></i>
+        </a>
+    }
 </div>
+
+@code {
+    [Parameter] public bool ShowGamification { get; set; } = true;
+    private GamificationDbModel? Gamification;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            var restored = await SupabaseService.LoadSessionAsync();
+            Console.WriteLine($"Session restaurée dans Header : {restored}");
+        }
+        if (AuthService.IsAuthenticated && ShowGamification)
+        {
+            Gamification = await GamificationDbService.GetGamificationAsync();
+        }
+    }
+}

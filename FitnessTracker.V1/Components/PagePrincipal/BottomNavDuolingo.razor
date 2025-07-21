@@ -1,28 +1,36 @@
-﻿@inject NavigationManager Nav
+﻿@using FitnessTracker.V1.Services.Data
+@inject AuthService AuthService
+@inject SupabaseService2 SupabaseService
 
-<div class="bottom-nav">
-    <div class="nav-item @(IsActive("/") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/"))">
-        <div class="nav-icon">🏠</div>
-        <div class="nav-label">Accueil</div>
+@if (AuthService.IsAuthenticated)
+{
+    <div class="bottom-nav">
+        <NavLink href="/view-prog" class="nav-item" Match="NavLinkMatch.All">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Accueil</div>
+        </NavLink>
+        <NavLink href="/analyse" class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Stats</div>
+        </NavLink>
+        <NavLink href="/choix-programme" class="nav-item">
+            <div class="nav-icon">🎯</div>
+            <div class="nav-label">Objectifs</div>
+        </NavLink>
+        <NavLink href="/mon-profil" class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Profil</div>
+        </NavLink>
     </div>
-    <div class="nav-item @(IsActive("/stats") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/stats"))">
-        <div class="nav-icon">📊</div>
-        <div class="nav-label">Stats</div>
-    </div>
-    <div class="nav-item @(IsActive("/goals") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/goals"))">
-        <div class="nav-icon">🎯</div>
-        <div class="nav-label">Objectifs</div>
-    </div>
-    <div class="nav-item @(IsActive("/profile") ? "active" : "")" @onclick="@(() => Nav.NavigateTo("/profile"))">
-        <div class="nav-icon">👤</div>
-        <div class="nav-label">Profil</div>
-    </div>
-</div>
+}
 
 @code {
-    private bool IsActive(string path)
+    protected override async Task OnInitializedAsync()
     {
-        var current = Nav.Uri.Replace(Nav.BaseUri, "/");
-        return current.StartsWith(path);
+        if (!AuthService.IsAuthenticated)
+        {
+            var restored = await SupabaseService.LoadSessionAsync();
+            Console.WriteLine($"🟢 Session restaurée dans BottomNav : {restored}");
+        }
     }
 }
