@@ -24,12 +24,14 @@ public class PoidsEntry : BaseModel
 
     [Column("user_id")]
     [JsonPropertyName("user_id")]
-    public string UserId { get; set; } = "";
+    public Guid UserId { get; set; } 
 
     [Column("en_lb")]
     [JsonPropertyName("en_lb")]
     public bool EnLb { get; set; } = false;
     [Column("objectif_atteint")]
+
+
     [JsonPropertyName("objectif_atteint")]
     public bool ObjectifAtteint { get; set; } = false;
 }

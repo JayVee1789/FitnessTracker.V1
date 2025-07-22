@@ -214,48 +214,51 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         Gamification = await GamificationDbService.GetGamificationAsync();
 
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
-        if (!string.IsNullOrEmpty(data))
-        {
-            SeancesCompletes = data.Split(',').ToList();
-            Console.WriteLine($"✅ Séances complètes récupérées : {SeancesCompletes.Count}");
-        }
-        else
-        {
-            SeancesCompletes = new List<string>();
-            Console.WriteLine("ℹ️ Aucune séance complétée enregistrée.");
-        }
+        SeancesCompletes = !string.IsNullOrEmpty(data)
+            ? data.Split(',').ToList()
+            : new List<string>();
+        Console.WriteLine($"✅ Séances complètes récupérées : {SeancesCompletes.Count}");
 
-        // 🔄 Charger le programme sélectionné
+        // 🔄 Charger programme sélectionné
         var programmeId = await LocalStorage.GetItemAsync<Guid>("selectedProgrammeId");
-        if (programmeId != Guid.Empty)
-        {
-            var restored = await SupabaseService.LoadSessionAsync();
-            Console.WriteLine($"🟢 Session restaurée : {restored}");
-
-            var userId = SupabaseService.GetCurrentUserId();
-            Console.WriteLine($"🟣 UserID récupéré : {userId}");
-
-            Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
-            var programme = Programmes.FirstOrDefault(p => p.Id == programmeId);
-
-            if (programme != null)
-            {
-                SelectedProgrammeId = programmeId;
-                SelectedProgrammeDate = programme.DateDebut;
-                SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(programme.Contenu);
-                Console.WriteLine($"✅ Programme chargé : {programme.Nom}");
-                await ChargerSeance();
-            }
-            else
-            {
-                Console.WriteLine("❌ Programme introuvable.");
-            }
-        }
-        else
+        if (programmeId == Guid.Empty)
         {
             Console.WriteLine("ℹ️ Aucun programme sélectionné.");
+            return;
         }
+
+        var restored = await SupabaseService.LoadSessionAsync();
+        Console.WriteLine($"🟢 Session restaurée : {restored}");
+
+        var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
+        if (userGuid == null)
+        {
+            Console.WriteLine("❌ Aucun utilisateur connecté → userId null");
+            userId = null;
+        }
+        else
+        {
+            userId = userGuid.Value.ToString();
+            Console.WriteLine($"✅ User ID : {userId}");
+        }
+
+        Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var programme = Programmes.FirstOrDefault(p => p.Id == programmeId);
+
+        if (programme is null)
+        {
+            Console.WriteLine("❌ Programme introuvable.");
+            return;
+        }
+
+        SelectedProgrammeId = programmeId;
+        SelectedProgrammeDate = programme.DateDebut;
+        SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(programme.Contenu);
+        Console.WriteLine($"✅ Programme chargé : {programme.Nom}");
+
+        await ChargerSeance();
     }
+
 
     private List<ExerciceJour> Exercises = new();
 
@@ -372,7 +375,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         if (Gamification is null)
         {
             Console.WriteLine("⚠️ Gamification null ➡️ rechargement...");
-            Gamification = await GamificationDbService.GetGamificationAsync();
+            Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
             if (Gamification is null) return;
         }
 
@@ -381,9 +384,10 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         Gamification.StreakDays++;
         Gamification.LastSessionDate = DateTime.UtcNow;
         Gamification.TotalTrainingTimeMinutes += minutes;
+        Console.WriteLine($"👤 UserID utilisé pour Upsert : {userId}");
 
         await GamificationDbService.UpsertGamificationAsync(Gamification);
-        Gamification = await GamificationDbService.GetGamificationAsync();
+        Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
 
         Console.WriteLine($"✅ Session sauvegardée - durée : {minutes} min");
         StateHasChanged();
@@ -435,7 +439,12 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         double poidsSaisiKg = ex.IsLb ? ex.PoidsAffiche * 0.453592 : ex.PoidsAffiche;
 
         // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
-
+        if (string.IsNullOrEmpty(userId))
+        {
+            Console.WriteLine("❌ userId null dans MarquerAtteint, action annulée");
+            return;
+        }
+        var guidUserId = Guid.Parse(userId);
 
         ex.ObjectifAtteint = poidsSaisiKg >= ex.Objectif;
         var local = new PoidsEntryLocal
@@ -444,7 +453,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
                 Exercice = ex.ExerciseName,
                 Date = DateTime.Today,
                 Poids = poidsSaisiKg,
-                UserId = userId ?? "",
+                UserId = guidUserId,
                 EnLb = ex.IsLb,
                 ObjectifAtteint = ex.ObjectifAtteint
             };
@@ -512,7 +521,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
                     Poids = poidsKg,
-                    UserId = userId,
+                    UserId = Guid.Parse(userId),
 
                     EnLb = ex.IsLb
                 };
@@ -522,7 +531,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
                     Exercice = ex.ExerciseName,
                     Date = DateTime.Today,
                     Poids = poidsKg,
-                    UserId = userId,
+                    UserId = Guid.Parse(userId),
                     EnLb = ex.IsLb
                 };
 

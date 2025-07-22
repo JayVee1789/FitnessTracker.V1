@@ -84,12 +84,14 @@
     };
     private List<PoidsEntry> entries = new();
     private GamificationDbModel? gamificationDbModel;
+    UserProfile profile = new();
+
     protected override async Task OnInitializedAsync()
     {
         entries = await PoidsService.GetEntriesAsync();
         Console.WriteLine($"✅ Analyse loaded entries : {entries.Count}");
-        gamificationDbModel = await GamificationDbService.GetGamificationAsync();
-        var profile = await profileService.GetOrCreateUserProfileAsync();
+        gamificationDbModel = await GamificationDbService.GetOrCreateGamificationAsync();
+        profile = await profileService.GetOrCreateUserProfileAsync();
     }
 
     private int getNbStreakDay()
@@ -127,8 +129,16 @@
         return string.Join(" ", parties);
     }
 
+    // public  double GetTotalCalorie()
+    // {
+    //     int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
+    //     int poids = profile.
+    // }
+
+
     public static double CalculerCalories(int dureeMinutes, double met, double poidsKg)
     {
+        
         double calories = dureeMinutes * met * poidsKg * 0.0175;
         return Math.Round(calories, 1); // arrondi à une décimale
     }

@@ -278,7 +278,13 @@
             if (!exists)
             {
                 // injection user_id (optionnel si déjà géré dans SupabaseService)
-                entry.UserId = _supabase.Auth.CurrentUser?.Id ?? "";
+                var userGuid = Guid.TryParse(_supabase.Auth.CurrentUser?.Id, out var idGuid) ? idGuid : Guid.Empty;
+                if (userGuid == Guid.Empty)
+                {
+                    Console.WriteLine("❌ User ID invalide !");
+                    return;
+                }
+                entry.UserId = userGuid;
                 await SupabaseService.AddEntryAsync(entry);
                 added++;
             }

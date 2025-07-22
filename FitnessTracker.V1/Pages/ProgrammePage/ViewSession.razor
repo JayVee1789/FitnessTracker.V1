@@ -275,7 +275,7 @@
     public static bool AfficherEnLb { get; set; } = false;
     private ExerciceJour? ExerciceCible = null;
     private List<string> Suggestions = new();
-    private string? userId;
+    private Guid userId;
     private string GetInputId(ExerciceJour ex) => $"{ex.ExerciseName}_{Guid.NewGuid()}";
     List<ExerciseDefinition> allExercises = new();
     private bool SelectedPlanAvailable => SelectedPlan is not null;
@@ -304,7 +304,8 @@
         try
         {
             await Gamification.InitializeAsync();
-            userId = SupabaseService.GetCurrentUserId();
+            var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
+           
             Console.WriteLine("🔑 Utilisateur actuel : " + userId);
             var data = await JS.InvokeAsync<string>("localStorage.getItem", "seancesCompletes");
             if (!string.IsNullOrEmpty(data))
@@ -807,7 +808,7 @@
                 Exercice = ex.ExerciseName,
                 Date = DateTime.Today,
                 Poids = poidsSaisiKg,
-                UserId = userId ?? "",
+                UserId = userId ,
                 EnLb = ex.IsLb,
                 ObjectifAtteint = ex.ObjectifAtteint
             };

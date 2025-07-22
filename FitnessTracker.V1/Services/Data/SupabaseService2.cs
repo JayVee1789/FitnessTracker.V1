@@ -75,14 +75,14 @@ public class SupabaseService2
     #region Entry
     public async Task<List<PoidsEntry>> GetEntriesAsync()
     {
-        var userId = GetCurrentUserId();
-        if (userId is null) return new();
-
+        var userIdString = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userIdString)) return new();
+        var userGuid = Guid.Parse(userIdString);
         try
         {
             var res = await _supabase
                 .From<PoidsEntry>()
-                .Where(e => e.UserId == userId)
+                .Where(e => e.UserId == userGuid)
                 .Get();
 
             return res.Models;
@@ -255,9 +255,17 @@ public class SupabaseService2
     {
         return _supabase.Auth.CurrentUser?.Id;
     }
+    public Guid? GetCurrentUserIdAsGuid()
+    {
+        var idString = _supabase.Auth.CurrentUser.Id;
+
+        if (Guid.TryParse(idString, out var idGuid))
+            return idGuid;
+        return null;
+    }
 
 
-public async Task<List<PoidsEntry>> GetPoidsEntriesFromSupabaseAsync()
+    public async Task<List<PoidsEntry>> GetPoidsEntriesFromSupabaseAsync()
 {
     var userId = GetCurrentUserId();
     if (string.IsNullOrEmpty(userId))
@@ -272,7 +280,7 @@ public async Task<List<PoidsEntry>> GetPoidsEntriesFromSupabaseAsync()
 
         var result = await _supabase
             .From<PoidsEntry>()
-            .Where(x => x.UserId == userGuid.ToString())
+            .Where(x => x.UserId == userGuid)
             .Get();
 
         var entries = result.Models.ToList();

@@ -2,6 +2,7 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using FitnessTracker.V1.Models.Enumeration;
+using Supabase.Gotrue;
 
 public class ProfileService
 {
@@ -41,6 +42,7 @@ public class ProfileService
                 PathologieMuscle = "",
                 PriorityMuscle = ""
             };
+            Console.WriteLine($"👤 UserID utilisé pour Upsert : {user.Id}");
 
             // ✅ Upsert au lieu de Insert
             await _supabase.From<SportProfileModel>().Upsert(record);

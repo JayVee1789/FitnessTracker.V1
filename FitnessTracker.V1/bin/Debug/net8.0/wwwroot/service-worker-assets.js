@@ -1,6 +1,10 @@
 self.assetsManifest = {
-  "version": "UdBiOZ0v",
+  "version": "ZQC6CLfO",
   "assets": [
+    {
+      "hash": "sha256-+LTDLTFQOAzv/Zs6t+iLN+sImMB14wosmwDodz8KGH8=",
+      "url": "ChartJsBlazorInterop.js"
+    },
     {
       "hash": "sha256-DBSSrEld57Xw2ws+KO7Rhipj5Jo0acdZu6+JYkcoth4=",
       "url": "FitnessTracker.V1.styles.css"
@@ -42,6 +46,10 @@ self.assetsManifest = {
       "url": "_content/Blazor.Bootstrap/pdfjs-4.0.379.worker.min.js"
     },
     {
+      "hash": "sha256-+LTDLTFQOAzv/Zs6t+iLN+sImMB14wosmwDodz8KGH8=",
+      "url": "_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"
+    },
+    {
       "hash": "sha256-aIXXR+9s7dYyi5uLNEw6yrNYcjcOCvrD+zPA2yDLSOw=",
       "url": "_framework/BlazorBootstrap.wasm"
     },
@@ -50,11 +58,15 @@ self.assetsManifest = {
       "url": "_framework/Blazored.LocalStorage.wasm"
     },
     {
-      "hash": "sha256-3PXYUNmydpkR+9HEpF86E3kzvbhsA4anRqxZZy8+A/Q=",
+      "hash": "sha256-w+7LWVNvsBZXAZIl/fwpTkv1CwyMyYCQUFfFMgF1NuI=",
+      "url": "_framework/ChartJs.Blazor.wasm"
+    },
+    {
+      "hash": "sha256-LXvMfMMHDKyfIjxJVHj4tvVo8IUFqViDmB2eXciryuI=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-YBc/aOrmqvj87O+T7ImOSsLyaxaIe6h05MCj+6J1q9s=",
+      "hash": "sha256-bz8ao3Gvoxhj6ieiCHS40szTpM6eh7Mvxym5LnPiwZ4=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -898,7 +910,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-pXchdFYyU8ZV3ixoTLdG+YqgXxtjzhjZfD+MNije1rk=",
+      "hash": "sha256-GSiZeudQht/fGY5dWOhkBm2I77qI8CjGWbNxcbkaMkg=",
       "url": "_framework/blazor.boot.json"
     },
     {

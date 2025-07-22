@@ -84,7 +84,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Gamification = await GamificationDbService.GetGamificationAsync();
+        Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))

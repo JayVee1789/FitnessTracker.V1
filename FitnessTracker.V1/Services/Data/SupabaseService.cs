@@ -74,7 +74,7 @@ public class SupabaseService
         {
             var result = await _supabase
                 .From<PoidsEntry>()
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId == Guid.Parse(userId))
                 .Get();
 
             Console.WriteLine($"✅ {result.Models.Count} entrées récupérées pour l'utilisateur {userId}");

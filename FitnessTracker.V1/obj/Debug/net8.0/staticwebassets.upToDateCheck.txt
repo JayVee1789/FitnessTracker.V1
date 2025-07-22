@@ -1,3 +1,4 @@
+C:\Users\jvere\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js
 wwwroot\animations.js
 wwwroot\appsettings.json
 wwwroot\css\app.css

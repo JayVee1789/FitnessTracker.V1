@@ -7,7 +7,8 @@
 @inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification
 @inject GamificationDbService GamificationDbService
 @inject IJSRuntime JS
-
+@inject PoidsService PoidsService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @if (_updateAvailable)
 {
     <div class="alert alert-warning text-center fixed-bottom m-0">
@@ -29,9 +30,9 @@
         <div class="streak-badge">🔥 5 jours</div>
         @if (Gamification != null)
             {
-          
+
           <div class="streak-badge">🔥 @Gamification.State.Streak jours</div>
-           
+
             }
 
 
@@ -93,6 +94,15 @@
 
     //     // Gamification = await GamificationDbService.GetGamificationAsync();
     // }
+    protected override async Task OnInitializedAsync()
+    {
+        var isReset = await LocalStorage.GetItemAsync<bool>("poids_reset_done");
+        if (!isReset)
+        {
+            await PoidsService.ResetAllPoidsLocalAsync();
+            await LocalStorage.SetItemAsync("poids_reset_done", true);
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "FitnessTracker.V1",
   "resources": {
-    "hash": "sha256-O3Yhn6FDRhAlx3l8rKH7yzrD8rl+ZGm/HPdM3NgpvW8=",
+    "hash": "sha256-+mqqGfscIOXu+Fsk3JGCDKQny9xqZ2q+HalxqKziX4U=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-DTUQS6Jc6BNnS7sYYezFfaUKVmQq0/lanhQuJfygH/k="
     },
@@ -20,6 +20,7 @@
     "assembly": {
       "BlazorBootstrap.wasm": "sha256-aIXXR+9s7dYyi5uLNEw6yrNYcjcOCvrD+zPA2yDLSOw=",
       "Blazored.LocalStorage.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
+      "ChartJs.Blazor.wasm": "sha256-w+7LWVNvsBZXAZIl/fwpTkv1CwyMyYCQUFfFMgF1NuI=",
       "Microsoft.AspNetCore.Authorization.wasm": "sha256-5a7/RdhGgJYmku/9sroYrsn1T46a5Hi/fIg49VoQnJQ=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-RXNLtwbclPPqHjZ5WE/aBFbGFbrMv8bsCzF5YnPCujo=",
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-LhGZoIRq6DWYdRr6cN7rLQwQMW1nW2JSmItcWCgWv28=",
@@ -232,10 +233,10 @@
       "mscorlib.wasm": "sha256-8L4O6tiH48gEZfzf0Y84J01S+3eEG59Bo5bfpH2H+9Y=",
       "netstandard.wasm": "sha256-sEvS/ZjfGhf1dLglmk72ysM50loOygjujJ/J5OhFLEw=",
       "System.Private.CoreLib.wasm": "sha256-BhHYDTpkph+YJOQuAlv6aSrvjTVX0WLTIDBXecinFXo=",
-      "FitnessTracker.V1.wasm": "sha256-YBc/aOrmqvj87O+T7ImOSsLyaxaIe6h05MCj+6J1q9s="
+      "FitnessTracker.V1.wasm": "sha256-bz8ao3Gvoxhj6ieiCHS40szTpM6eh7Mvxym5LnPiwZ4="
     },
     "pdb": {
-      "FitnessTracker.V1.pdb": "sha256-3PXYUNmydpkR+9HEpF86E3kzvbhsA4anRqxZZy8+A/Q="
+      "FitnessTracker.V1.pdb": "sha256-LXvMfMMHDKyfIjxJVHj4tvVo8IUFqViDmB2eXciryuI="
     }
   },
   "cacheBootResources": true,

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Ul59KeI8D94=",
+  "dgSpecHash": "uue8v3aK1Ck=",
   "success": true,
   "projectFilePath": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\FitnessTracker.V1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jvere\\.nuget\\packages\\blazor.bootstrap\\3.3.1\\blazor.bootstrap.3.3.1.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
+    "C:\\Users\\jvere\\.nuget\\packages\\chartjs.blazor.fork\\2.0.2\\chartjs.blazor.fork.2.0.2.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.17\\microsoft.aspnetcore.authorization.8.0.17.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.17\\microsoft.aspnetcore.components.8.0.17.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\8.0.17\\microsoft.aspnetcore.components.analyzers.8.0.17.nupkg.sha512",
@@ -14,6 +15,7 @@
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\8.0.17\\microsoft.aspnetcore.components.webassembly.8.0.17.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly.devserver\\8.0.17\\microsoft.aspnetcore.components.webassembly.devserver.8.0.17.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.aspnetcore.metadata\\8.0.17\\microsoft.aspnetcore.metadata.8.0.17.nupkg.sha512",
+    "C:\\Users\\jvere\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.6\\microsoft.extensions.configuration.9.0.6.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.6\\microsoft.extensions.configuration.abstractions.9.0.6.nupkg.sha512",
     "C:\\Users\\jvere\\.nuget\\packages\\microsoft.extensions.configuration.binder\\9.0.6\\microsoft.extensions.configuration.binder.9.0.6.nupkg.sha512",

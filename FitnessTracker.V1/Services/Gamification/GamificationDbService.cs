@@ -67,6 +67,7 @@ namespace FitnessTracker.V1.Services
                 StreakDays = 0,
                 LastSessionDate = DateTime.UtcNow
             };
+            Console.WriteLine($"👤 UserID utilisé pour Upsert : {userId}");
 
             await UpsertGamificationAsync(gamification);
             Console.WriteLine("✅ Gamification créée et sauvegardée.");
