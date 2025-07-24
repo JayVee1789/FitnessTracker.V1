@@ -390,7 +390,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         Gamification.TotalTrainingTimeMinutes += minutes;
         Console.WriteLine($"👤 UserID utilisé pour Upsert : {userId}");
 
-        await GamificationDbService.UpsertGamificationAsync(Gamification);
+        await GamificationDbService.UpdateGamificationAsync(Gamification);
         Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
 
         Console.WriteLine($"✅ Session sauvegardée - durée : {minutes} min");

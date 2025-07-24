@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "XN6AA/CE",
+  "version": "PD3oyTw/",
   "assets": [
     {
       "hash": "sha256-+LTDLTFQOAzv/Zs6t+iLN+sImMB14wosmwDodz8KGH8=",
@@ -62,11 +62,11 @@ self.assetsManifest = {
       "url": "_framework/ChartJs.Blazor.wasm"
     },
     {
-      "hash": "sha256-7kT4v/RMc07g4smvOtjA3KS6j3RtXX9jyoIy/4RpQ4Q=",
+      "hash": "sha256-YWH05GAboLrQo7UIen0Mrf9AkZUwr8GAXZE5Z+PDCbQ=",
       "url": "_framework/FitnessTracker.V1.pdb"
     },
     {
-      "hash": "sha256-vmIku8+ofhccOUeT1ZL8eFo3opQ9PZZy8Qwqzk8v2Ro=",
+      "hash": "sha256-l2Z9Lj/PSP4gBHAMPlmEAkUUBka5I1PQtOFjIKAyy3s=",
       "url": "_framework/FitnessTracker.V1.wasm"
     },
     {
@@ -910,7 +910,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-GdhZx2q7iOSp/F6eGUXcHZN2f3E3Ox7kHhUej9JiCOw=",
+      "hash": "sha256-ncJupNDacWYDyTUl7vT9zB3FSwy3VTdjWA3lBgJrNpc=",
       "url": "_framework/blazor.boot.json"
     },
     {

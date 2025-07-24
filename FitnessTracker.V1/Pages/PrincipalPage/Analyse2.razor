@@ -8,7 +8,8 @@
 @inject ProfileService profileService
 @inject SupabaseService2 SupabaseService
 @inject Supabase.Client Supabase
-
+@using FitnessTracker.V1.Services
+@inject IJSRuntime JSRuntime
 
 
 
@@ -26,7 +27,7 @@
         </div>
         <div class="duo-card text-center flex-column">
             <div class="stat-icon total">💪</div>
-            <div class="stat-value">456</div>
+            <div class="stat-value">@getNbSeanceTotal()</div>
             <div class="stat-label">Séances totales</div>
         </div>
         <div class="duo-card text-center flex-column">
@@ -36,7 +37,7 @@
         </div>
         <div class="duo-card text-center flex-column">
             <div class="stat-icon calories">🔥</div>
-            <div class="stat-value">1240</div>
+            <div class="stat-value">@GetTotalCalorie()</div>
             <div class="stat-label">Calories brûlées</div>
         </div>
     </div>
@@ -81,6 +82,32 @@
         <div class="achievement-badge unlocked">💪</div>
         <div class="achievement-badge unlocked">🎯</div>
     </div>
+    <!-- ✅ BADGES OBTENUS -->
+    <!-- ✅ BADGES OBTENUS -->
+    @* @if (gamificationDbModel.Badges?.Any() == true)
+    {
+        <div class="badge-section mb-4">
+            <h4>🏅 Badges débloqués</h4>
+            <div class="d-flex flex-wrap gap-3 mt-3">
+                @foreach (var badge in gamificationDbModel.Badges)
+                {
+                    <Badge Color="BadgeColor.Warning" class="me-2">
+                        <i class="@badge.Icon me-1"></i> @badge.Title
+                    </Badge>
+                }
+            </div>
+        </div>
+    } *@
+    @if (gamificationDbModel?.Badges?.Any() == true)
+    {
+        <div class="section-header">🎖️ Badges débloqués</div>
+        <div class="achievements-grid">
+            @foreach (var badge in gamificationDbModel.Badges)
+            {
+                <div class="achievement-badge unlocked">@badge.Emoji <br /> @badge.Title</div>
+            }
+        </div>
+    }
 </div>
 
 @code {
@@ -95,17 +122,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         var restored = await SupabaseService.LoadSessionAsync();
         Console.WriteLine($"🟢 Session restaurée : {restored}");
+
         entries = await PoidsService.GetEntriesAsync();
-        Console.WriteLine($"✅ Analyse loaded entries : {entries.Count}");
         gamificationDbModel = await GamificationDbService.GetOrCreateGamificationAsync();
         profile = await profileService.GetOrCreateUserProfileAsync();
+        
         sportProfileModel = await GetSportProfile();
 
-
+        if (gamificationDbModel != null)
+        {
+            BadgeService.InjectServices(JSRuntime, SupabaseService);
+            await BadgeService.VerifierBadgesAsync(gamificationDbModel);
+        }
     }
+
 
     private int getNbStreakDay()
     {
@@ -142,11 +174,11 @@
         return string.Join(" ", parties);
     }
 
-    // public  double GetTotalCalorie()
-    // {
-    //     int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
-    //     int poids = profile.
-    // }
+    public double GetTotalCalorie()
+    {
+        int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
+        return CalculerCalories(totalMinutes, 6.5, sportProfileModel.Poids);
+    }
 
 
     public static double CalculerCalories(int dureeMinutes, double met, double poidsKg)

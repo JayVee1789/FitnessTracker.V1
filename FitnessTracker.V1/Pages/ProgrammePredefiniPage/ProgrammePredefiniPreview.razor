@@ -1,6 +1,7 @@
 ﻿@page "/programme-predefini-preview/{Nom}"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
 @using FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeSpecial
 @inject NavigationManager Nav
 @inject SupabaseService2 SupabaseService
@@ -94,6 +95,7 @@
         plan = Nom.ToLower() switch
         {
             "wageningen" => new WageningenProgramme().GeneratePlan(null, null),
+            "tnation" => new ProgrammeTnation().GeneratePlan(),
             _ => null
         };
         newProgrammeName = $"Programme {Nom} ({DateTime.Today:dd/MM})";

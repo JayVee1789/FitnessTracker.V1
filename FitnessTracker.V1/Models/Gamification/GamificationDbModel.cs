@@ -1,4 +1,5 @@
-﻿using Supabase.Postgrest.Attributes;
+﻿using BlazorBootstrap;
+using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
 namespace FitnessTracker.V1.Models.Gamification
@@ -31,9 +32,6 @@ namespace FitnessTracker.V1.Models.Gamification
         [Column("total_calories_burned")]
         public decimal TotalCaloriesBurned { get; set; }
 
-        [Column("badges")]
-        public List<string> Badges { get; set; } = new();
-
         [Column("best_lift_record")]
         public decimal BestLiftRecord { get; set; }
 
@@ -42,5 +40,9 @@ namespace FitnessTracker.V1.Models.Gamification
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
+
+        // ✅ BadgeModel est maintenant mappé directement comme jsonb[]
+        [Column("badges")]
+        public List<BadgeModel> Badges { get; set; } = new();
     }
 }

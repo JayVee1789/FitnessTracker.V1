@@ -1,14 +1,11 @@
 ﻿// FitnessTracker.V1/Services/SupabaseService2.cs
 using Blazored.LocalStorage;
-using FitnessTracker.V1.Models;
+using FitnessTracker.V1.Models.Gamification;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using Supabase;
-using Supabase.Interfaces;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
-using static FitnessTracker.V1.Models.Model;
 using FTOptions = FitnessTracker.V1.Options.SupabaseOptions;   // 👈 alias anti-conflit
 
 
@@ -330,7 +327,52 @@ public class SupabaseService2
         Console.WriteLine($"❌ Erreur GetPoidsEntriesFromSupabaseAsync : {ex.Message}");
         return new();
     }
+
+
 }
+    public async Task<bool> UpdateGamificationAsync(GamificationDbModel gamification)
+    {
+        if (gamification == null || gamification.Id == Guid.Empty)
+            return false;
+
+        // 🔐 Ajoute les headers
+        RefreshAuthHeaders();
+        _http.DefaultRequestHeaders.Remove("apikey");
+        _http.DefaultRequestHeaders.Add("apikey", _options.AnonKey);
+
+        var url = $"{_options.Url}/rest/v1/gamification?id=eq.{gamification.Id}";
+
+        var patch = new Dictionary<string, object>
+        {
+            ["badges"] = gamification.Badges,
+            ["last_session_date"] = gamification.LastSessionDate,
+            ["total_xp"] = gamification.TotalXP,
+            ["streak_days"] = gamification.StreakDays,
+            ["total_training_time_minutes"] = gamification.TotalTrainingTimeMinutes,
+            ["total_calories_burned"] = gamification.TotalCaloriesBurned,
+            ["best_lift_record"] = gamification.BestLiftRecord,
+            ["best_walking_distance"] = gamification.BestWalkingDistance
+        };
+
+        var content = new StringContent(
+            JsonSerializer.Serialize(patch),
+            System.Text.Encoding.UTF8,
+            "application/json");
+
+        var response = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url)
+        {
+            Content = content
+        });
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("❌ Erreur PATCH Supabase : " + await response.Content.ReadAsStringAsync());
+        }
+
+        return response.IsSuccessStatusCode;
+    }
+
+
 
 
 

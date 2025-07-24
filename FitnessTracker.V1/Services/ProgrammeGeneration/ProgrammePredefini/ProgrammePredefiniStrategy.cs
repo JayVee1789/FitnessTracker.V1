@@ -8,13 +8,13 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
         public static List<string> ProgrammesDisponibles => new()
         {
             "wageningen",
-    "tnation"
+               "tnation"
         };
 
         public static List<ProgrammePredefiniInfo> GetProgrammesInfos() => new()
         {
             new ProgrammePredefiniInfo("Wageningen", 6, "Remise en forme générale pour senior"),
-         new ProgrammePredefiniInfo("Tnation", 8, "Programme T-Nation sur 8 semaines")
+         new ProgrammePredefiniInfo("tnation", 8, "Programme T-Nation sur 8 semaines")
         };
 
         public static WorkoutPlan GetProgrammeByName(string nom)

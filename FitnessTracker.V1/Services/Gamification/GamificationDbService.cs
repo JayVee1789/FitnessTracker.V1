@@ -1,6 +1,10 @@
 ﻿using FitnessTracker.V1.Models.Gamification;
 using FitnessTracker.V1.Services.Data;
+using Microsoft.Extensions.Options;
 using Supabase;
+using static System.Net.WebRequestMethods;
+using System.Text.Json;
+using FTOptions = FitnessTracker.V1.Options.SupabaseOptions;
 
 namespace FitnessTracker.V1.Services
 {
@@ -9,12 +13,24 @@ namespace FitnessTracker.V1.Services
         private readonly Client _supabase;
         private readonly AuthService _auth;
         private readonly SupabaseService2 _supabaseService;
-        public GamificationDbService(Client supabase, AuthService auth, SupabaseService2 supabaseService)
+        private readonly HttpClient _http;
+        private readonly FTOptions _options;
+
+
+        public GamificationDbService(
+            Client supabase,
+            AuthService auth,
+            SupabaseService2 supabaseService,
+            HttpClient http,
+            IOptions<FTOptions> options)
         {
             _supabase = supabase;
             _auth = auth;
             _supabaseService = supabaseService;
+            _http = http;
+            _options = options.Value; // 👈 stocké ici
         }
+
 
         public async Task<GamificationDbModel?> GetGamificationAsync()
         {
@@ -83,48 +99,63 @@ namespace FitnessTracker.V1.Services
                 LastSessionDate = DateTime.UtcNow
             };
 
-            await UpsertGamificationAsync(gamification);
+            await UpdateGamificationAsync(gamification);
             Console.WriteLine("✅ Gamification créée et sauvegardée.");
             return gamification;
         }
 
-        //public async Task UpsertGamificationAsync(GamificationDbModel gamification)
-        //{
-        //    try
-        //    {
-        //        await _supabase.From<GamificationDbModel>().Upsert(gamification);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"❌ Erreur Upsert : {ex.Message}");
-        //    }
-        //}
-        public async Task UpsertGamificationAsync(GamificationDbModel gamification)
+
+        
+        public async Task<bool> UpdateGamificationAsync(GamificationDbModel gamification)
         {
+            if (gamification == null || gamification.Id == Guid.Empty)
+                return false;
+
+            // 🔐 Authentification
             var token = _supabase.Auth.CurrentSession?.AccessToken;
-            var user = _supabase.Auth.CurrentUser;
-
-            Console.WriteLine($"🔐 Token = {token}");
-            Console.WriteLine($"👤 CurrentUser ID = {user?.Id}");
-
-            if (string.IsNullOrEmpty(token) || user == null)
+            if (string.IsNullOrWhiteSpace(token))
             {
-                Console.WriteLine("❌ Impossible d'upsert → utilisateur non authentifié ou token manquant.");
-                return;
+                Console.WriteLine("❌ Aucun token disponible.");
+                return false;
             }
 
-            try
+            // ✅ Headers obligatoires
+            _http.DefaultRequestHeaders.Remove("apikey");
+            _http.DefaultRequestHeaders.Remove("Authorization");
+            _http.DefaultRequestHeaders.Add("apikey", _options.AnonKey);
+            _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var url = $"{_options.Url}/rest/v1/gamification?id=eq.{gamification.Id}";
+
+            var patch = new Dictionary<string, object>
             {
-                await _supabase.From<GamificationDbModel>()
-                    .Upsert(gamification); // Sans options
-                Console.WriteLine("✅ Gamification upsert réussie.");
-            }
-            catch (Exception ex)
+                ["badges"] = gamification.Badges,
+                ["last_session_date"] = gamification.LastSessionDate,
+                ["total_xp"] = gamification.TotalXP,
+                ["streak_days"] = gamification.StreakDays,
+                ["total_training_time_minutes"] = gamification.TotalTrainingTimeMinutes,
+                ["total_calories_burned"] = gamification.TotalCaloriesBurned,
+                ["best_lift_record"] = gamification.BestLiftRecord,
+                ["best_walking_distance"] = gamification.BestWalkingDistance
+            };
+
+            var content = new StringContent(
+                JsonSerializer.Serialize(patch),
+                System.Text.Encoding.UTF8,
+                "application/json");
+
+            var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Patch, url)
             {
-                Console.WriteLine("❌ Erreur pendant l'upsert : " + ex.Message);
+                Content = content
+            });
+
+            if (!res.IsSuccessStatusCode)
+            {
+                Console.WriteLine("❌ PATCH Supabase échoué : " + await res.Content.ReadAsStringAsync());
             }
+
+            return res.IsSuccessStatusCode;
         }
-
 
     }
 }
