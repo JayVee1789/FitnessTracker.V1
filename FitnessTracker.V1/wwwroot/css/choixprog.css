@@ -1,0 +1,173 @@
+﻿/* ChoixProgramme : styles wireframe mobile responsives */
+
+.choixprogramme-container {
+    max-width: 420px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.choixprogramme-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.choixprogramme-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #2D3748;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.choixprogramme-subtitle {
+    font-size: 1rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* ===== Cartes programme ===== */
+.choixprogramme-card {
+    border-radius: 16px;
+    padding: 1.3rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+    .choixprogramme-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .choixprogramme-card.personalise {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    }
+
+    .choixprogramme-card.classic {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+    }
+
+    .choixprogramme-card.premium {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+    }
+
+/* Badge Premium */
+.choixprogramme-badge {
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    background: linear-gradient(45deg, #fd79a8, #e84393);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Icone au-dessus */
+.choixprogramme-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Titre + description */
+.choixprogramme-card-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.choixprogramme-description {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+    opacity: 0.9;
+}
+
+/* Citation */
+.choixprogramme-quote {
+    background: rgba(255,255,255,0.2);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-style: italic;
+    font-size: 0.85rem;
+    border-left: 3px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.8rem;
+}
+
+.choixprogramme-card.classic .choixprogramme-quote {
+    background: rgba(255,255,255,0.15);
+    border-left-color: rgba(255,255,255,0.3);
+}
+
+/* Boutons */
+.choixprogramme-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+    .choixprogramme-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Boutons personnalisés par type */
+    .choixprogramme-button.classic {
+        background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+    }
+
+    .choixprogramme-button.premium {
+        background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+    }
+
+/* Bas de page */
+.choixprogramme-footer {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(253, 203, 110, 0.3);
+    margin-top: 2rem;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .choixprogramme-container {
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .choixprogramme-card {
+        padding: 1rem;
+    }
+
+    .choixprogramme-button {
+        font-size: 0.95rem;
+        padding: 0.8rem;
+    }
+}

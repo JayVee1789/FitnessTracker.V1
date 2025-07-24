@@ -4,6 +4,8 @@
 @inject NavigationManager Nav
 @inject AuthService AuthService
 @inject SupabaseService2 SupabaseService
+@inject AppState appState
+
 @if (isLoading)
 {
     <div class="duo-card">Chargement de votre profil...</div>
@@ -14,17 +16,17 @@ else if (profile is null)
 }
 else
 {
-    <EditForm Model="profile">
+    <EditForm Model="profile" OnValidSubmit="SauvegarderProfil">
         <div class="phone-frame">
             <div class="phone-screen">
 
                 <!-- Header -->
                 <div class="monprofil-header">
                     <div class="monprofil-header-left">
-                        <button class="monprofil-back-btn">←</button>
-                        <div class="monprofil-header-title">Profil</div>
+                       @*  <button class="monprofil-back-btn">←</button> *@
+                        @* <div class="monprofil-header-title">Profil</div> *@
                     </div>
-                    <button class="monprofil-save-btn" type="button" @onclick="SauvegarderProfil">Sauvegarder</button>
+                    <button class="monprofil-save-btn" type="submit">Sauvegarder</button>
                 </div>
 
                 <div class="monprofil-content-scroll">
@@ -108,10 +110,10 @@ else
                                 <div class="monprofil-goal-text">Objectif</div>
                             </div>
                             <InputSelect class="monprofil-goal-dropdown" @bind-Value="profile.Objective">
-                                <option value="Force">Gagner de la force</option>
-                                <option value="Endurance">Travailler son endurance</option>
-                                <option value="Hypertrophy">Gagner du muscle</option>
-                                <option value="Fat_loss">Perdre du poids</option>
+                                <option value="Force">Force</option>
+                                <option value="Endurance">Endurance</option>
+                                <option value="Hypertrophy">Muscle</option>
+                                <option value="Fat_loss">Maigrir</option>
                                 <option value="Glutes">Fessiers</option>
                             </InputSelect>
                         </div>
@@ -123,7 +125,7 @@ else
                                 <div class="monprofil-goal-text">Fréquence</div>
                             </div>
                             <InputSelect class="monprofil-goal-dropdown" @bind-Value="profile.SeancesPerWeek">
-                                @for (int i = 1; i <= 7; i++)
+                                @for (int i = 1; i <= 6; i++)
                                 {
                                     <option value="@i">@i x/semaine</option>
                                 }
@@ -170,6 +172,7 @@ else
                             </div>
                         </div>
                     </div>
+                    <!-- Zone dangereuse -->
                     <div class="monprofil-danger-section">
                         <div class="monprofil-section-title">⚠️ Zone dangereuse</div>
 
@@ -196,8 +199,10 @@ else
             </div>
         </div>
     </EditForm>
-    <!-- Zone dangereuse -->
-} <div class="toast-message @toastClass">@toastMessage</div>
+
+    <div class="toast-message @toastClass">@toastMessage</div>
+    
+} 
 
 @code {
     private SportProfileModel? profile;
@@ -258,10 +263,20 @@ else
     private async Task SauvegarderProfil()
     {
         if (profile is null) return;
-        await Supabase.From<SportProfileModel>().Upsert(profile);
-        toastMessage = "✅ Profil sauvegardé avec succès.";
 
+        await Supabase.From<SportProfileModel>().Upsert(profile);
+
+        // ✅ Utiliser la méthode officielle pour notifier les autres composants
+        appState.SetUnite(profile.Unite == "lb");
+
+        toastMessage = "✅ Profil sauvegardé avec succès.";
+        toastClass = "show";
+
+        await Task.Delay(2500);
+        toastClass = "";
+        StateHasChanged();
     }
+
 
     private string newPassword = "";
     private string passwordMessage = "";

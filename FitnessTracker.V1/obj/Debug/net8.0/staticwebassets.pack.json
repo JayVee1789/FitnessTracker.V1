@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\choixprog.css",
+      "PackagePath": "staticwebassets\\css\\choixprog.css"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\components.css",
       "PackagePath": "staticwebassets\\css\\components.css"
     },

@@ -4,6 +4,7 @@ wwwroot\appsettings.json
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
+wwwroot\css\choixprog.css
 wwwroot\css\components.css
 wwwroot\css\duo-theme.css
 wwwroot\css\layout-core.css

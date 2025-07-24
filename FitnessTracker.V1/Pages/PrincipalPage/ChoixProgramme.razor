@@ -1,50 +1,33 @@
 ﻿@page "/choix-programme"
 @inject NavigationManager Nav
 
-<div class="app-main" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem;">
-
-    <div class="mobile-container">
+<div class="app-main">
+    <div >
 
         <!-- Header -->
-        <div class="text-center mb-4">
-            <h2 class="session-header text-primary">🚀 aventure fitness !</h2>
-            <p class="subtitle">Ton parcours, ton rythme, tes résultats</p>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-bar mb-4">
-            <div class="stat-item">
-                <div class="stat-number">7</div>
-                <div class="stat-label">Jours</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">🔥</div>
-                <div class="stat-label">Série</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">42</div>
-                <div class="stat-label">XP</div>
-            </div>
+        <div class="choixprogramme-header">
+            <h2 class="choixprogramme-title">🚀 Choisis ton aventure fitness !</h2>
+            <p class="choixprogramme-subtitle">Ton parcours, ton rythme, tes résultats</p>
         </div>
 
         <!-- Programme personnalisé -->
-        <div class="program-card clickable-card" @onclick="OnProgrammePersoClick">
-            <span class="program-icon">🎨</span>
-            <h3 class="program-title"><strong>Programme personnalisé</strong></h3>
-            <p class="program-description">
+        <div class="choixprogramme-card personalise" @onclick="OnProgrammePersoClick">
+            <span class="choixprogramme-icon">🎨</span>
+            <h3 class="choixprogramme-card-title"><strong>Programme personnalisé</strong></h3>
+            <p class="choixprogramme-description">
                 Tu fabriques ton propre super-héros ! Niveau, objectifs, dispo... C’est ton plan, ton style 🧪
             </p>
-            <div class="program-quote">
+            <div class="choixprogramme-quote">
                 🧑‍🔬 « Je veux du muscle ici, moins de bobo là, et du temps pour Netflix le dimanche »
             </div>
-            <button class="action-btn">🎯 Créer mon programme</button>
+            <button class="choixprogramme-button">🎯 Créer mon programme</button>
         </div>
 
         <!-- Programme classic -->
-        <div class="program-card beginner clickable-card" @onclick="OnProgrammeClassicClick">
-            <span class="program-icon">📚</span>
-            <h3 class="program-title"><strong>Programme classic</strong></h3>
-            <p class="program-description">
+        <div class="choixprogramme-card classic" @onclick="OnProgrammeClassicClick">
+            <span class="choixprogramme-icon">📚</span>
+            <h3 class="choixprogramme-card-title"><strong>Programme classic</strong></h3>
+            <p class="choixprogramme-description">
                 Les programmes d'entraînement standard faits pour tout le monde, déjà prêts à être utilisés 🧪
             </p>
             <div class="level-indicator">
@@ -53,32 +36,28 @@
                 <div class="level-dot"></div>
                 <div class="level-dot"></div>
             </div>
-            <div class="program-quote">
+            <div class="choixprogramme-quote">
                 🧑‍🔬 « Je commence maintenant ! »
             </div>
-            <button class="action-btn" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
-                🚀 Programmes classiques
-            </button>
+            <button class="choixprogramme-button classic">🚀 Programmes classiques</button>
         </div>
 
         <!-- Programme de star -->
-        <div class="program-card premium clickable-card" @onclick="OnProgrammePredefClick">
-            <div class="premium-badge">⭐ Premium</div>
-            <span class="program-icon">⭐</span>
-            <h3 class="program-title"><strong>Programme de star</strong></h3>
-            <p class="program-description">
+        <div class="choixprogramme-card premium" @onclick="OnProgrammePredefClick">
+            <div class="choixprogramme-badge">⭐ Premium</div>
+            <span class="choixprogramme-icon">⭐</span>
+            <h3 class="choixprogramme-card-title"><strong>Programme de star</strong></h3>
+            <p class="choixprogramme-description">
                 T'entraîner comme The Rock, Arnold ou Megan ? Clique, choisis, transpire 💦
             </p>
-            <div class="program-quote">
+            <div class="choixprogramme-quote">
                 🌟 « Fais-moi transpirer comme Brad Pitt dans Snatch »
             </div>
-            <button class="action-btn" style="background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);">
-                💪 Programmes de stars
-            </button>
+            <button class="choixprogramme-button premium">💪 Programmes de stars</button>
         </div>
 
-        <!-- Message de fin -->
-        <div class="bottom-message">
+        <!-- Message motivation -->
+        <div class="choixprogramme-footer">
             🐣 ou 🐉 ? Peu importe ton niveau… choisis ton style et deviens la star de ton propre film d'action 🎬💥
         </div>
 
