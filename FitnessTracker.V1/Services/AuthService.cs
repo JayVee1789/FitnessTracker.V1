@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Supabase;
+using static System.Net.WebRequestMethods;
 
 namespace FitnessTracker.V1.Services
 {
@@ -7,11 +8,13 @@ namespace FitnessTracker.V1.Services
     {
         private readonly Client _supabase;
         private readonly ILocalStorageService _localStorage;
+        private readonly HttpClient _http;
 
-        public AuthService(Client supabase, ILocalStorageService localStorage)
+        public AuthService(Client supabase, ILocalStorageService localStorage, HttpClient http)
         {
             _supabase = supabase;
             _localStorage = localStorage;
+            _http = http;
         }
 
         public bool IsAuthenticated => _supabase.Auth.CurrentUser is not null;
@@ -33,8 +36,9 @@ namespace FitnessTracker.V1.Services
         public async Task SignOutAsync()
         {
             await _supabase.Auth.SignOut();
-            await _localStorage.RemoveItemAsync("access_token");
-            await _localStorage.RemoveItemAsync("refresh_token");
+            await _localStorage.RemoveItemAsync("supabase_session");
+            _http.DefaultRequestHeaders.Remove("Authorization"); // optionnel mais propre
+
         }
 
         public async Task<string> GetCurrentUserRoleAsync()

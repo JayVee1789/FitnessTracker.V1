@@ -1,8 +1,9 @@
 ﻿@page "/mon-profil"
+@using FitnessTracker.V1.Services.Data
 @inject Supabase.Client Supabase
 @inject NavigationManager Nav
 @inject AuthService AuthService
-
+@inject SupabaseService2 SupabaseService
 <div class="session-header">👤 Mon profil sportif</div>
 
 @if (isLoading)
@@ -125,6 +126,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        var restored = await SupabaseService.LoadSessionAsync();
+        Console.WriteLine($"🟢 Session restaurée : {restored}");
         var user = Supabase.Auth.CurrentUser;
         if (user is null)
         {

@@ -211,9 +211,12 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     // }
     protected override async Task OnInitializedAsync()
     {
-
+        
         var restored = await SupabaseService.LoadSessionAsync();
         Console.WriteLine($"🟢 Session restaurée : {restored}");
+        var isLoggedIn = await SupabaseService.EnsureLoggedInAsync(Nav);
+        if (!isLoggedIn)
+            return; // 🔒 Stop ici si pas connecté
         Gamification = await GamificationDbService.GetGamificationAsync();
 
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");

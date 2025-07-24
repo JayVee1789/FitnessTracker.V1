@@ -1,4 +1,6 @@
-﻿namespace FitnessTracker.V1.Models
+﻿using FitnessTracker.V1.Models.Gamification;
+
+namespace FitnessTracker.V1.Models
 {
     public class AppState
     {
@@ -24,7 +26,12 @@
             AfficherEnLb = !AfficherEnLb;
             OnChange?.Invoke();
         }
+
+        public GamificationDbModel? Gamification { get; set; }
     }
+   
+       
+    
 
 
 }

@@ -85,6 +85,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+
         var restored = await SupabaseService.LoadSessionAsync();
         Console.WriteLine($"🟢 Session restaurée : {restored}");
         if (!restored)
@@ -95,10 +96,25 @@ else
         }
 
         var userId = SupabaseService.GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId))
+        {
+            Console.WriteLine("❌ Aucun userId ➡️ redirection");
+            Nav.NavigateTo("/login", true);
+            return;
+        }
         Console.WriteLine($"🟣 UserID récupéré : {userId}");
        
+        Gamification = appState.Gamification;
 
-        Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
+        if (Gamification == null)
+        {
+            Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
+            appState.Gamification = Gamification;
+        }
+
+
+
+       
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))

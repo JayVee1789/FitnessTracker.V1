@@ -1,6 +1,7 @@
 ﻿// FitnessTracker.V1/Services/SupabaseService2.cs
 using Blazored.LocalStorage;
 using FitnessTracker.V1.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using Supabase;
 using Supabase.Interfaces;
@@ -235,6 +236,8 @@ public class SupabaseService2
             var json = JsonSerializer.Serialize(session);
             await _localStorage.SetItemAsync("supabase_session", json);
         }
+        await _localStorage.SetItemAsync("access_token", session.AccessToken);
+        await _localStorage.SetItemAsync("refresh_token", session.RefreshToken);
     }
 
     public async Task<bool> LoadSessionAsync()
@@ -245,12 +248,46 @@ public class SupabaseService2
             var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(json);
             if (session != null)
             {
-                await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
-                return true;
+                try
+                {
+                    var access = await _localStorage.GetItemAsync<string>("access_token");
+                    var refresh = await _localStorage.GetItemAsync<string>("refresh_token");
+
+                    if (!string.IsNullOrEmpty(access) && !string.IsNullOrEmpty(refresh))
+                    {
+                        await _supabase.Auth.SetSession(access, refresh);
+                    }
+                    Console.WriteLine("🟢 Session restaurée avec succès");
+                    return true;
+                }
+                catch (Supabase.Gotrue.Exceptions.GotrueException ex)
+                {
+                    Console.WriteLine($"❌ Session invalide : {ex.Message}");
+                    await _localStorage.RemoveItemAsync("supabase_session");
+                    return false;
+                }
             }
         }
         return false;
     }
+    public async Task<bool> EnsureLoggedInAsync(NavigationManager nav)
+    {
+        var user = _supabase.Auth.CurrentUser;
+
+        if (user != null)
+            return true;
+
+        var restored = await LoadSessionAsync();
+        if (!restored || _supabase.Auth.CurrentUser == null)
+        {
+            Console.WriteLine("🔐 Redirection vers login : utilisateur non connecté.");
+            nav.NavigateTo("/login", forceLoad: true); // adapte ton chemin si besoin
+            return false;
+        }
+
+        return true;
+    }
+
     public string? GetUserId()
     {
         return _supabase.Auth.CurrentUser?.Id;

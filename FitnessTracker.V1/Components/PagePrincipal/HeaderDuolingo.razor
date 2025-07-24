@@ -3,6 +3,7 @@
 @inject AuthService AuthService
 @inject GamificationDbService GamificationDbService
 @inject SupabaseService2 SupabaseService
+@inject FitnessTracker.V1.Models.AppState appState
 
 <div class="duo-header full-width">
     @if (AuthService.IsAuthenticated)
@@ -40,9 +41,18 @@
             var restored = await SupabaseService.LoadSessionAsync();
             Console.WriteLine($"Session restaurée dans Header : {restored}");
         }
+
         if (AuthService.IsAuthenticated && ShowGamification)
         {
-            Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
+            // ✅ Reprend de AppState si dispo
+            Gamification = appState.Gamification;
+
+            if (Gamification == null)
+            {
+                Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
+                appState.Gamification = Gamification;
+                Console.WriteLine("✅ Gamification chargée et stockée dans AppState.");
+            }
         }
     }
 }
