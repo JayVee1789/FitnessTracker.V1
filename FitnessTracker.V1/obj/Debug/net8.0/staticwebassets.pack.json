@@ -49,6 +49,10 @@
       "PackagePath": "staticwebassets\\css\\mobile-native.css"
     },
     {
+      "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\monprofil.css",
+      "PackagePath": "staticwebassets\\css\\monprofil.css"
+    },
+    {
       "Id": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\roadmap.css",
       "PackagePath": "staticwebassets\\css\\roadmap.css"
     },

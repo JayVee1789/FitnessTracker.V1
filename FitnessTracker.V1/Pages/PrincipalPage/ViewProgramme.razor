@@ -91,7 +91,7 @@ else
         if (!restored)
         {
             Console.WriteLine("❌ Session non restaurée ➡️ Redirection vers connexion");
-            Nav.NavigateTo("/login", true);
+            Nav.NavigateTo("/login");
             return;
         }
 
@@ -99,7 +99,7 @@ else
         if (string.IsNullOrEmpty(userId))
         {
             Console.WriteLine("❌ Aucun userId ➡️ redirection");
-            Nav.NavigateTo("/login", true);
+            Nav.NavigateTo("/login");
             return;
         }
         Console.WriteLine($"🟣 UserID récupéré : {userId}");
@@ -125,7 +125,7 @@ else
     {
         await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
        
-        Nav.NavigateTo("/view-seance", true);
+        Nav.NavigateTo("/view-seance");
     }
 
     private async Task OnSupprimerProgramme(ProgrammeModel prog)

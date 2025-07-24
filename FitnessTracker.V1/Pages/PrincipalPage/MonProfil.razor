@@ -4,8 +4,6 @@
 @inject NavigationManager Nav
 @inject AuthService AuthService
 @inject SupabaseService2 SupabaseService
-<div class="session-header">👤 Mon profil sportif</div>
-
 @if (isLoading)
 {
     <div class="duo-card">Chargement de votre profil...</div>
@@ -16,114 +14,197 @@ else if (profile is null)
 }
 else
 {
-    <EditForm Model="profile" OnValidSubmit="SauvegarderProfil">
-        <div class="duo-card">
-            <div class="duo-title">Âge</div>
-            <InputNumber class="form-control" @bind-Value="profile.Age" />
-        </div>
-        <div class="duo-card">
-            <div class="duo-title">Poids (kg)</div>
-            <InputNumber class="form-control" @bind-Value="profile.Poids" />
-        </div>
+    <EditForm Model="profile">
+        <div class="phone-frame">
+            <div class="phone-screen">
 
-        <div class="duo-card">
-            <div class="duo-title">Taille (cm ou format libre)</div>
-            <InputText class="form-control" @bind-Value="profile.Taille" />
-        </div>
-        <div class="duo-card">
-            <div class="duo-title">Sexe</div>
-            <InputSelect class="form-select" @bind-Value="profile.Sexe">
-                <option value="Homme">Homme</option>
-                <option value="Femme">Femme</option>
-                <option value="Autre">Autre</option>
-            </InputSelect>
-        </div>
+                <!-- Header -->
+                <div class="monprofil-header">
+                    <div class="monprofil-header-left">
+                        <button class="monprofil-back-btn">←</button>
+                        <div class="monprofil-header-title">Profil</div>
+                    </div>
+                    <button class="monprofil-save-btn" type="button" @onclick="SauvegarderProfil">Sauvegarder</button>
+                </div>
 
-        <div class="duo-card">
-            <div class="duo-title">Niveau</div>
-            <InputSelect class="form-select" @bind-Value="profile.Level">
-                <option value="Debutant">Débutant</option>
-                <option value="Intermediaire">Intermédiaire</option>
-                <option value="Avance">Avancé</option>
-            </InputSelect>
-        </div>
+                <div class="monprofil-content-scroll">
 
-        <div class="duo-card">
-            <div class="duo-title">Objectif</div>
-            <InputSelect class="form-select" @bind-Value="profile.Objective">
-                <option value="Force">Gagner de la force</option>
-                <option value="Endurance">Travailler son endurance</option>
-                <option value="Hypertrophy">Gagner du muscle</option>
-                <option value="Fat_loss">Perdre du poids</option>
-                <option value="Glutes">Fessiers</option>
-             </InputSelect>
-        </div>
+                   @*  <!-- Avatar -->
+                    <div class="monprofil-avatar-section">
+                        <div class="monprofil-avatar-container">
+                            <div class="monprofil-main-avatar">🏋️‍♂️</div>
+                            <button class="monprofil-avatar-edit-btn">📷</button>
+                        </div>
+                        <div class="monprofil-username">Marie Dupont</div>
+                        <div class="monprofil-level-info">@profile?.Level</div>
+                    </div> *@
 
-        <div class="duo-card">
-            <div class="duo-title">Séances / semaine</div>
-            <InputNumber class="form-control" @bind-Value="profile.SeancesPerWeek" />
-        </div>
+                    <!-- Infos personnelles -->
+                    <div class="monprofil-form-section">
+                        <div class="monprofil-section-title">👤 Informations personnelles</div>
 
-        <div class="duo-card">
-            <div class="duo-title">Durée du programme (mois)</div>
-            <InputNumber class="form-control" @bind-Value="profile.ProgramDurationMonths" />
-        </div>
+                        <div class="monprofil-form-group">
+                            <label class="monprofil-form-label">Âge</label>
+                            <InputNumber class="monprofil-form-input" @bind-Value="profile.Age" />
+                        </div>
 
-        <div class="duo-card">
-            <div class="form-check mb-2">
-                <InputCheckbox class="form-check-input" @bind-Value="profile.WantsSuperset" id="superset" />
-                <label class="form-check-label" for="superset">Utiliser des supersets</label>
+                        <div class="monprofil-dual-input">
+                            <div class="monprofil-form-group">
+                                <label class="monprofil-form-label">Sexe</label>
+                                <InputSelect class="monprofil-form-select" @bind-Value="profile.Sexe">
+                                    <option value="Homme">Homme</option>
+                                    <option value="Femme">Femme</option>
+                                    <option value="Autre">Autre</option>
+                                </InputSelect>
+                            </div>
+                            <div class="monprofil-form-group">
+                                <label class="monprofil-form-label">Unité</label>
+                                <InputSelect class="monprofil-form-select" @bind-Value="profile.Unite">
+                                    <option value="kg">kg</option>
+                                    <option value="lb">lb</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="monprofil-dual-input">
+                            <div class="monprofil-form-group">
+                                <label class="monprofil-form-label">Taille (cm)</label>
+                                <InputText class="monprofil-form-input" @bind-Value="profile.Taille" />
+                            </div>
+                            <div class="monprofil-form-group">
+                                <label class="monprofil-form-label">Poids</label>
+                                <InputNumber class="monprofil-form-input" @bind-Value="profile.Poids" />
+                            </div>
+                        </div>
+
+                        <div class="monprofil-form-group">
+                            <label class="monprofil-form-label">Niveau</label>
+                            <InputSelect class="monprofil-form-select" @bind-Value="profile.Level">
+                                <option value="Debutant">Débutant</option>
+                                <option value="Intermediaire">Intermédiaire</option>
+                                <option value="Avance">Avancé</option>
+                            </InputSelect>
+                        </div>
+
+                        <div class="monprofil-form-group">
+                            <label class="monprofil-form-label">Pathologie musculaire</label>
+                            <InputText class="monprofil-form-input" @bind-Value="profile.PathologieMuscle" />
+                        </div>
+
+                        <div class="monprofil-form-group">
+                            <label class="monprofil-form-label">Muscle prioritaire</label>
+                            <InputText class="monprofil-form-input" @bind-Value="profile.PriorityMuscle" />
+                        </div>
+                    </div>
+
+                    <!-- Objectifs -->
+                    <div class="monprofil-goals-section">
+                        <div class="monprofil-section-title">🎯 Mes objectifs</div>
+
+                        <!-- Objectif -->
+                        <div class="monprofil-goal-item">
+                            <div class="monprofil-goal-info">
+                                <div class="monprofil-goal-icon objectif">⚖️</div>
+                                <div class="monprofil-goal-text">Objectif</div>
+                            </div>
+                            <InputSelect class="monprofil-goal-dropdown" @bind-Value="profile.Objective">
+                                <option value="Force">Gagner de la force</option>
+                                <option value="Endurance">Travailler son endurance</option>
+                                <option value="Hypertrophy">Gagner du muscle</option>
+                                <option value="Fat_loss">Perdre du poids</option>
+                                <option value="Glutes">Fessiers</option>
+                            </InputSelect>
+                        </div>
+
+                        <!-- Séances/semaine -->
+                        <div class="monprofil-goal-item">
+                            <div class="monprofil-goal-info">
+                                <div class="monprofil-goal-icon frequence">📅</div>
+                                <div class="monprofil-goal-text">Fréquence</div>
+                            </div>
+                            <InputSelect class="monprofil-goal-dropdown" @bind-Value="profile.SeancesPerWeek">
+                                @for (int i = 1; i <= 7; i++)
+                                {
+                                    <option value="@i">@i x/semaine</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Durée -->
+                        <div class="monprofil-goal-item">
+                            <div class="monprofil-goal-info">
+                                <div class="monprofil-goal-icon duree">⏱️</div>
+                                <div class="monprofil-goal-text">Durée</div>
+                            </div>
+                            <InputSelect class="monprofil-goal-dropdown" @bind-Value="profile.ProgramDurationMonths">
+                                @for (int m = 1; m <= 3; m++)
+                                {
+                                    <option value="@m">@m mois</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+
+
+                    <!-- Préférences -->
+                    <div class="monprofil-preferences-section">
+                        <div class="monprofil-section-title">⚙️ Préférences</div>
+
+                        <div class="monprofil-preference-item">
+                            <div class="monprofil-preference-info">
+                                <div class="monprofil-preference-icon">🔀</div>
+                                <div class="monprofil-preference-text">Supersets</div>
+                            </div>
+                            <div class="toggle-switch @(profile.WantsSuperset ? "active" : null)" @onclick="() => profile.WantsSuperset = !profile.WantsSuperset">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+
+                        <div class="monprofil-preference-item">
+                            <div class="monprofil-preference-info">
+                                <div class="monprofil-preference-icon">🏃‍♂️</div>
+                                <div class="monprofil-preference-text">Poids du corps</div>
+                            </div>
+                            <div class="toggle-switch @(profile.BodyweightOnly ? "active" : null)" @onclick="() => profile.BodyweightOnly = !profile.BodyweightOnly">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="monprofil-danger-section">
+                        <div class="monprofil-section-title">⚠️ Zone dangereuse</div>
+
+                        <!-- Suppression -->
+                        <button class="monprofil-danger-btn" type="button">Supprimer mon profil</button>
+
+                        <!-- Changement de mot de passe -->
+                        <div class="monprofil-password-card mt-4">
+                            <div class="monprofil-password-title">🔐 Changer mon mot de passe</div>
+
+                            <input type="password" class="monprofil-form-input mt-2" placeholder="Nouveau mot de passe" @bind="newPassword" />
+
+                            <button class="monprofil-save-btn mt-3" type="button" @onclick="ChangePassword">Mettre à jour</button>
+
+                            @if (!string.IsNullOrEmpty(passwordMessage))
+                            {
+                                <div class="monprofil-feedback mt-2">@passwordMessage</div>
+                            }
+                        </div>
+                    </div>
+
+                    
+                </div>
             </div>
-
-            <div class="form-check">
-                <InputCheckbox class="form-check-input" @bind-Value="profile.BodyweightOnly" id="poidscorps" />
-                <label class="form-check-label" for="poidscorps">Poids du corps uniquement</label>
-            </div>
         </div>
-
-        <div class="duo-card">
-            <div class="duo-title">Pathologie musculaire</div>
-            <InputText class="form-control" @bind-Value="profile.PathologieMuscle" />
-        </div>
-
-        <div class="duo-card">
-            <div class="duo-title">Muscle prioritaire</div>
-            <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
-        </div>
-        <div class="duo-card">
-            <div class="duo-title">Unité préférée</div>
-            <InputSelect class="form-select" @bind-Value="profile.Unite">
-                <option value="kg">Kilogrammes (kg)</option>
-                <option value="lb">Livres (lb)</option>
-            </InputSelect>
-        </div>
-        <div class="text-center mt-4">
-            <button class="duo-btn">💾 Sauvegarder</button>
-        </div>
-
-        @if (message is not null)
-        {
-            <div class="motiv-message">@message</div>
-        }
     </EditForm>
-
-    <div class="duo-card mt-4">
-        <div class="duo-title">🔐 Changer mon mot de passe</div>
-        <input type="password" class="form-control mt-2" placeholder="Nouveau mot de passe" @bind="newPassword" />
-        <button class="duo-btn mt-3" @onclick="ChangePassword">Mettre à jour</button>
-
-        @if (!string.IsNullOrEmpty(passwordMessage))
-        {
-            <div class="motiv-message mt-2">@passwordMessage</div>
-        }
-    </div>
-}
+    <!-- Zone dangereuse -->
+} <div class="toast-message @toastClass">@toastMessage</div>
 
 @code {
     private SportProfileModel? profile;
-    private string? message;
+    private string? toastMessage;
     private bool isLoading = true;
-
+    private string toastClass = "";
+    
     protected override async Task OnInitializedAsync()
     {
         var restored = await SupabaseService.LoadSessionAsync();
@@ -178,7 +259,8 @@ else
     {
         if (profile is null) return;
         await Supabase.From<SportProfileModel>().Upsert(profile);
-        message = "✅ Profil sauvegardé avec succès.";
+        toastMessage = "✅ Profil sauvegardé avec succès.";
+
     }
 
     private string newPassword = "";

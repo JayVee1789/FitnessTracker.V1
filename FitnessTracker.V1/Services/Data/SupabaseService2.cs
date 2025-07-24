@@ -281,7 +281,7 @@ public class SupabaseService2
         if (!restored || _supabase.Auth.CurrentUser == null)
         {
             Console.WriteLine("🔐 Redirection vers login : utilisateur non connecté.");
-            nav.NavigateTo("/login", forceLoad: true); // adapte ton chemin si besoin
+            nav.NavigateTo("/login"); // adapte ton chemin si besoin
             return false;
         }
 

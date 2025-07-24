@@ -297,7 +297,7 @@
     {
         if (!AuthService.IsAuthenticated)
         {
-            Nav.NavigateTo("/login", forceLoad: true);
+            Nav.NavigateTo("/login");
             return;
         }
 

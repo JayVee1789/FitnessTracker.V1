@@ -8,6 +8,7 @@ wwwroot\css\components.css
 wwwroot\css\duo-theme.css
 wwwroot\css\layout-core.css
 wwwroot\css\mobile-native.css
+wwwroot\css\monprofil.css
 wwwroot\css\roadmap.css
 wwwroot\css\statsPageStyle.css
 wwwroot\css\style.css
