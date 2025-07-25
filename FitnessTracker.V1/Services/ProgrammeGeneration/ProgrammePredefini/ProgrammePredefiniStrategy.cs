@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using static FitnessTracker.V1.Models.Model;
 
 namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
@@ -8,21 +12,21 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammePredefini
         public static List<string> ProgrammesDisponibles => new()
         {
             "wageningen",
-               "tnation"
+            "10x3"
         };
 
         public static List<ProgrammePredefiniInfo> GetProgrammesInfos() => new()
         {
             new ProgrammePredefiniInfo("Wageningen", 6, "Remise en forme générale pour senior"),
-         new ProgrammePredefiniInfo("tnation", 8, "Programme T-Nation sur 8 semaines")
+            new ProgrammePredefiniInfo("10x3", 8, "Programme de force athlétique")
         };
 
-        public static WorkoutPlan GetProgrammeByName(string nom)
+        public static async Task<WorkoutPlan> GetProgrammeByNameAsync(string nom, HttpClient http, ILocalStorageService localStorage)
         {
             return nom.ToLower() switch
             {
                 "wageningen" => new ProgrammeWageningen().GeneratePlan(),
-                "tnation" => new ProgrammeTnation().GeneratePlan(),
+                "10x3" => await new ProgrammeTnation(http, localStorage).GeneratePlanAsync(),
                 _ => throw new System.Exception($"Programme inconnu : {nom}")
             };
         }

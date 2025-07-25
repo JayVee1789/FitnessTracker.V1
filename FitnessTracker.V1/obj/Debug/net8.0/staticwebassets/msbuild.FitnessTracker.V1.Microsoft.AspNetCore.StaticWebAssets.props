@@ -282,8 +282,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>2bjeozxzdv</Fingerprint>
-      <Integrity>Pq0CPqXJ8HNcC8eGkKZ8dPXoMqU4D/cvKcRHN9Xg0mc=</Integrity>
+      <Fingerprint>0uo554er5f</Fingerprint>
+      <Integrity>CJ5cWJcp6eWi8KIbnLbmX+VQDfWY6pyjR0f/5YPJpEI=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\data\ExercicesListeLocal.json'))</OriginalItemSpec>

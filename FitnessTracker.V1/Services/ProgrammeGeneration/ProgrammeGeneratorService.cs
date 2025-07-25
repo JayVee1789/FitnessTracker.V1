@@ -34,6 +34,7 @@ namespace FitnessTracker.V1.Services.ProgrammeGeneration.ProgrammeClassic
             RegisterStrategy(new ArnoldProgrammeStrategy());
             RegisterStrategy(new CalisthenicsProgrammeStrategy());
             RegisterStrategy(new WageningenProgramme());
+
         }
         public void RegisterStrategy(IProgrammeStrategy strategy)
         {

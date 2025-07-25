@@ -1409,7 +1409,7 @@
   },
   {
     "Id": 177,
-    "Name": "Romanian Deadlift (Barbell)",
+    "Name": "Romanian Deadlift",
     "Category": "Hamstrings/Glutes",
     "Equipment": "Barbell",
     "Description": "Compound",
@@ -3998,5 +3998,13 @@
     "Equipment": "Mini Band",
     "Description": "Compound",
     "Origin": "Conditioning"
+  },
+  {
+    "Id": 501,
+    "Name": "Skull Crushers",
+    "Category": "Triceps",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
   }
 ]

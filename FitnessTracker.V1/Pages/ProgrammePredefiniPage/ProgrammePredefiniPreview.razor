@@ -8,6 +8,8 @@
 @inject Supabase.Client Supabase
 @inject AuthService AuthService
 @inject PoidsService poidsService
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <div class="mobile-container app-main">
     <h2 class="session-header text-center mb-4">🎯 Programme : @Nom.ToUpper()</h2>
@@ -53,6 +55,7 @@
                 </div>
             </div>
         }
+
         <div class="text-center">
             <button class="duo-btn mt-3" @onclick="OpenSaveModal">📥 Enregistrer ce programme</button>
         </div>
@@ -90,14 +93,10 @@
     private string newProgrammeName = "Programme prédéfini";
     private bool showModal = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        plan = Nom.ToLower() switch
-        {
-            "wageningen" => new WageningenProgramme().GeneratePlan(null, null),
-            "tnation" => new ProgrammeTnation().GeneratePlan(),
-            _ => null
-        };
+        plan = await ProgrammePredefiniStrategy.GetProgrammeByNameAsync(Nom, Http, LocalStorage);
+
         newProgrammeName = $"Programme {Nom} ({DateTime.Today:dd/MM})";
     }
 
