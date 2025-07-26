@@ -25,6 +25,8 @@
 @inject ProfileService ProfileService
 @inject FitnessTracker.V1.Models.AppState appState
 @* @inject FitnessTracker.V1.Services.Gamification.GamificationManager Gamification *@
+@inject Supabase.Client Supabase
+@inject ReposJournalDbService ReposJournalDbService
 
 <div class="row gy-2 gx-3 mb-4 px-3">
 
@@ -93,8 +95,8 @@
                         <span class="input-group-text bg-light border-0">@((appState.AfficherEnLb ? "lb" : "kg"))</span>
                         <span class="input-group-text bg-light border-0 fw-bold" style="font-size: 0.85rem;">
                             🎯 @(appState.AfficherEnLb
-                              ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
-                              : $"{Math.Round(ex.Objectif, 1)} kg")
+                               ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                               : $"{Math.Round(ex.Objectif, 1)} kg")
                         </span>
                     </div>
                 </div>
@@ -114,6 +116,46 @@
     <div class="motiv-message">
         Continue comme ça ! Tu vas tout déchirer 💥
     </div>
+}
+else if (jour is not null && jour.IsRest)
+{
+    @if (ActiviteRepos is not null)
+    {
+        <div class="duo-card objectif-atteint mt-4">
+            <div class="w-100">
+                <div class="duo-title mb-2">
+                    <span class="duo-title-text">Jour de repos actif 🧘</span>
+                </div>
+
+                <div class="row gx-3 align-items-end">
+                    <div class="col-7">
+                        <label class="form-label">Activité :</label>
+                        <select class="form-select" @bind="ActiviteRepos.Activite">
+                            <option value="rien">🛌 Rien</option>
+                            <option value="marche">🚶 Marche</option>
+                            <option value="jogging">🏃 Jogging</option>
+                            <option value="vélo">🚴 Vélo</option>
+                            <option value="rameur">🚣 Rameur</option>
+                            <option value="elliptique">🕹️ Elliptique</option>
+                            <option value="escalier">🧗 Escalier</option>
+                            <option value="corde à sauter">🤸 Corde à sauter</option>
+                        </select>
+                    </div>
+
+                    <div class="col-5">
+                        <label class="form-label">Durée (min) :</label>
+                        <input type="number" class="form-control" @bind="ActiviteRepos.DureeMinutes" min="0" max="300" />
+                    </div>
+                </div>
+
+                <div class="duo-objectif text-center mt-3">
+                    ✅ @((ActiviteRepos.Activite == "rien")
+                      ? "Repos complet"
+                      : $"{ActiviteRepos.Activite} pendant {ActiviteRepos.DureeMinutes} min")
+                </div>
+            </div>
+        </div>
+    }
 }
 else
 {
@@ -181,7 +223,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     private string JourLabel => $"Jour {SelectedJourIndex}";
     private GamificationDbModel? Gamification;
     private Chronometre? chronoRef;
-
+    ReposModel? ActiviteRepos = null;
+    WorkoutDay? jour = null;
     // protected override async Task OnInitializedAsync()
     // {
     //     var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
@@ -265,35 +308,24 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
 
     private List<ExerciceJour> Exercises = new();
-
+   
     private async Task ChargerSeance()
     {
         Exercises.Clear();
-
+        ActiviteRepos = null;
         if (SelectedPlan is null || SelectedSemaineIndex >= SelectedPlan.Weeks.Count)
             return;
 
         var week = SelectedPlan.Weeks[SelectedSemaineIndex];
-        var jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
+        jour = week.Days.FirstOrDefault(d => d.DayIndex == SelectedJourIndex);
 
         if (jour == null || jour.IsRest)
         {
-            Exercises = new()
-            {
-                new ExerciceJour
+            ActiviteRepos = new ReposModel
                 {
-                    ExerciseName = "Repos",
-                    Series = 0,
-                    Repetitions = 0,
-                    RestTimeSeconds = 0,
-                    Objectif =0,
-                    Pourcentage1RM = 0,
-                    PoidsUtilisé = 0,
-                    ObjectifAtteint = false,
-                    IsLb = appState.AfficherEnLb,
-
-                }
-            };
+                    Activite = "rien",
+                    DureeMinutes = 0
+                };
         }
         else
         {
@@ -317,6 +349,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
         StateHasChanged();
     }
+   
+    
     private async Task OnProgrammeSelected(ChangeEventArgs e)
     {
         Exercises.Clear();
@@ -375,7 +409,19 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         int minutes = (int)Math.Round(tempsTotal.TotalMinutes);
 
         await SaveEverything();
+        if (ActiviteRepos is not null && !string.IsNullOrWhiteSpace(ActiviteRepos.Activite))
+        {
+            var reposModel = new ReposModel
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    Date = DateTime.Today,
+                    Activite = ActiviteRepos.Activite,
+                    DureeMinutes = ActiviteRepos.DureeMinutes
+                };
 
+            await ReposJournalDbService.SaveReposAsync(reposModel);
+        }
         if (Gamification is null)
         {
             Console.WriteLine("⚠️ Gamification null ➡️ rechargement...");

@@ -69,6 +69,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PoidsService>();
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<GamificationDbService>();
+builder.Services.AddScoped<ReposJournalDbService>();
+
 // ────────────────────────── LOGGING ──────────────────────────────
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 

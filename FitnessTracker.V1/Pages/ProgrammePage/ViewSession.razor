@@ -280,7 +280,8 @@
     List<ExerciseDefinition> allExercises = new();
     private bool SelectedPlanAvailable => SelectedPlan is not null;
     private List<string> SeancesCompletes = new(); // ex: "progId:sem:jour"
-
+    ReposModel? ActiviteRepos = null;
+    WorkoutDay? jour = null;
     private string toastMessage = "";
     private string toastClass = "";
 

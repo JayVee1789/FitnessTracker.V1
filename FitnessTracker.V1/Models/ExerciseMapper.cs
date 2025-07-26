@@ -21,7 +21,8 @@ namespace FitnessTracker.V1.Mapping
                 IsSuperset = session.IsSuperset,
                 PoidsUtilisé = poidsKg,
                 //Objectif = poidsKg * (1 + session.Pourcentage1RM / 100.0),
-                Objectif = ObjectifService.DefinirObjectif(poidsKg),
+                //Objectif = ObjectifService.DefinirObjectif(poidsKg),
+                Objectif = ObjectifService.DefinirObjectif2(poidsKg, ObjectifService.EpleyPercentageWithRIR(session.Repetitions, 2)),
                 IsLb = afficherEnLb
                 
             };

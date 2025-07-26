@@ -1163,6 +1163,6 @@ C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\refint\FitnessTracker.V1.dll
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\FitnessTracker.V1.pdb
 C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\ref\FitnessTracker.V1.dll
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-i0ii389e4p.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-m3s7qpodvy.gz
-C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-a5iu4ypr7g.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\d72ztarqsa-22330kyeei.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\u4pa4pv044-qhrxyxwen1.gz
+C:\Users\jvere\source\repos\FitnessTracker.V1\FitnessTracker.V1\obj\Debug\net8.0\compressed\hqswnw7wg4-58ssbggbod.gz

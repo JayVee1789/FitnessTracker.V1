@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "FitnessTracker.V1",
   "resources": {
-    "hash": "sha256-nrOm6bjDhOsHgIdUjVot4K72+ncX5hLgTDHtccqjKBk=",
+    "hash": "sha256-0vLQ39uuDFBB8lzJwp5uWNgt0YKQcizbspvHolvPSkE=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-DTUQS6Jc6BNnS7sYYezFfaUKVmQq0/lanhQuJfygH/k="
     },
@@ -233,10 +233,10 @@
       "mscorlib.wasm": "sha256-8L4O6tiH48gEZfzf0Y84J01S+3eEG59Bo5bfpH2H+9Y=",
       "netstandard.wasm": "sha256-sEvS/ZjfGhf1dLglmk72ysM50loOygjujJ/J5OhFLEw=",
       "System.Private.CoreLib.wasm": "sha256-BhHYDTpkph+YJOQuAlv6aSrvjTVX0WLTIDBXecinFXo=",
-      "FitnessTracker.V1.wasm": "sha256-TsEpRwn7LLb492SMik3CvvTwvtnNX/bgp0vJbiV1e4A="
+      "FitnessTracker.V1.wasm": "sha256-OqKkKKLAK8tqQdvuD3z07mI1FrSVWSPbge48s3fuJX4="
     },
     "pdb": {
-      "FitnessTracker.V1.pdb": "sha256-/ld8wE5Gz4G/60i+NPcA0Xj80z3vaeoc2/LY+hQ0tdc="
+      "FitnessTracker.V1.pdb": "sha256-kvAcvxXmR+GzU3BEkvq/CY3R8gY95SKt6l6s5yBVQUY="
     }
   },
   "cacheBootResources": true,

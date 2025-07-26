@@ -46,6 +46,11 @@
         {
             return poidsEnregistrer * 1.025;
         }
+        public static double DefinirObjectif2(double poidsEnregistrer, double pourcentageRM)
+        {
 
+
+            return poidsEnregistrer * (pourcentageRM / 100);
+        }
     }
 }
