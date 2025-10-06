@@ -96,7 +96,8 @@ namespace FitnessTracker.V1.Services
                 TotalXP = 0,
                 TotalTrainingTimeMinutes = 0,
                 StreakDays = 0,
-                LastSessionDate = DateTime.UtcNow
+                LastSessionDate = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow
             };
 
             await UpdateGamificationAsync(gamification);
@@ -136,7 +137,9 @@ namespace FitnessTracker.V1.Services
                 ["total_training_time_minutes"] = gamification.TotalTrainingTimeMinutes,
                 ["total_calories_burned"] = gamification.TotalCaloriesBurned,
                 ["best_lift_record"] = gamification.BestLiftRecord,
-                ["best_walking_distance"] = gamification.BestWalkingDistance
+                ["best_walking_distance"] = gamification.BestWalkingDistance,
+                ["created_at"] = DateTime.UtcNow,
+                ["streak_max"] = saveStreakMax(gamification.StreakDays, gamification.StreakMax)
             };
 
             var content = new StringContent(
@@ -156,6 +159,30 @@ namespace FitnessTracker.V1.Services
 
             return res.IsSuccessStatusCode;
         }
+
+
+        private int? saveStreakMax(int streak, int? streakmax)
+        {
+            //au cas ou la personne viens de commencer
+            if(streakmax == null)
+            {
+                streakmax = 0;
+            }
+
+            int? beststreak = 0;
+            if (streak > streakmax)
+            {
+                beststreak = streak;
+            }
+            else
+            {
+                beststreak = streakmax;
+            }
+
+            return beststreak; 
+        }
+
+
 
     }
 }

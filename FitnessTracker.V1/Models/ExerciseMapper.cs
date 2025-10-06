@@ -1,6 +1,7 @@
-﻿using FitnessTracker.V1.Models.FitnessTracker.V1.Models;
+﻿using FitnessTracker.V1.Models;
 using FitnessTracker.V1.Services;
 using static FitnessTracker.V1.Models.Model;
+
 
 namespace FitnessTracker.V1.Mapping
 {

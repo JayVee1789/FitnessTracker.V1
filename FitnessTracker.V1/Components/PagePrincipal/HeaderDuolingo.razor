@@ -15,7 +15,14 @@
         @if (Gamification != null)
         {
             <div class="level-badge">Niv. @Gamification.TotalXP XP</div>
-            <div class="streak-badge">🔥 @Gamification.StreakDays jours</div>
+
+           
+            <div class="streak-badge">
+                🔥 @(EstDansLesDeuxDerniersJours(Gamification.CreatedAt)
+                 ? $"{Gamification.StreakDays} jours"
+                 : "0 jours")
+            </div>
+
         }
 
         <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
@@ -54,5 +61,21 @@
                 Console.WriteLine("✅ Gamification chargée et stockée dans AppState.");
             }
         }
+
     }
+
+
+
+    public static bool EstDansLesDeuxDerniersJours(DateTime? date)
+    {
+        // On compare avec la date actuelle en UTC pour cohérence
+        DateTime? maintenant = DateTime.UtcNow;
+
+        // Calcule la différence
+        TimeSpan? diff = maintenant - date;
+
+        // Vérifie si la date est dans les deux derniers jours
+        return diff.Value.Days <= 2 ;
+    }
+
 }

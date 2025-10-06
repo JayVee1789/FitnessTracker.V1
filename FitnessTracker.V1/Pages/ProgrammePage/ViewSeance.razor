@@ -1,6 +1,6 @@
 ﻿@page "/view-seance"
 @using FitnessTracker.V1.Models
-@using FitnessTracker.V1.Models.FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models.Gamification
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Services.Data
@@ -94,9 +94,10 @@
                         @oninput="e => SetPoidsEtSale(e, ex)" />
                         <span class="input-group-text bg-light border-0">@((appState.AfficherEnLb ? "lb" : "kg"))</span>
                         <span class="input-group-text bg-light border-0 fw-bold" style="font-size: 0.85rem;">
-                            🎯 @(appState.AfficherEnLb
-                               ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
-                               : $"{Math.Round(ex.Objectif, 1)} kg")
+                            
+                                🎯 @(appState.AfficherEnLb
+                                 ? $"{Math.Round(ex.Objectif / 0.453592, 1)} lb"
+                                 : $"{Math.Round(ex.Objectif, 1)} kg")
                         </span>
                     </div>
                 </div>
@@ -121,7 +122,7 @@ else if (jour is not null && jour.IsRest)
 {
     @if (ActiviteRepos is not null)
     {
-        <div class="duo-card objectif-atteint mt-4">
+        <div class="duo-card mt-4">
             <div class="w-100">
                 <div class="duo-title mb-2">
                     <span class="duo-title-text">Jour de repos actif 🧘</span>
@@ -150,10 +151,13 @@ else if (jour is not null && jour.IsRest)
 
                 <div class="duo-objectif text-center mt-3">
                     ✅ @((ActiviteRepos.Activite == "rien")
-                      ? "Repos complet"
-                      : $"{ActiviteRepos.Activite} pendant {ActiviteRepos.DureeMinutes} min")
+                          ? "Repos complet"
+                          : $"{ActiviteRepos.Activite} pendant {ActiviteRepos.DureeMinutes} min")
                 </div>
             </div>
+        </div>
+        <div class="text-center mt-4">
+            <button class="duo-btn px-5 py-2 fs-5" @onclick="OnSessionTerminee">Session terminée 🎉</button>
         </div>
     }
 }
@@ -225,36 +229,12 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     private Chronometre? chronoRef;
     ReposModel? ActiviteRepos = null;
     WorkoutDay? jour = null;
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
-    //     if (!string.IsNullOrEmpty(data))
-    //     {
-    //         SeancesCompletes = data.Split(',').ToList();
-    //         Console.WriteLine($"✅ Séances complètes récupérées : {SeancesCompletes.Count}");
-    //     }
-    //     var programmeId = await LocalStorage.GetItemAsync<Guid>("selectedProgrammeId");
-    //     if (programmeId != Guid.Empty)
-    //     {
-    //         var restored = await SupabaseService.LoadSessionAsync();
-    //         Console.WriteLine($"🟢 Session restaurée : {restored}");
-    //         var userId = SupabaseService.GetCurrentUserId();
-    //         Console.WriteLine($"🟣 UserID récupéré : {userId}");
+    
 
-    //         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
-    //         var programme = Programmes.FirstOrDefault(p => p.Id == programmeId);
-    //         if (programme != null)
-    //         {
-    //             SelectedProgrammeId = programmeId;
-    //             SelectedProgrammeDate = programme.DateDebut;
-    //             SelectedPlan = JsonSerializer.Deserialize<WorkoutPlan>(programme.Contenu);
-    //             await ChargerSeance();
-    //         }
-    //     }
-    // }
+
     protected override async Task OnInitializedAsync()
     {
-        
+
         var restored = await SupabaseService.LoadSessionAsync();
         Console.WriteLine($"🟢 Session restaurée : {restored}");
         var isLoggedIn = await SupabaseService.EnsureLoggedInAsync(Nav);
@@ -276,7 +256,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             return;
         }
 
-       
+
         var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
         if (userGuid == null)
         {
@@ -308,7 +288,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
 
     private List<ExerciceJour> Exercises = new();
-   
+
     private async Task ChargerSeance()
     {
         Exercises.Clear();
@@ -349,8 +329,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
         StateHasChanged();
     }
-   
-    
+
+
     private async Task OnProgrammeSelected(ChangeEventArgs e)
     {
         Exercises.Clear();
@@ -404,7 +384,13 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
     private async Task OnSessionTerminee()
     {
         chronoRef?.StopChronoFromParent(); // stoppe au cas où
+        var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
 
+        if (userGuid == null)
+        {
+            Console.WriteLine("❌ Utilisateur non connecté ou ID invalide.");
+            return;
+        }
         var tempsTotal = chronoRef?.ElapsedTime ?? TimeSpan.Zero;
         int minutes = (int)Math.Round(tempsTotal.TotalMinutes);
 
@@ -414,13 +400,20 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             var reposModel = new ReposModel
                 {
                     Id = Guid.NewGuid(),
-                    UserId = userId,
+                    UserId = userGuid.Value,
                     Date = DateTime.Today,
                     Activite = ActiviteRepos.Activite,
                     DureeMinutes = ActiviteRepos.DureeMinutes
                 };
-
-            await ReposJournalDbService.SaveReposAsync(reposModel);
+            try
+            {
+                await ReposJournalDbService.SaveReposAsync(reposModel);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+           
         }
         if (Gamification is null)
         {
@@ -442,6 +435,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         Console.WriteLine($"✅ Session sauvegardée - durée : {minutes} min");
         StateHasChanged();
     }
+
 
 
 
@@ -494,7 +488,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         }
         var guidUserId = Guid.Parse(userId);
 
-        ex.ObjectifAtteint = poidsSaisiKg >= ex.Objectif;
+        ex.ObjectifAtteint = (int)Math.Round(poidsSaisiKg) >= ex.Objectif;
         var local = new PoidsEntryLocal
             {
                 Id = Guid.NewGuid(),
@@ -686,6 +680,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             ex.PoidsAffiche = val; // ça déclenche le setter ⇒ isDirty
         }
     }
+
     private async Task OnSemaineChanged(ChangeEventArgs e)
     {
         SelectedSemaineIndex = int.Parse(e.Value?.ToString() ?? "0");

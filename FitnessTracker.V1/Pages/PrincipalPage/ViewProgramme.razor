@@ -15,7 +15,7 @@
         <div class="greeting-text">Salut 👋</div>
         <div class="greeting-subtext">Prêt pour ton entraînement ?</div>
     </div> *@
-<FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo/>
+<FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo />
 <div class="section-container">
     <div class="section-title">📚 Mes Programmes</div>
 </div>
@@ -45,38 +45,38 @@ else
 
 
             <div class="program-card" @onclick="@(() => LancerSeance(prog.Id))">
-                    <button class="delete-btn"
-                            @onclick="@(() => OnSupprimerProgramme(prog))"
-                    @onclick:stopPropagation>
-                        🗑️
-                    </button>
+                <button class="delete-btn"
+                @onclick="@(() => OnSupprimerProgramme(prog))"
+                @onclick:stopPropagation>
+                    🗑️
+                </button>
 
-                    <div class="card-header strength">💪</div>
-                    <div class="card-title">@prog.Nom</div>
+                <div class="card-header strength">💪</div>
+                <div class="card-title">@prog.Nom</div>
 
-                    <div class="card-stats">
+                <div class="card-stats">
 
 
 
 
                     <span class="stat-bubble">📅 @datedebutformate</span>
-                        <span class="stat-bubble">📆 @(plan?.TotalWeeks ?? 0) sem.</span>
-                        <span class="stat-bubble">🎯 @totalSeances séances</span>
-                    </div>
+                    <span class="stat-bubble">📆 @(plan?.TotalWeeks ?? 0) sem.</span>
+                    <span class="stat-bubble">🎯 @totalSeances séances</span>
+                </div>
 
-                    <div class="progress-section">
-                        <div class="progress-text">@seancesCompletes.Count/@totalSeances terminées</div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width:@(progressPercent)%"></div>
-                        </div>
+                <div class="progress-section">
+                    <div class="progress-text">@seancesCompletes.Count/@totalSeances terminées</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width:@RemplirBarre(totalSeances,seancesCompletes.Count)%"></div>
                     </div>
                 </div>
-            }
-        </div>
-    }
+            </div>
+        }
+    </div>
+}
 
 <button class="floating-add" @onclick="@(() => Nav.NavigateTo("/choix-programme"))">+</button>
-@* </div> *@
+
 
 @code {
     private List<ProgrammeModel> Programmes = new();
@@ -103,7 +103,7 @@ else
             return;
         }
         Console.WriteLine($"🟣 UserID récupéré : {userId}");
-       
+
         Gamification = appState.Gamification;
 
         if (Gamification == null)
@@ -114,7 +114,7 @@ else
 
 
 
-       
+
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
         var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
         if (!string.IsNullOrEmpty(data))
@@ -124,7 +124,7 @@ else
     private async Task LancerSeance(Guid programmeId)
     {
         await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
-       
+
         Nav.NavigateTo("/view-seance");
     }
 
@@ -134,5 +134,19 @@ else
         await LocalStorage.RemoveItemAsync($"programme_{prog.Id}");
         Programmes.Remove(prog);
         StateHasChanged();
+    }
+
+    private string RemplirBarre(int TotalDone, int Completed)
+    {
+        string resultat = "";
+        if(TotalDone > 0)
+        {
+            resultat = Math.Min(100, Math.Round((double)Completed * 100 / TotalDone)) + "%";
+        }
+        else
+        {
+            resultat = "0%";
+        }
+        return resultat;
     }
 }

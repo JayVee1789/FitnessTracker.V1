@@ -18,64 +18,12 @@
 }
 
 <div class="d-flex flex-column min-vh-100">
-    <!-- HEADER DUOLINGO STYLE -->
-    @* <div class="duo-header">
-        <div class="profile-section">
-            <div class="profile-avatar">👤</div>
-            @if (Gamification?.State != null)
-            {
-                <div class="level-badge">Niv. @Gamification.State.Level</div>
-            }
-        </div>
-        <div class="streak-badge">🔥 5 jours</div>
-        @if (Gamification != null)
-            {
-
-          <div class="streak-badge">🔥 @Gamification.State.Streak jours</div>
-
-            }
-
-
-
-        @if (AuthService.IsAuthenticated)
-        {
-            <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
-                <i class="bi bi-box-arrow-right"></i>
-            </a>
-        }
-        else
-        {
-            <a class="btn btn-light btn-sm" href="/login" title="Se connecter">
-                <i class="bi bi-box-arrow-in-right"></i>
-            </a>
-        }
-    </div> *@
-    @* <FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo></FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo> *@
+   
     <main class="app-main">
         @Body
     </main>
     <BottomNavDuolingo />
-    @* @if (AuthService.IsAuthenticated)
-    {
-        <div class="bottom-nav">
-            <NavLink href="/view-prog" class="nav-item" Match="NavLinkMatch.All">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Accueil</div>
-            </NavLink>
-            <NavLink href="/analyse" class="nav-item">
-                <div class="nav-icon">📊</div>
-                <div class="nav-label">Stats</div>
-            </NavLink>
-            <NavLink href="/choix-programme" class="nav-item">
-                <div class="nav-icon">🎯</div>
-                <div class="nav-label">Objectifs</div>
-            </NavLink>
-            <NavLink href="/mon-profil" class="nav-item">
-                <div class="nav-icon">👤</div>
-                <div class="nav-label">Profil</div>
-            </NavLink>
-        </div>
-    } *@
+  
 </div>
 
 <Modal IsServiceModal="true" />
@@ -84,16 +32,6 @@
     private bool _updateAvailable = false;
     private string role = "user";
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     // if (!AuthService.IsAuthenticated)
-    //     // {
-    //     //     var restored = await SupabaseService.LoadSessionAsync();
-    //     //     Console.WriteLine($"🟢 Session restaurée dans layout : {restored}");
-    //     // }
-
-    //     // Gamification = await GamificationDbService.GetGamificationAsync();
-    // }
     protected override async Task OnInitializedAsync()
     {
         var isReset = await LocalStorage.GetItemAsync<bool>("poids_reset_done");

@@ -3,8 +3,7 @@ using FitnessTracker.V1.Models;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Components;
 
-namespace FitnessTracker.V1.Models
-{
+
     namespace FitnessTracker.V1.Models
     {
         public class ExerciceJour
@@ -79,4 +78,4 @@ namespace FitnessTracker.V1.Models
         }
     }
 
-}
+

@@ -1,236 +1,212 @@
-﻿@page "/analyse2"
-@using FitnessTracker.V1.Models
-@using FitnessTracker.V1.Services
-@using FitnessTracker.V1.Components
-@using BlazorBootstrap
+﻿@page "/analyse"
+@using FitnessTracker.V1.Components.Graphique
+@using FitnessTracker.V1.Models.Gamification
+@using FitnessTracker.V1.Services.Data
 @inject PoidsService PoidsService
 @inject ProgrammeService ProgService
+@inject GamificationDbService GamificationDbService
+@inject ProfileService profileService
+@inject SupabaseService2 SupabaseService
+@inject Supabase.Client Supabase
+@using FitnessTracker.V1.Services
+@inject IJSRuntime JSRuntime
 
-<div class="session-header">Analyse des Performances</div>
 
-@if (analyse is null)
-{
-    <div class="motiv-message">Chargement de tes progrès…</div>
-}
-else
-{
-    <div class="d-flex flex-wrap justify-content-center">
 
-        @* Carte Duo pour chaque graphique *@
-        <div class="thumb-container" @onclick="ShowLineModal">
-            <div class="duo-card">
-                <i class="bi bi-bar-chart-line" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Progression du poids</div>
-                    <div class="duo-objectif">Voir l’évolution</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="thumb-container" @onclick="ShowFreqModal">
-            <div class="duo-card">
-                <i class="bi bi-calendar-week" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Séances / semaine</div>
-                    <div class="duo-objectif">Suivre ta régularité</div>
-                </div>
-            </div>
-        </div>
-@* 
-        <div class="thumb-container" @onclick="ShowRadarModal">
-            <div class="duo-card">
-                <i class="bi bi-graph-up-arrow" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Radar</div>
-                    <div class="duo-objectif">Forces et faiblesses</div>
-                </div>
-            </div>
-        </div> *@
-
-       @*  <div class="thumb-container" @onclick="ShowBmiModal">
-            <div class="duo-card">
-                <i class="bi bi-activity" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">IMC</div>
-                    <div class="duo-objectif">Suivi santé</div>
-                </div>
-            </div>
-        </div> *@
-
-        @* <div class="thumb-container" @onclick="ShowProgModal">
-            <div class="duo-card">
-                <i class="bi bi-calendar3" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Timeline</div>
-                    <div class="duo-objectif">Vision du programme</div>
-                </div>
-            </div>
-        </div> *@
-
-        @* <div class="thumb-container" @onclick="ShowPieModal">
-            <div class="duo-card">
-                <i class="bi bi-pie-chart" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Muscles</div>
-                    <div class="duo-objectif">Répartition entraînée</div>
-                </div>
-            </div>
-        </div> *@
-
-        <div class="thumb-container" @onclick="ShowPrModal">
-            <div class="duo-card">
-                <i class="bi bi-trophy" style="font-size:2rem;color:#1CB0F6;"></i>
-                <div>
-                    <div class="duo-title-text">Records</div>
-                    <div class="duo-objectif">Tes PR 🏆</div>
-                </div>
-            </div>
-        </div>
-
+<div class="app-main">
+    <div class="section-header d-flex justify-content-between align-items-center">
+        📊 Statistiques
+        <span class="badge bg-orange text-white">7 jours</span>
     </div>
-}
 
-@* Modals inchangés, conservés pour compatibilité *@
+    <div class="main-stats mb-3">
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon streak">🔥</div>
+            <div class="stat-value">@getNbStreakDay()</div>
+            <div class="stat-label">Jours consécutifs</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon total">💪</div>
+            <div class="stat-value">@getNbSeanceTotal()</div>
+            <div class="stat-label">Séances totales</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon time">⏱️</div>
+            <div class="stat-value">@getTempsTotal()</div>
+            <div class="stat-label">Temps d'exercice</div>
+        </div>
+        <div class="duo-card text-center flex-column">
+            <div class="stat-icon calories">🔥</div>
+            <div class="stat-value">@GetTotalCalorie()</div>
+            <div class="stat-label">Calories brûlées</div>
+        </div>
+    </div>
 
-<Modal @ref="lineModal" Size="ModalSize.Large" OnShownAsync="OnLineModalShown">
-    <HeaderTemplate><h5>Progression du poids</h5></HeaderTemplate>
-    <BodyTemplate>
-        <GraphiqueLine @ref="largeLineChart"
-                       Entries="entries"
-                       Analyse="analyse"
-                       Width="400" Height="400" />
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HideLineModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+    <div class="section-header">📈 Progression hebdomadaire</div>
+    <div class="duo-card">
+        <div class="w-100 text-center mb-2 fw-bold">Séances par jour</div>
+        <div class="d-flex justify-content-around w-100">
+            @foreach (var jour in Jours)
+            {
+                <div class="d-flex flex-column align-items-center">
+                    <div class="rounded-pill bg-success" style="width:20px; height:@jour.Height%;"></div>
+                    <div style="font-size: 0.8rem;">@jour.Label</div>
+                </div>
+            }
+        </div>
+    </div>
 
-<Modal @ref="freqModal" Size="ModalSize.Large" OnShownAsync="OnFreqModalShown">
-    <HeaderTemplate><h5>Séances par semaine</h5></HeaderTemplate>
-    <BodyTemplate>
-        <WorkoutFrequencyBar @ref="largeFreqChart"
-                             Entries="entries"
-                             Width="400" Height="400" />
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HideFreqModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+    <div class="section-header">🏆 Records</div>
+    <div class="records-grid">
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">🏋️ Poids max : 85kg</div>
+            <PrTracker Entries="entries" />
 
-<Modal @ref="radarModal" Size="ModalSize.Large" OnShownAsync="OnRadarModalShown">
-    <HeaderTemplate><h5>Radar Forces/Faiblesses</h5></HeaderTemplate>
-    <BodyTemplate>
-        <StrengthRadar @ref="largeRadarChart"
-                       Entries="entries"
-                       Analyse="analyse"
-                       Width="400" Height="400" />
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HideRadarModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
 
-<Modal @ref="bmiModal" Size="ModalSize.Small" OnShownAsync="OnBmiModalShown">
-    <HeaderTemplate><h5>Indice de Masse Corporelle</h5></HeaderTemplate>
-    <BodyTemplate>
-        <BmiGauge @ref="largeBmiGauge"
-                  WeightKg="@(entries.LastOrDefault()?.Poids ?? 0)"
-                  HeightCm="178"
-                  Width="400" Height="400" />
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HideBmiModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+        </div>
 
-<Modal @ref="progModal" Size="ModalSize.Large" OnShownAsync="OnProgModalShown">
-    <HeaderTemplate><h5>Timeline du programme</h5></HeaderTemplate>
-    <BodyTemplate>
-        @if (currentProg is not null)
-        {
-            <ProgrammeTimeline @ref="largeProgTimeline"
-                               Programme="currentProg"
-                               DurationWeeks="8"
-                               Width="400"
-                               Height="250" />
-        }
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HideProgModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">🏃 Longue course : 12.5km</div>
+        </div>
 
-<Modal @ref="pieModal" Size="ModalSize.Small" OnShownAsync="OnPieModalShown">
-    <HeaderTemplate><h5>Répartition des muscles</h5></HeaderTemplate>
-    <BodyTemplate>
-        <MuscleSplitPie @ref="largePieChart"
-                        Entries="entries"
-                        Definitions="exerciseDefs" />
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HidePieModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+        <div class="duo-card flex-column text-center">
+            <div class="fw-bold">⏱️ Séance longue : 90 min</div>
+        </div>
+    </div>
 
-<Modal @ref="prModal" Size="ModalSize.Regular" OnShownAsync="OnPrModalShown">
-    <HeaderTemplate><h5>Records personnels</h5></HeaderTemplate>
-    <BodyTemplate>
-    @*     <PrTracker @ref="largePrChart"
-                   Entries="entries"
-                   Width="380" Height="400" /> *@
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button class="duo-btn" @onclick="HidePrModal">Fermer</Button>
-    </FooterTemplate>
-</Modal>
+
+
+    <div class="section-header">🎖️ Badges débloqués</div>
+    <div class="achievements-grid">
+        <div class="achievement-badge unlocked">🔥</div>
+        <div class="achievement-badge unlocked">💪</div>
+        <div class="achievement-badge unlocked">🎯</div>
+    </div>
+    <!-- ✅ BADGES OBTENUS -->
+    <!-- ✅ BADGES OBTENUS -->
+    @* @if (gamificationDbModel.Badges?.Any() == true)
+    {
+        <div class="badge-section mb-4">
+            <h4>🏅 Badges débloqués</h4>
+            <div class="d-flex flex-wrap gap-3 mt-3">
+                @foreach (var badge in gamificationDbModel.Badges)
+                {
+                    <Badge Color="BadgeColor.Warning" class="me-2">
+                        <i class="@badge.Icon me-1"></i> @badge.Title
+                    </Badge>
+                }
+            </div>
+        </div>
+    } *@
+    @if (gamificationDbModel?.Badges?.Any() == true)
+    {
+        <div class="section-header">🎖️ Badges débloqués</div>
+        <div class="achievements-grid">
+            @foreach (var badge in gamificationDbModel.Badges)
+            {
+                <div class="achievement-badge unlocked">@badge.Emoji <br /> @badge.Title</div>
+            }
+        </div>
+    }
+</div>
 
 @code {
+    List<(string Label, int Height)> Jours = new()
+    {
+        ("L", 60), ("M", 40), ("M", 80), ("J", 100), ("V", 70), ("S", 90), ("D", 30)
+    };
     private List<PoidsEntry> entries = new();
-    private PoidsAnalysisResult? analyse;
-    private ProgrammeModel? currentProg;
-    private List<ExerciseDefinition> exerciseDefs = new();
-
-    private Modal lineModal, freqModal, radarModal,
-                  bmiModal, progModal, pieModal, prModal;
-
-    private GraphiqueLine largeLineChart;
-    private WorkoutFrequencyBar largeFreqChart;
-    private StrengthRadar largeRadarChart;
-    private BmiGauge largeBmiGauge;
-    private ProgrammeTimeline largeProgTimeline;
-    private MuscleSplitPie largePieChart;
-    // private PrTracker largePrChart;
+    private GamificationDbModel? gamificationDbModel;
+    UserProfile profile = new();
+    private SportProfileModel sportProfileModel = new();
 
     protected override async Task OnInitializedAsync()
     {
+        var restored = await SupabaseService.LoadSessionAsync();
+        Console.WriteLine($"🟢 Session restaurée : {restored}");
+
         entries = await PoidsService.GetEntriesAsync();
-        analyse = PoidsAnalyzer.Analyser(entries);
-        currentProg = await ProgService.GetCurrentAsync();
-        var defs = await ProgService.GetExerciseDefinitionsAsync();
-        exerciseDefs = defs ?? new List<ExerciseDefinition>();
-        Console.WriteLine($"[Analyse] exerciseDefs.Count = {exerciseDefs.Count}");
+        gamificationDbModel = await GamificationDbService.GetOrCreateGamificationAsync();
+        profile = await profileService.GetOrCreateUserProfileAsync();
+
+        sportProfileModel = await GetSportProfile();
+
+        if (gamificationDbModel != null)
+        {
+            BadgeService.InjectServices(JSRuntime, SupabaseService);
+            await BadgeService.VerifierBadgesAsync(gamificationDbModel);
+        }
     }
 
-    private Task ShowLineModal() => lineModal.ShowAsync();
-    private Task HideLineModal() => lineModal.HideAsync();
-    private Task ShowFreqModal() => freqModal.ShowAsync();
-    private Task HideFreqModal() => freqModal.HideAsync();
-    private Task ShowRadarModal() => radarModal.ShowAsync();
-    private Task HideRadarModal() => radarModal.HideAsync();
-    private Task ShowBmiModal() => bmiModal.ShowAsync();
-    private Task HideBmiModal() => bmiModal.HideAsync();
-    private Task ShowProgModal() => progModal.ShowAsync();
-    private Task HideProgModal() => progModal.HideAsync();
-    private Task ShowPieModal() => pieModal.ShowAsync();
-    private Task HidePieModal() => pieModal.HideAsync();
-    private Task ShowPrModal() => prModal.ShowAsync();
-    private Task HidePrModal() => prModal.HideAsync();
 
-    private Task OnLineModalShown() => largeLineChart.RefreshAsync();
-    private Task OnFreqModalShown() => largeFreqChart.RefreshAsync();
-    private Task OnRadarModalShown() => largeRadarChart.RefreshAsync();
-    private Task OnBmiModalShown() => largeBmiGauge.RefreshAsync();
-    private Task OnProgModalShown() => largeProgTimeline.RefreshAsync();
-    private Task OnPieModalShown() => largePieChart.RefreshAsync();
-    // private Task OnPrModalShown() => largePrChart.RefreshAsync();
+    private int getNbStreakDay()
+    {
+        return gamificationDbModel?.StreakDays ?? 0;
+    }
+
+    private int getNbSeanceTotal()
+    {
+        return gamificationDbModel?.TotalSeances ?? 0;
+    }
+
+    private string getTempsTotal()
+    {
+        int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
+        return FormatMinutesLisible(totalMinutes);
+    }
+
+    public static string FormatMinutesLisible(int totalMinutes)
+    {
+        var temps = TimeSpan.FromMinutes(totalMinutes);
+        int jours = (int)temps.TotalDays;
+        int heures = temps.Hours;
+        int minutes = temps.Minutes;
+
+        List<string> parties = new();
+
+        if (jours > 0)
+            parties.Add($"{jours}j");
+        if (heures > 0)
+            parties.Add($"{heures}h");
+        if (minutes > 0 || parties.Count == 0)
+            parties.Add($"{minutes}mn");
+
+        return string.Join(" ", parties);
+    }
+
+    public double GetTotalCalorie()
+    {
+        int totalMinutes = gamificationDbModel?.TotalTrainingTimeMinutes ?? 0;
+        return CalculerCalories(totalMinutes, 6.5, sportProfileModel.Poids);
+    }
+
+
+    public static double CalculerCalories(int dureeMinutes, double met, double poidsKg)
+    {
+
+        double calories = dureeMinutes * met * poidsKg * 0.0175;
+        return Math.Round(calories, 1); // arrondi à une décimale
+    }
+
+    private async Task<SportProfileModel> GetSportProfile()
+    {
+        var user = SupabaseService.GetCurrentUserId();
+
+        var results = await Supabase
+                .From<SportProfileModel>()
+                .Where(x => x.Id == user)
+                .Get();
+
+        var profile = results.Models.FirstOrDefault();
+
+
+        return profile;
+
+    }
+
+    // private int getCourseTotal()
+    // {
+    //     return gamificationDbModel.
+    // }
+
 }

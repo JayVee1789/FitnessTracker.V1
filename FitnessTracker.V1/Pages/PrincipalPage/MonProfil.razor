@@ -99,6 +99,12 @@ else
                         </div>
                     </div>
 
+                    <!-- GEstion Max-->
+                    <div>
+                        <div> feuille des max</div>
+                        <button @onclick="GoFeuilleMax"> remplir ses max</button>
+                    </div>
+
                     <!-- Objectifs -->
                     <div class="monprofil-goals-section">
                         <div class="monprofil-section-title">🎯 Mes objectifs</div>
@@ -209,7 +215,7 @@ else
     private string? toastMessage;
     private bool isLoading = true;
     private string toastClass = "";
-    
+
     protected override async Task OnInitializedAsync()
     {
         var restored = await SupabaseService.LoadSessionAsync();
@@ -277,7 +283,12 @@ else
         StateHasChanged();
     }
 
+    private async Task GoFeuilleMax()
+    {
+        await Task.Yield();
+        Nav.NavigateTo("/FeuilleMax");
 
+    }
     private string newPassword = "";
     private string passwordMessage = "";
 

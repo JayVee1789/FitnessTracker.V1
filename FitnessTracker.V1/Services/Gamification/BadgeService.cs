@@ -1,5 +1,5 @@
 ﻿using FitnessTracker.V1.Models;
-using FitnessTracker.V1.Models.FitnessTracker.V1.Models;
+
 using FitnessTracker.V1.Models.Gamification;
 using FitnessTracker.V1.Services.Data;
 using Microsoft.JSInterop;

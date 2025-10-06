@@ -3,14 +3,14 @@ using Supabase.Postgrest.Models;
 
 namespace FitnessTracker.V1.Models
 {
-    [Table("reposmodel")]
+    [Table("reposjournal")]
     public class ReposModel : BaseModel
     {
         [PrimaryKey("id", false)]
         public Guid Id { get; set; }
 
         [Column("userid")]
-        public string UserId { get; set; } = "";
+        public Guid UserId { get; set; } 
 
         [Column("date")]
         public DateTime Date { get; set; }

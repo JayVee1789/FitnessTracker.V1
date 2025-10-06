@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\FitnessTracker.V1.props" />
-</Project>

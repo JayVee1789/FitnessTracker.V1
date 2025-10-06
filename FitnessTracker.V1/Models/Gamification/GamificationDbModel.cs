@@ -39,10 +39,13 @@ namespace FitnessTracker.V1.Models.Gamification
         public decimal BestWalkingDistance { get; set; }
 
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         // ✅ BadgeModel est maintenant mappé directement comme jsonb[]
         [Column("badges")]
         public List<BadgeModel> Badges { get; set; } = new();
+
+        [Column("streak_max")]
+        public int? StreakMax { get; set; }
     }
 }
