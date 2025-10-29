@@ -1,0 +1,2130 @@
+[
+  {
+    "Id": 1,
+    "Name": "Incline Bench Presses",
+    "Category": "Chest",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 2,
+    "Name": "BB Curls",
+    "Category": "Biceps",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 3,
+    "Name": "Back Lying Tricep Extensions",
+    "Category": "Triceps",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 4,
+    "Name": "Wide-Grip Dips",
+    "Category": "Back",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 5,
+    "Name": "Standing Military Presses",
+    "Category": "Deltoids",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 6,
+    "Name": "High-Bar Back Squats",
+    "Category": "Quads/Hamstrings",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 7,
+    "Name": "Pull-Ups ",
+    "Category": "Back",
+    "Equipment": "Bodyweight or Cable Machine",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 8,
+    "Name": "Pull-Downs",
+    "Category": "Back",
+    "Equipment": "Bodyweight or Cable Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 9,
+    "Name": "Side DB Raises",
+    "Category": "Deltoids",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 10,
+    "Name": "Hack Squats",
+    "Category": "Quads/Hamstrings",
+    "Equipment": "Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 11,
+    "Name": "Standing Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine or Free Weights",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 12,
+    "Name": "Sumo Deadlifts",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 13,
+    "Name": "Traditional Deadlifts",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 14,
+    "Name": "Seated Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 15,
+    "Name": "Power Cleans or Snatches",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 16,
+    "Name": "Donkey Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 17,
+    "Name": "Good Mornings",
+    "Category": "Lower Back/Hips",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 18,
+    "Name": "Bicep Curls",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 19,
+    "Name": "Hammer Curls",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 20,
+    "Name": "Tricep Kickbacks",
+    "Category": "Triceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 21,
+    "Name": "Tricep Press-Downs",
+    "Category": "Triceps",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 22,
+    "Name": "Leg Extensions",
+    "Category": "Quadriceps",
+    "Equipment": "Leg Extension Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 23,
+    "Name": "Hamstring Curls",
+    "Category": "Hamstrings",
+    "Equipment": "Leg Curl Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 24,
+    "Name": "Calf Raises",
+    "Category": "Calves",
+    "Equipment": "Body Weight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 25,
+    "Name": "Lateral Raises",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 26,
+    "Name": "Front Raises",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 27,
+    "Name": "Flyes",
+    "Category": "Chest",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 28,
+    "Name": "Pec Deck Machine",
+    "Category": "Chest",
+    "Equipment": "Pec Deck Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 29,
+    "Name": "Reverse Flyes",
+    "Category": "Rear Delts",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 30,
+    "Name": "Leg Curls",
+    "Category": "Hamstrings",
+    "Equipment": "Leg Curl Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 31,
+    "Name": "Ab Crunch Machine",
+    "Category": "Abs",
+    "Equipment": "Ab Crunch Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 32,
+    "Name": "Cable Crunches",
+    "Category": "Abs",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 33,
+    "Name": "Cable Kickbacks",
+    "Category": "Glutes",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 34,
+    "Name": "Machine Hip Abductions",
+    "Category": "Abductors",
+    "Equipment": "Abduction Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 35,
+    "Name": "Machine Hip Adductions",
+    "Category": "Adductors",
+    "Equipment": "Adduction Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 36,
+    "Name": "Bench Press",
+    "Category": "Chest",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 37,
+    "Name": "Deadlift",
+    "Category": "Back",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 38,
+    "Name": "Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 39,
+    "Name": "Shoulder Press",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 40,
+    "Name": "Bent Over Rows",
+    "Category": "Back",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 41,
+    "Name": "Pull Ups",
+    "Category": "Back",
+    "Equipment": "Body Weight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 42,
+    "Name": "Dips",
+    "Category": "Chest/Triceps",
+    "Equipment": "Body Weight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 43,
+    "Name": "Leg Press",
+    "Category": "Legs",
+    "Equipment": "Leg Press Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 44,
+    "Name": "Lunges",
+    "Category": "Legs",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 45,
+    "Name": "Chin Ups",
+    "Category": "Back/Biceps",
+    "Equipment": "Body Weight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 46,
+    "Name": "Push Ups",
+    "Category": "Chest",
+    "Equipment": "Body Weight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 47,
+    "Name": "Clean and Press",
+    "Category": "Full Body",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 49,
+    "Name": "T-Bar Rows",
+    "Category": "Back",
+    "Equipment": "T-Bar",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 50,
+    "Name": "Farmers Walk",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 51,
+    "Name": "Overhead Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 52,
+    "Name": "Front Squat",
+    "Category": "Legs",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 53,
+    "Name": "Flat Bench Presses",
+    "Category": "Chest",
+    "Equipment": "Barbell or Dumbbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 54,
+    "Name": "Bulgarian Split Squat",
+    "Category": "Legs",
+    "Equipment": "Dumbbells or Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 55,
+    "Name": "Upright Row",
+    "Category": "Shoulders/Traps",
+    "Equipment": "Barbell or Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 56,
+    "Name": "Preacher Curl",
+    "Category": "Biceps",
+    "Equipment": "Barbell or Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 57,
+    "Name": "Back Extension",
+    "Category": "Lower Back",
+    "Equipment": "Roman Chair or Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 58,
+    "Name": "Goblet Squat",
+    "Category": "Legs",
+    "Equipment": "Dumbbell or Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 59,
+    "Name": "Face Pulls",
+    "Category": "Rear Delts/Upper Back",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 60,
+    "Name": "Overhead Tricep Extension",
+    "Category": "Triceps",
+    "Equipment": "Dumbbell or Cable",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 61,
+    "Name": "Seated Row",
+    "Category": "Back",
+    "Equipment": "Cable Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 62,
+    "Name": "Chest Supported Row",
+    "Category": "Back",
+    "Equipment": "Dumbbells or Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 63,
+    "Name": "Cable Lateral Raise",
+    "Category": "Shoulders",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 64,
+    "Name": "Zottman Curl",
+    "Category": "Biceps/Forearms",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 65,
+    "Name": "Landmine Press",
+    "Category": "Shoulders/Chest",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 67,
+    "Name": "Hip Thrust",
+    "Category": "Glutes",
+    "Equipment": "Barbell or Machine",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 68,
+    "Name": "Incline Dumbbell Curl",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 69,
+    "Name": "Sissy Squat",
+    "Category": "Quads",
+    "Equipment": "Bodyweight or Machine",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 70,
+    "Name": "Arnold Press",
+    "Category": "Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 71,
+    "Name": "Cable Fly",
+    "Category": "Chest",
+    "Equipment": "Cable Machine",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 72,
+    "Name": "Diamond Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 73,
+    "Name": "Decline Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 74,
+    "Name": "Incline Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 75,
+    "Name": "Archer Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 76,
+    "Name": "Pseudo Planche Push-Ups",
+    "Category": "Chest/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 77,
+    "Name": "Pike Push-Ups",
+    "Category": "Shoulders/Chest",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 78,
+    "Name": "Handstand Push-Ups",
+    "Category": "Shoulders/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 79,
+    "Name": "Wall Handstand Hold",
+    "Category": "Shoulders/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 80,
+    "Name": "Plank",
+    "Category": "Core",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 81,
+    "Name": "Side Plank",
+    "Category": "Core/Obliques",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 82,
+    "Name": "Hollow Body Hold",
+    "Category": "Core",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 83,
+    "Name": "Superman",
+    "Category": "Lower Back",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 84,
+    "Name": "Gymnastic Bridge",
+    "Category": "Spine/Hips",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 85,
+    "Name": "Glute Bridge",
+    "Category": "Glutes/Hamstrings",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 86,
+    "Name": "Single-Leg Glute Bridge",
+    "Category": "Glutes/Hamstrings",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 87,
+    "Name": "Hip Bridge March",
+    "Category": "Glutes/Hamstrings",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 88,
+    "Name": "Frog Pumps",
+    "Category": "Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 89,
+    "Name": "Jump Squats",
+    "Category": "Legs",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 90,
+    "Name": "Pistol Squat",
+    "Category": "Quads/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 91,
+    "Name": "Box Jumps",
+    "Category": "Legs",
+    "Equipment": "Bodyweight (Box/Step)",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 92,
+    "Name": "Wall Sit",
+    "Category": "Quads",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 93,
+    "Name": "Curtsy Lunge",
+    "Category": "Quads/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 94,
+    "Name": "Reverse Lunge",
+    "Category": "Legs",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 95,
+    "Name": "Walking Lunge",
+    "Category": "Legs",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 96,
+    "Name": "Cossack Squat",
+    "Category": "Adductors/Quads",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 97,
+    "Name": "Step-Ups",
+    "Category": "Legs",
+    "Equipment": "Bodyweight or Dumbbells",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 98,
+    "Name": "Nordic Hamstring Curl",
+    "Category": "Hamstrings",
+    "Equipment": "Bodyweight (Anchor)",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 99,
+    "Name": "Single-Leg Romanian Deadlift",
+    "Category": "Hamstrings/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 100,
+    "Name": "Single-Leg Calf Raise",
+    "Category": "Calves",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 101,
+    "Name": "Donkey Kicks",
+    "Category": "Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 102,
+    "Name": "Fire Hydrant",
+    "Category": "Glutes/Abductors",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 103,
+    "Name": "Side Leg Raises",
+    "Category": "Abductors",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 104,
+    "Name": "High Knees",
+    "Category": "Full Body/Cardio",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 105,
+    "Name": "Mountain Climbers",
+    "Category": "Core/Cardio",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 106,
+    "Name": "Burpees",
+    "Category": "Full Body",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 107,
+    "Name": "Jumping Jacks",
+    "Category": "Full Body/Cardio",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 108,
+    "Name": "Bear Crawl",
+    "Category": "Core/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 109,
+    "Name": "Crab Walk",
+    "Category": "Core/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 110,
+    "Name": "Inchworm",
+    "Category": "Core/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 111,
+    "Name": "Bicycle Crunches",
+    "Category": "Abs/Obliques",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 112,
+    "Name": "Russian Twists",
+    "Category": "Obliques",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 113,
+    "Name": "V-Ups",
+    "Category": "Abs",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 114,
+    "Name": "Flutter Kicks",
+    "Category": "Abs/Hip Flexors",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 115,
+    "Name": "Lying Leg Raises",
+    "Category": "Abs",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 116,
+    "Name": "Hanging Leg Raises",
+    "Category": "Abs/Hip Flexors",
+    "Equipment": "Pull-Up Bar or Rings",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 117,
+    "Name": "Toes-to-Bar",
+    "Category": "Abs/Hip Flexors",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 118,
+    "Name": "Windshield Wipers",
+    "Category": "Core",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 119,
+    "Name": "Plank Shoulder Taps",
+    "Category": "Core/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 120,
+    "Name": "Dead Bug",
+    "Category": "Core",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 121,
+    "Name": "Spiderman Push-Ups",
+    "Category": "Chest/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 122,
+    "Name": "Dive Bomber Push-Ups",
+    "Category": "Chest/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 123,
+    "Name": "Clapping Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 124,
+    "Name": "One-Arm Push-Up",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 125,
+    "Name": "Assisted One-Arm Push-Up",
+    "Category": "Chest/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 126,
+    "Name": "One-Arm Pull-Up",
+    "Category": "Back/Biceps",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 127,
+    "Name": "Assisted One-Arm Pull-Up",
+    "Category": "Back/Biceps",
+    "Equipment": "Bar + Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 128,
+    "Name": "Muscle-Up (Bar)",
+    "Category": "Full Body",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 129,
+    "Name": "Ring Muscle-Up",
+    "Category": "Full Body",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 130,
+    "Name": "Ring Dips",
+    "Category": "Chest/Triceps",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 131,
+    "Name": "Ring Rows",
+    "Category": "Back/Biceps",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 132,
+    "Name": "Ring Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 133,
+    "Name": "Ring Flyes",
+    "Category": "Chest",
+    "Equipment": "Gym Rings",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 134,
+    "Name": "Ring Bicep Curls",
+    "Category": "Biceps",
+    "Equipment": "Gym Rings",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 135,
+    "Name": "Ring Tricep Extensions",
+    "Category": "Triceps",
+    "Equipment": "Gym Rings",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 136,
+    "Name": "Ring Archer Push-Ups",
+    "Category": "Chest/Triceps",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 137,
+    "Name": "Skin the Cat",
+    "Category": "Shoulders/Core",
+    "Equipment": "Gym Rings",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 138,
+    "Name": "Front Lever Hold",
+    "Category": "Back/Core",
+    "Equipment": "Bar or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 139,
+    "Name": "Back Lever Hold",
+    "Category": "Back/Core",
+    "Equipment": "Bar or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 140,
+    "Name": "L-Sit",
+    "Category": "Core/Hip Flexors",
+    "Equipment": "Floor or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 141,
+    "Name": "V-Sit Hold",
+    "Category": "Core/Hip Flexors",
+    "Equipment": "Floor or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 142,
+    "Name": "Planche Lean",
+    "Category": "Shoulders/Core",
+    "Equipment": "Parallettes or Floor",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 143,
+    "Name": "Tuck Planche",
+    "Category": "Shoulders/Core",
+    "Equipment": "Parallettes or Floor",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 144,
+    "Name": "Planche Push-Ups",
+    "Category": "Chest/Shoulders",
+    "Equipment": "Parallettes or Floor",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 145,
+    "Name": "Band Pull-Apart",
+    "Category": "Upper Back/Shoulders",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 146,
+    "Name": "Band Face Pull",
+    "Category": "Rear Delts",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 147,
+    "Name": "Band Row",
+    "Category": "Back/Biceps",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 148,
+    "Name": "Band Chest Press",
+    "Category": "Chest/Triceps",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 149,
+    "Name": "Band Overhead Press",
+    "Category": "Shoulders/Triceps",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 150,
+    "Name": "Band Squat",
+    "Category": "Legs",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 151,
+    "Name": "Band Good Morning",
+    "Category": "Hamstrings/Lower Back",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 152,
+    "Name": "Band Deadlift",
+    "Category": "Hamstrings/Glutes",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 153,
+    "Name": "Band Upright Row",
+    "Category": "Shoulders/Traps",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 154,
+    "Name": "Band Bicep Curl",
+    "Category": "Biceps",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 155,
+    "Name": "Band Tricep Pushdown",
+    "Category": "Triceps",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 156,
+    "Name": "Band Glute Kickback",
+    "Category": "Glutes",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 157,
+    "Name": "Band Lateral Walk",
+    "Category": "Glutes/Abductors",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 158,
+    "Name": "Band Woodchopper",
+    "Category": "Core/Obliques",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 159,
+    "Name": "Band Overhead Tricep Ext.",
+    "Category": "Triceps",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 160,
+    "Name": "Band External Rotation",
+    "Category": "Rotator Cuff",
+    "Equipment": "Resistance Band",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 161,
+    "Name": "Band Pull-Through",
+    "Category": "Glutes/Hamstrings",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 162,
+    "Name": "Band Thruster",
+    "Category": "Full Body",
+    "Equipment": "Resistance Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 163,
+    "Name": "Assisted Band Pull-Up",
+    "Category": "Back/Biceps",
+    "Equipment": "Bar + Band",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 164,
+    "Name": "Kettlebell Swing",
+    "Category": "Glutes/Hamstrings",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 165,
+    "Name": "Kettlebell Clean & Press",
+    "Category": "Full Body",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 166,
+    "Name": "Kettlebell Snatch",
+    "Category": "Full Body",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 167,
+    "Name": "Turkish Get-Up",
+    "Category": "Full Body/Core",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 168,
+    "Name": "Kettlebell Windmill",
+    "Category": "Core/Shoulders",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 169,
+    "Name": "Renegade Row",
+    "Category": "Back/Core",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 170,
+    "Name": "Dumbbell Thruster",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 171,
+    "Name": "Dumbbell Snatch",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 172,
+    "Name": "Dumbbell Clean & Press",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 173,
+    "Name": "Dumbbell Deadlift",
+    "Category": "Hamstrings/Glutes",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 174,
+    "Name": "Dumbbell Pullover",
+    "Category": "Chest/Lats",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 175,
+    "Name": "Dumbbell Skull Crusher",
+    "Category": "Triceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 176,
+    "Name": "Dumbbell Step-Up",
+    "Category": "Legs",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 177,
+    "Name": "Romanian Deadlift",
+    "Category": "Hamstrings/Glutes",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 178,
+    "Name": "Zercher Squat",
+    "Category": "Legs/Core",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 179,
+    "Name": "Pendlay Row",
+    "Category": "Back",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 180,
+    "Name": "Landmine Press",
+    "Category": "Shoulders/Chest",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 181,
+    "Name": "Landmine Row",
+    "Category": "Back/Biceps",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 182,
+    "Name": "Landmine Twist",
+    "Category": "Core/Obliques",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 183,
+    "Name": "Waiter’s Carry",
+    "Category": "Shoulders/Core",
+    "Equipment": "Dumbbell or Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 184,
+    "Name": "Suitcase Carry",
+    "Category": "Core/Grip",
+    "Equipment": "Dumbbell or Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 185,
+    "Name": "Human Flag",
+    "Category": "Full Body",
+    "Equipment": "Pull-Up Bar or Poles",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 186,
+    "Name": "Assisted Human Flag",
+    "Category": "Full Body",
+    "Equipment": "Bar + Band",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 187,
+    "Name": "Dragon Flag",
+    "Category": "Core",
+    "Equipment": "Bench or Floor",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 188,
+    "Name": "Straddle Planche",
+    "Category": "Shoulders/Core",
+    "Equipment": "Parallettes",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 189,
+    "Name": "Full Planche",
+    "Category": "Shoulders/Core",
+    "Equipment": "Parallettes",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 190,
+    "Name": "One-Arm Handstand",
+    "Category": "Shoulders/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 191,
+    "Name": "Shrimp Squat",
+    "Category": "Quads/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 192,
+    "Name": "Reverse Nordic Curl",
+    "Category": "Quads",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 193,
+    "Name": "Nordic Hip Hinge",
+    "Category": "Hamstrings",
+    "Equipment": "Bodyweight (Anchor)",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 194,
+    "Name": "Archer Pull-Up",
+    "Category": "Back/Biceps",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 195,
+    "Name": "Typewriter Pull-Up",
+    "Category": "Back/Biceps",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 196,
+    "Name": "L-Sit Pull-Up",
+    "Category": "Back/Core",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 197,
+    "Name": "Rope Climb",
+    "Category": "Back/Biceps",
+    "Equipment": "Climbing Rope",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 198,
+    "Name": "Wall Walk",
+    "Category": "Shoulders/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 199,
+    "Name": "Press to Handstand",
+    "Category": "Shoulders/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 200,
+    "Name": "Hollow Rock",
+    "Category": "Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 201,
+    "Name": "Arch Rock",
+    "Category": "Lower Back",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 202,
+    "Name": "Scapular Pull-Up",
+    "Category": "Upper Back",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 203,
+    "Name": "Scapular Push-Up",
+    "Category": "Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Single-Joint",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 204,
+    "Name": "Superman Pull",
+    "Category": "Lower Back",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 205,
+    "Name": "Chest-to-Wall Handstand",
+    "Category": "Shoulders/Core",
+    "Equipment": "Wall",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 206,
+    "Name": "Handstand Toe Taps",
+    "Category": "Core/Shoulders",
+    "Equipment": "Wall",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 207,
+    "Name": "Pike Press",
+    "Category": "Shoulders/Triceps",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 208,
+    "Name": "Russian Dip",
+    "Category": "Triceps/Shoulders",
+    "Equipment": "Parallel Bars",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 209,
+    "Name": "Parallel Bar Dip",
+    "Category": "Chest/Triceps",
+    "Equipment": "Parallel Bars",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 210,
+    "Name": "German Hang",
+    "Category": "Shoulders",
+    "Equipment": "Rings or Bar",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 211,
+    "Name": "Dragon Squat",
+    "Category": "Quads/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 212,
+    "Name": "Shrimp Push-Up",
+    "Category": "Chest/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 213,
+    "Name": "Table Bridge",
+    "Category": "Shoulders/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 214,
+    "Name": "Back Bridge Push-Up",
+    "Category": "Spine/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 215,
+    "Name": "Elbow Lever",
+    "Category": "Core/Arms",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 216,
+    "Name": "Advanced Tuck Planche",
+    "Category": "Shoulders/Core",
+    "Equipment": "Parallettes",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 217,
+    "Name": "Assisted Back Lever",
+    "Category": "Back/Core",
+    "Equipment": "Rings + Band",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 218,
+    "Name": "Assisted Front Lever",
+    "Category": "Back/Core",
+    "Equipment": "Rings + Band",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 219,
+    "Name": "Straddle Front Lever",
+    "Category": "Back/Core",
+    "Equipment": "Bar or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 220,
+    "Name": "Straddle Back Lever",
+    "Category": "Back/Core",
+    "Equipment": "Bar or Rings",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 403,
+    "Name": "Plank to Push-Up",
+    "Category": "Core/Arms",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 404,
+    "Name": "Plank Jacks",
+    "Category": "Core/Cardio",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 405,
+    "Name": "Plank with Reach",
+    "Category": "Core/Shoulders",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 406,
+    "Name": "Side Plank Hip Dips",
+    "Category": "Obliques/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 407,
+    "Name": "Reverse Plank",
+    "Category": "Core/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Isometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 408,
+    "Name": "Reverse Plank March",
+    "Category": "Core/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 409,
+    "Name": "Hollow-to-Arch Roll",
+    "Category": "Core/Back",
+    "Equipment": "Bodyweight",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 410,
+    "Name": "Dragon Flag Negative",
+    "Category": "Core",
+    "Equipment": "Bench",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 411,
+    "Name": "Hanging Knee Tuck",
+    "Category": "Core/Hip Flexors",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 412,
+    "Name": "Hanging Windshield Wiper",
+    "Category": "Core",
+    "Equipment": "Pull-Up Bar",
+    "Description": "Compound",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 438,
+    "Name": "Single-Leg Balance Reach",
+    "Category": "Ankles/Core",
+    "Equipment": "Bodyweight",
+    "Description": "Balance",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 446,
+    "Name": "Tuck Jump",
+    "Category": "Power",
+    "Equipment": "Bodyweight",
+    "Description": "Plyometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 447,
+    "Name": "Lateral Bound",
+    "Category": "Power/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Plyometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 448,
+    "Name": "Skater Hop",
+    "Category": "Power/Glutes",
+    "Equipment": "Bodyweight",
+    "Description": "Plyometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 449,
+    "Name": "Broad Jump",
+    "Category": "Power/Legs",
+    "Equipment": "Bodyweight",
+    "Description": "Plyometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 457,
+    "Name": "Standing Long Jump",
+    "Category": "Power",
+    "Equipment": "Bodyweight",
+    "Description": "Plyometric",
+    "Origin": "Calisthenie"
+  },
+  {
+    "Id": 460,
+    "Name": "Kettlebell Goblet Clean",
+    "Category": "Full Body",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 461,
+    "Name": "Kettlebell Figure 8",
+    "Category": "Core/Glutes",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 462,
+    "Name": "Kettlebell Around the World",
+    "Category": "Shoulders/Core",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 463,
+    "Name": "Kettlebell Hammer Curl",
+    "Category": "Biceps",
+    "Equipment": "Kettlebell",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 464,
+    "Name": "Kettlebell Rack Squat",
+    "Category": "Legs/Core",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 465,
+    "Name": "Kettlebell Overhead Lunge",
+    "Category": "Legs/Shoulders",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 466,
+    "Name": "Kettlebell Alternating Press",
+    "Category": "Shoulders",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 467,
+    "Name": "Kettlebell Russian Twist",
+    "Category": "Core",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 468,
+    "Name": "Kettlebell Halo",
+    "Category": "Shoulders/Core",
+    "Equipment": "Kettlebell",
+    "Description": "Mobility",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 469,
+    "Name": "Kettlebell Bottoms-Up Press",
+    "Category": "Shoulders/Grip",
+    "Equipment": "Kettlebell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 470,
+    "Name": "Dumbbell Floor Press",
+    "Category": "Chest/Triceps",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 471,
+    "Name": "Dumbbell Chest Fly (Floor)",
+    "Category": "Chest",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 472,
+    "Name": "Dumbbell Cuban Press",
+    "Category": "Shoulders/Rotator Cuff",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 473,
+    "Name": "Dumbbell I-Y-T Raise",
+    "Category": "Upper Back/Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 474,
+    "Name": "Dumbbell Farmers March",
+    "Category": "Core/Grip",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 475,
+    "Name": "Dumbbell Cross-Body Curl",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 476,
+    "Name": "Dumbbell Spider Curl",
+    "Category": "Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 477,
+    "Name": "Dumbbell Rear Delt Row",
+    "Category": "Rear Delts",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 478,
+    "Name": "Dumbbell Squeeze Press",
+    "Category": "Chest/Triceps",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 479,
+    "Name": "Dumbbell Pullover Bridge",
+    "Category": "Chest/Lats/Core",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 480,
+    "Name": "Dumbbell Single-Arm Row",
+    "Category": "Back/Biceps",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 481,
+    "Name": "Dumbbell Split Jerk",
+    "Category": "Shoulders/Legs",
+    "Equipment": "Dumbbells",
+    "Description": "Power",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 482,
+    "Name": "Dumbbell Clean",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Power",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 483,
+    "Name": "Dumbbell Alternating Snatch",
+    "Category": "Full Body",
+    "Equipment": "Dumbbells",
+    "Description": "Power",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 484,
+    "Name": "Dumbbell Windmill",
+    "Category": "Core/Shoulders",
+    "Equipment": "Dumbbells",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 485,
+    "Name": "Landmine Single-Leg Deadlift",
+    "Category": "Hamstrings/Glutes",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 486,
+    "Name": "Landmine Hack Squat",
+    "Category": "Quads/Glutes",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 487,
+    "Name": "Landmine Lateral Raise",
+    "Category": "Shoulders",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Single-Joint",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 488,
+    "Name": "Landmine Half-Kneeling Press",
+    "Category": "Shoulders/Core",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 489,
+    "Name": "Landmine Meadows Row",
+    "Category": "Back/Biceps",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 490,
+    "Name": "Landmine Thruster",
+    "Category": "Full Body",
+    "Equipment": "Barbell (Landmine)",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  },
+  {
+    "Id": 501,
+    "Name": "Skull Crushers",
+    "Category": "Triceps",
+    "Equipment": "Barbell",
+    "Description": "Compound",
+    "Origin": "Musculation"
+  }
+]

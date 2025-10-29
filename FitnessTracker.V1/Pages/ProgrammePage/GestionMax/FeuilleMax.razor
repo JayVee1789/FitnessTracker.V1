@@ -1,0 +1,201 @@
+﻿@page "/FeuilleMax"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@using System.Net.Http.Json
+@using ModelAlias = FitnessTracker.V1.Models.Model
+
+<div class="mobile-container">
+    <div class="session-header">Mes 1RM</div>
+
+    <div class="duo-bubble mb-3">
+        Ajoute tes exercices et leur <strong>1RM</strong>. Tu peux ensuite les réutiliser partout dans l’app.
+        <div class="duo-quote mt-2">
+            Astuce : clique sur <em>+ Ajouter une ligne</em> pour créer une nouvelle carte.
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="AjouterLigne">
+            <i class="bi bi-plus-circle me-1"></i> Ajouter une ligne
+        </button>
+
+        <button class="duo-btn px-4" @onclick="EnregistrerTout">
+            <i class="bi bi-cloud-check me-1"></i> Enregistrer tout
+        </button>
+    </div>
+
+    @if (RepMaxs.Count == 0)
+    {
+        <div class="duo-bubble">
+            Aucune donnée pour l’instant. Ajoute ta première ligne 👇
+        </div>
+    }
+
+    @for (int i = 0; i < RepMaxs.Count; i++)
+    {
+        var ligne = RepMaxs[i];
+        <div class="duo-card">
+            <div class="flex-grow-1">
+                <div class="duo-title">
+                    <i class="bi bi-trophy-fill text-warning"></i>
+                    <span class="duo-title-text">Exercice</span>
+                </div>
+
+                <div class="mb-2">
+                    <select class="form-select" @bind="ligne.Nom">
+                        <option value="">-- Choisir un exercice --</option>
+                        @foreach (var ex in allExercises)
+                        {
+                            <option value="@ex.Name">@ex.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="duo-info">
+                    <i class="bi bi-activity me-1"></i>
+                    <strong>1RM</strong> (kg)
+                </div>
+
+                <div>
+                    <input class="form-control" type="number" min="0" step="0.5" @bind="ligne.MaxRep" />
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(ligne.Nom) && ligne.MaxRep > 0)
+                {
+                    <div class="duo-objectif">
+                        <i class="bi bi-check2-circle me-1"></i>
+                        Prêt à enregistrer
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex flex-column align-items-end justify-content-between">
+                <button class="duo-icon-btn-small" title="Supprimer" @onclick="() => SupprimerLigne(i)">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="AjouterLigne">
+            <i class="bi bi-plus-circle me-1"></i> Ajouter une ligne
+        </button>
+
+        <button class="duo-btn px-4" @onclick="EnregistrerTout">
+            <i class="bi bi-cloud-check me-1"></i> Enregistrer tout
+        </button>
+    </div>
+
+    <div class="motiv-message">
+        Tu avances bien 💪 Continue sur ta lancée !
+    </div>
+</div>
+
+@code {
+    // ========= Modèle local pour le formulaire 1RM =========
+    public class RepMax
+    {
+        public string? GUID { get; set; }
+        public string? UserGuid { get; set; }
+        public string Nom { get; set; } = string.Empty; // nom d'exercice choisi
+        public double MaxRep { get; set; }              // 1RM en kg
+    }
+
+    // ========= État =========
+    private List<RepMax> RepMaxs = new();
+    private List<ModelAlias.ExerciseDefinition> allExercises = new();
+
+    // ========= Clés "tables" dans localStorage =========
+    private const string KEY_RECORD = "repmax_record";
+    private const string KEY_MAX = "repmax_max";
+
+    // ========= Cycle de vie =========
+    protected override async Task OnInitializedAsync()
+    {
+        await ChargerExercices();
+
+        // Recharge depuis localStorage (priorité à max)
+        var saved = await GetLocal<List<RepMax>>(KEY_MAX);
+        if (saved == null || saved.Count == 0)
+            saved = await GetLocal<List<RepMax>>(KEY_RECORD);
+
+        if (saved != null && saved.Count > 0)
+        {
+            RepMaxs = saved;
+        }
+        else
+        {
+            AjouterLigne();
+        }
+    }
+
+    // ========= Actions UI =========
+    private void AjouterLigne()
+    {
+        RepMaxs.Add(new RepMax
+        {
+            GUID = Guid.NewGuid().ToString("N")
+        });
+    }
+
+    private void SupprimerLigne(int index)
+    {
+        if (index >= 0 && index < RepMaxs.Count)
+            RepMaxs.RemoveAt(index);
+    }
+
+    // ========= Chargement exercices (tri A→Z) =========
+    private async Task ChargerExercices()
+    {
+        var version = DateTime.Now.Ticks; // anti-cache
+        allExercises = (await Http.GetFromJsonAsync<List<ModelAlias.ExerciseDefinition>>(
+                $"data/Exercices_Musculation_Calisthenie_musculation.json?v={version}")
+            ?? new())
+            .OrderBy(ex => ex.Name)
+            .ToList();
+    }
+
+    // ========= Enregistrer tout (dans record ET max) =========
+    private async Task EnregistrerTout()
+    {
+        var valides = RepMaxs
+            .Where(l => !string.IsNullOrWhiteSpace(l.Nom) && l.MaxRep > 0)
+            .Select(l =>
+            {
+                if (string.IsNullOrWhiteSpace(l.GUID))
+                    l.GUID = Guid.NewGuid().ToString("N");
+                return l;
+            })
+            .ToList();
+
+        if (valides.Count == 0)
+        {
+            await Toast("Aucune ligne valide à enregistrer (nom et 1RM requis).");
+            return;
+        }
+
+        // on enregistre dans les deux tables pour simplifier la réutilisation
+        await SetLocal(KEY_RECORD, valides);
+        await SetLocal(KEY_MAX, valides);
+
+        await Toast($"Enregistré {valides.Count} ligne(s) dans « record » et « max ».");
+    }
+
+    // ========= JS interop helpers =========
+    private async Task Toast(string message)
+        => await JS.InvokeVoidAsync("showToast", message); // my-toast.js déjà référencé dans index.html
+
+    private async Task SetLocal<T>(string key, T data)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(data);
+        await JS.InvokeVoidAsync("localStorage.setItem", key, json);
+    }
+
+    private async Task<T?> GetLocal<T>(string key)
+    {
+        var json = await JS.InvokeAsync<string?>("localStorage.getItem", key);
+        if (string.IsNullOrWhiteSpace(json)) return default;
+        return System.Text.Json.JsonSerializer.Deserialize<T>(json);
+    }
+}
