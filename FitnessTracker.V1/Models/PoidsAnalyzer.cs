@@ -1,10 +1,10 @@
 ﻿namespace FitnessTracker.V1.Models
 {
-    public class PoidsAnalysisResult
-    {
-        public List<string> ExercicesFort { get; set; } = new();
-        public List<string> ExercicesFaible { get; set; } = new();
-    }
+    //public class PoidsAnalysisResult
+    //{
+    //    public List<string> ExercicesFort { get; set; } = new();
+    //    public List<string> ExercicesFaible { get; set; } = new();
+    //}
 
     public static class PoidsAnalyzer
     {

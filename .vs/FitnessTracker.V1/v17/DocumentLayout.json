@@ -1,0 +1,604 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\programmepage\\viewsession.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\programmepage\\viewsession.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\programmepage\\viewseance.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\programmepage\\viewseance.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\weightsanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\weightsanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\poidsanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\poidsanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\programmepage\\generateprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\programmepage\\generateprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\principalpage\\createprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\principalpage\\createprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\mappers\\exercisemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\mappers\\exercisemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\enumeration\\programtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\enumeration\\programtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1.test\\fitnesstracker.v1.test.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|solutionrelative:fitnesstracker.v1.test\\fitnesstracker.v1.test.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1.test\\globalusings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|solutionrelative:fitnesstracker.v1.test\\globalusings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1.test\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5F77A0E-E1EF-47E2-971C-BE9E547D7A09}|FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj|solutionrelative:fitnesstracker.v1.test\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe||{177559E0-D141-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe||{177559E0-D141-11D0-92DF-00A0C9138C45}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll||{177559E0-D141-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll||{177559E0-D141-11D0-92DF-00A0C9138C45}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\programmepage\\gestionmax\\feuillemax.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\programmepage\\gestionmax\\feuillemax.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\wwwroot\\data\\exercices_musculation_uniquement.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\wwwroot\\data\\exercices_musculation_uniquement.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\wwwroot\\data\\exerciceslistelocal.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\wwwroot\\data\\exerciceslistelocal.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\programmepage\\viewseance.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\programmepage\\viewseance.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\exerciseday.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\exerciseday.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\principalpage\\viewprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\principalpage\\viewprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\principalpage\\monprofil.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\principalpage\\monprofil.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\components\\chronometre.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\components\\chronometre.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\principalpage\\choixprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\principalpage\\choixprogramme.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\principalpage\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\principalpage\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\pages\\authentificationpage\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\pages\\authentificationpage\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\services\\gamification\\gamificationdbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\services\\gamification\\gamificationdbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\services\\gamification\\badgeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\services\\gamification\\badgeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\components\\gamification\\sessionsummary.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\components\\gamification\\sessionsummary.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\fitnesstracker.v1.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\fitnesstracker.v1.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\wwwroot\\css\\choixprog.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\wwwroot\\css\\choixprog.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|c:\\users\\jvere\\source\\repos\\fitnesstracker.v1\\fitnesstracker.v1\\models\\reposmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B16CFD6-E5E6-4093-A9CF-D7BA17911C72}|FitnessTracker.V1\\FitnessTracker.V1.csproj|solutionrelative:fitnesstracker.v1\\models\\reposmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ReposModel.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\ReposModel.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\ReposModel.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\ReposModel.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\ReposModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-26T04:08:13.8Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ViewSeance.razor.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor.cs",
+              "ViewState": "AgIAAIQCAAAAAAAAAAAiwJACAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T02:08:12.652Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\_Imports.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\_Imports.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\_Imports.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\_Imports.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-31T01:36:16.306Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Program.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Program.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Program.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T05:52:30.926Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ViewSession.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSession.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSession.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSession.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSession.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:10:21.729Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ViewSeance.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\ProgrammePage\\ViewSeance.razor",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T02:09:02.273Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "App.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\App.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\App.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\App.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T05:52:19.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WeightsAnalyzer.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\WeightsAnalyzer.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\WeightsAnalyzer.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\WeightsAnalyzer.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\WeightsAnalyzer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T23:40:50.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PoidsAnalyzer.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\PoidsAnalyzer.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\PoidsAnalyzer.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\PoidsAnalyzer.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\PoidsAnalyzer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T23:40:18.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GenerateProgramme.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\GenerateProgramme.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\ProgrammePage\\GenerateProgramme.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\GenerateProgramme.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\ProgrammePage\\GenerateProgramme.razor",
+              "ViewState": "AgIAALUAAAAAAAAAAAAAALsAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:58:38.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CreateProgramme.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\CreateProgramme.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\PrincipalPage\\CreateProgramme.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\CreateProgramme.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\PrincipalPage\\CreateProgramme.razor",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAAACwBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:47:54.603Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ExerciseMapper.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\Mappers\\ExerciseMapper.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\Mappers\\ExerciseMapper.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\Mappers\\ExerciseMapper.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\Mappers\\ExerciseMapper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T18:06:36.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ProgramType.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\Enumeration\\ProgramType.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\Enumeration\\ProgramType.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\Enumeration\\ProgramType.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\Enumeration\\ProgramType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T06:31:42.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FitnessTracker.V1.Test.csproj",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\FitnessTracker.V1.Test.csproj",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-21T22:41:21.495Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "testhost.exe",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\testhost.exe",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000165|",
+              "WhenOpened": "2025-10-21T22:40:30.901Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UnitTest1.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\UnitTest1.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\UnitTest1.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\UnitTest1.cs",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\UnitTest1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T22:41:16.298Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Websocket.Client.dll",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\bin\\Debug\\net8.0\\Websocket.Client.dll",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001697|",
+              "WhenOpened": "2025-10-21T22:40:28.456Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GlobalUsings.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\GlobalUsings.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\GlobalUsings.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\GlobalUsings.cs",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\GlobalUsings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T22:40:19.807Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.csproj.BuildWithSkipAnalyzers",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-10-21T22:40:26.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "FitnessTracker.V1.Test.AssemblyInfoInputs.cache",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\FitnessTracker.V1.Test.AssemblyInfoInputs.cache",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002368|",
+              "WhenOpened": "2025-10-21T22:40:23.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": ".NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+              "RelativeToolTip": "FitnessTracker.V1.Test\\obj\\Debug\\net8.0\\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T22:40:22.632Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ExercicesListeLocal.json",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\data\\ExercicesListeLocal.json",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\wwwroot\\data\\ExercicesListeLocal.json",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\data\\ExercicesListeLocal.json",
+              "RelativeToolTip": "FitnessTracker.V1\\wwwroot\\data\\ExercicesListeLocal.json",
+              "ViewState": "AgIAADsBAAAAAAAAAAAAAE8BAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-29T00:09:09.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "FeuilleMax.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\GestionMax\\FeuilleMax.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\ProgrammePage\\GestionMax\\FeuilleMax.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\ProgrammePage\\GestionMax\\FeuilleMax.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\ProgrammePage\\GestionMax\\FeuilleMax.razor",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAqwJEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:39:16.046Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Exercices_Musculation_uniquement.json",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\data\\Exercices_Musculation_uniquement.json",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\wwwroot\\data\\Exercices_Musculation_uniquement.json",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\data\\Exercices_Musculation_uniquement.json",
+              "RelativeToolTip": "FitnessTracker.V1\\wwwroot\\data\\Exercices_Musculation_uniquement.json",
+              "ViewState": "AgIAAIsDAAAAAAAAAAAAAJYDAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-29T00:14:18.011Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "MonProfil.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\MonProfil.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\PrincipalPage\\MonProfil.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\MonProfil.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\PrincipalPage\\MonProfil.razor",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAAAFcAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:37:15.032Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ViewProgramme.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\ViewProgramme.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\PrincipalPage\\ViewProgramme.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\ViewProgramme.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\PrincipalPage\\ViewProgramme.razor",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:15:32.974Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\Home.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\PrincipalPage\\Home.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\Home.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\PrincipalPage\\Home.razor",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:47:33.068Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Chronometre.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Components\\Chronometre.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Components\\Chronometre.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Components\\Chronometre.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Components\\Chronometre.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:52:46.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "ChoixProgramme.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\ChoixProgramme.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\PrincipalPage\\ChoixProgramme.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\PrincipalPage\\ChoixProgramme.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\PrincipalPage\\ChoixProgramme.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-06T19:56:22.268Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ExerciseDay.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\ExerciseDay.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Models\\ExerciseDay.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Models\\ExerciseDay.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Models\\ExerciseDay.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAmwA4AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T18:06:35.171Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Login.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\AuthentificationPage\\Login.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Pages\\AuthentificationPage\\Login.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Pages\\AuthentificationPage\\Login.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Pages\\AuthentificationPage\\Login.razor",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAhwBYAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:43:58.308Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "GamificationDbService.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Services\\Gamification\\GamificationDbService.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Services\\Gamification\\GamificationDbService.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Services\\Gamification\\GamificationDbService.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Services\\Gamification\\GamificationDbService.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAADwv2EAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T22:10:41.843Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "BadgeService.cs",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Services\\Gamification\\BadgeService.cs",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Services\\Gamification\\BadgeService.cs",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Services\\Gamification\\BadgeService.cs",
+              "RelativeToolTip": "FitnessTracker.V1\\Services\\Gamification\\BadgeService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T22:10:28.476Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "SessionSummary.razor",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Components\\Gamification\\SessionSummary.razor",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\Components\\Gamification\\SessionSummary.razor",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\Components\\Gamification\\SessionSummary.razor",
+              "RelativeToolTip": "FitnessTracker.V1\\Components\\Gamification\\SessionSummary.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-28T22:10:06.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "choixprog.css",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\choixprog.css",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\wwwroot\\css\\choixprog.css",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\wwwroot\\css\\choixprog.css",
+              "RelativeToolTip": "FitnessTracker.V1\\wwwroot\\css\\choixprog.css",
+              "ViewState": "AgIAACoAAAAAAAAAAAASwDIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-08-06T19:56:48.619Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "FitnessTracker.V1.csproj",
+              "DocumentMoniker": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\FitnessTracker.V1.csproj",
+              "RelativeDocumentMoniker": "FitnessTracker.V1\\FitnessTracker.V1.csproj",
+              "ToolTip": "C:\\Users\\jvere\\source\\repos\\FitnessTracker.V1\\FitnessTracker.V1\\FitnessTracker.V1.csproj",
+              "RelativeToolTip": "FitnessTracker.V1\\FitnessTracker.V1.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-09-28T06:16:08.794Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

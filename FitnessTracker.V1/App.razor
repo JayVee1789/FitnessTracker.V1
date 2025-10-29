@@ -2,7 +2,7 @@
 @implements IAsyncDisposable
 @using BlazorBootstrap
 
-<BootstrapProvider>
+<App>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -13,7 +13,7 @@
             </LayoutView>
         </NotFound>
     </Router>
-</BootstrapProvider>
+</App>
 @if (updateAvailable)
 {
     <div class="alert alert-warning fixed-bottom text-center">

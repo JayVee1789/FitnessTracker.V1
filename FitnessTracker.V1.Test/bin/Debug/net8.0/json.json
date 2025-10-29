@@ -1,0 +1,90 @@
+<EditForm Model="profile" OnValidSubmit="SauvegarderProfil">
+        <div class="duo-card">
+            <div class="duo-title">Âge</div>
+            <InputNumber class="form-control" @bind-Value="profile.Age" />
+        </div>
+        <div class="duo-card">
+            <div class="duo-title">Poids (kg)</div>
+            <InputNumber class="form-control" @bind-Value="profile.Poids" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Taille (cm ou format libre)</div>
+            <InputText class="form-control" @bind-Value="profile.Taille" />
+        </div>
+        <div class="duo-card">
+            <div class="duo-title">Sexe</div>
+            <InputSelect class="form-select" @bind-Value="profile.Sexe">
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+            </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Niveau</div>
+            <InputSelect class="form-select" @bind-Value="profile.Level">
+                <option value="Debutant">Débutant</option>
+                <option value="Intermediaire">Intermédiaire</option>
+                <option value="Avance">Avancé</option>
+            </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Objectif</div>
+            <InputSelect class="form-select" @bind-Value="profile.Objective">
+                <option value="Force">Gagner de la force</option>
+                <option value="Endurance">Travailler son endurance</option>
+                <option value="Hypertrophy">Gagner du muscle</option>
+                <option value="Fat_loss">Perdre du poids</option>
+                <option value="Glutes">Fessiers</option>
+             </InputSelect>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Séances / semaine</div>
+            <InputNumber class="form-control" @bind-Value="profile.SeancesPerWeek" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Durée du programme (mois)</div>
+            <InputNumber class="form-control" @bind-Value="profile.ProgramDurationMonths" />
+        </div>
+
+        <div class="duo-card">
+            <div class="form-check mb-2">
+                <InputCheckbox class="form-check-input" @bind-Value="profile.WantsSuperset" id="superset" />
+                <label class="form-check-label" for="superset">Utiliser des supersets</label>
+            </div>
+
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" @bind-Value="profile.BodyweightOnly" id="poidscorps" />
+                <label class="form-check-label" for="poidscorps">Poids du corps uniquement</label>
+            </div>
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Pathologie musculaire</div>
+            <InputText class="form-control" @bind-Value="profile.PathologieMuscle" />
+        </div>
+
+        <div class="duo-card">
+            <div class="duo-title">Muscle prioritaire</div>
+            <InputText class="form-control" @bind-Value="profile.PriorityMuscle" />
+        </div>
+        <div class="duo-card">
+            <div class="duo-title">Unité préférée</div>
+            <InputSelect class="form-select" @bind-Value="profile.Unite">
+                <option value="kg">Kilogrammes (kg)</option>
+              <option value="lb">Livres (lb)</option>
+            </InputSelect>
+        </div>
+        <div class="text-center mt-4">
+            <button class="duo-btn">💾 Sauvegarder</button>
+        </div>
+
+        @if (message is not null)
+        {
+            <div class="motiv-message">@message</div>
+        }
+    </EditForm>
