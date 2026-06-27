@@ -1,4 +1,4 @@
-﻿@page "/exercices"
+@page "/exercices"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Services.Data
@@ -111,13 +111,15 @@
             {
                 Exercice = selectedExercice,
                 Date = selectedDate,
-                Poids = poids
+                Poids = poidsKg,
+                EnLb = selectedUnite == "lb"
             };
         var entryLocal = new PoidsEntryLocal
             {
                 Exercice = selectedExercice,
                 Date = selectedDate,
-                Poids = poids
+                Poids = poidsKg,
+                EnLb = selectedUnite == "lb"
             };
         await PoidsService.AddEntryAsync(entry, entryLocal);
         data = await PoidsService.GetEntriesAsync();
@@ -214,4 +216,5 @@
     }
 
 }
+
 

@@ -1,5 +1,6 @@
-﻿// FitnessTracker.V1/Services/SupabaseService2.cs
+// FitnessTracker.V1/Services/SupabaseService2.cs
 using Blazored.LocalStorage;
+using FitnessTracker.V1.Models;
 using FitnessTracker.V1.Models.Gamification;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
@@ -29,6 +30,8 @@ public class SupabaseService2
     private readonly string _programmesUrl;
     private readonly string _programmesManuelsUrl;
     private const string SessionKey = "supabase_session";
+    private const string AccessTokenKey = "access_token";
+    private const string RefreshTokenKey = "refresh_token";
     // ─── constructeur ─────────────────────────────────────────────
     public SupabaseService2(
         HttpClient http,
@@ -53,21 +56,27 @@ public class SupabaseService2
     }
 
     // ─── AUTH : Bearer dynamique ──────────────────────────────────
-    public void RefreshAuthHeaders()
+    public bool RefreshAuthHeaders()
     {
         var token = _supabase.Auth.CurrentSession?.AccessToken;
         _http.DefaultRequestHeaders.Remove("Authorization");
 
-        if (!string.IsNullOrEmpty(token))
-            _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        else
+        if (string.IsNullOrEmpty(token))
+        {
             Console.WriteLine("❌ Aucun token (utilisateur non connecté ou session expirée).");
+            return false;
+        }
+
+        _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        return true;
     }
 
     public void ClearAuthHeaders() =>
         _http.DefaultRequestHeaders.Remove("Authorization");
 
     public string? GetCurrentUserId() => _supabase.Auth.CurrentUser?.Id;
+
+    public bool IsCurrentUserAuthenticated => !string.IsNullOrEmpty(GetCurrentUserId());
 
     // ─── ENTRY (POIDS) ────────────────────────────────────────────
     #region Entry
@@ -92,18 +101,30 @@ public class SupabaseService2
         }
     }
 
-    public async Task AddEntryAsync(PoidsEntry entry) =>
+    public async Task AddEntryAsync(PoidsEntry entry)
+    {
+        var userId = GetCurrentUserIdAsGuid();
+        if (userId is null)
+            throw new InvalidOperationException("Utilisateur non connecté.");
+
+        entry.UserId = userId.Value;
         await _supabase.From<PoidsEntry>().Insert(entry);
+    }
 
     public async Task DeleteEntriesNotInAsync(List<PoidsEntry> local)
     {
+        var userId = GetCurrentUserIdAsGuid();
+        if (userId is null)
+            return;
+
+        RefreshAuthHeaders();
         var remote = await GetEntriesAsync();
         var toDelete = remote.Where(r =>
             !local.Any(l => l.Exercice == r.Exercice && l.Date.Date == r.Date.Date));
 
         var tasks = toDelete.Select(r =>
         {
-            var url = $"{_entriesUrl}?exercice=eq.{Uri.EscapeDataString(r.Exercice)}&date=eq.{r.Date:yyyy-MM-dd}";
+            var url = $"{_entriesUrl}?user_id=eq.{userId}&exercice=eq.{Uri.EscapeDataString(r.Exercice)}&date=eq.{r.Date:yyyy-MM-dd}";
             return _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
         });
 
@@ -115,7 +136,12 @@ public class SupabaseService2
 
     public async Task DeleteByExerciceAndDateAsync(string exo, DateTime date)
     {
-        var url = $"{_entriesUrl}?exercice=eq.{Uri.EscapeDataString(exo)}&date=eq.{date:yyyy-MM-dd}";
+        var userId = GetCurrentUserIdAsGuid();
+        if (userId is null)
+            throw new InvalidOperationException("Utilisateur non connecté.");
+
+        RefreshAuthHeaders();
+        var url = $"{_entriesUrl}?user_id=eq.{userId}&exercice=eq.{Uri.EscapeDataString(exo)}&date=eq.{date:yyyy-MM-dd}";
         var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
         res.EnsureSuccessStatusCode();
     }
@@ -125,16 +151,22 @@ public class SupabaseService2
     #region Programmes
     public async Task<List<ProgrammeModel>> GetProgrammesAsync()
     {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId)) return new();
+
         RefreshAuthHeaders();
-        var list = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmesUrl) ?? new();
+        var list = await _http.GetFromJsonAsync<List<ProgrammeModel>>($"{_programmesUrl}?user_id=eq.{userId}") ?? new();
         list.ForEach(p => p.Source = "auto");
         return list;
     }
 
     public async Task<List<ProgrammeModel>> GetProgrammesManuelsAsync()
     {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId)) return new();
+
         RefreshAuthHeaders();
-        var list = await _http.GetFromJsonAsync<List<ProgrammeModel>>(_programmesManuelsUrl) ?? new();
+        var list = await _http.GetFromJsonAsync<List<ProgrammeModel>>($"{_programmesManuelsUrl}?user_id=eq.{userId}") ?? new();
         list.ForEach(p => p.Source = "manuel");
         return list;
     }
@@ -153,15 +185,27 @@ public class SupabaseService2
         var userId = GetCurrentUserId();
         if (userId is null) return false;
 
+        var programmeId = p.Id == Guid.Empty ? Guid.NewGuid() : p.Id;
+        p.Id = programmeId;
         p.UserId = userId;
         p.Source = isManual ? "manuel" : "auto";
         var url = isManual ? _programmesManuelsUrl : _programmesUrl;
+
+        var localModel = new ProgrammeModelLocal
+        {
+            Id = programmeId,
+            Nom = p.Nom,
+            DateDebut = p.DateDebut,
+            Contenu = p.Contenu,
+            Source = p.Source
+        };
+        await _localStorage.SetItemAsync($"programme_{programmeId}", localModel);
 
         RefreshAuthHeaders();
 
         var payload = new
         {
-            id = p.Id == Guid.Empty ? Guid.NewGuid() : p.Id,
+            id = programmeId,
             nom = p.Nom,
             date_debut = p.DateDebut.ToString("yyyy-MM-dd"),
             contenu = p.Contenu,
@@ -169,15 +213,29 @@ public class SupabaseService2
             user_id = Guid.Parse(userId)
         };
 
-        var resp = await _http.PostAsJsonAsync(url, new[] { payload });
-        return resp.IsSuccessStatusCode;
+        try
+        {
+            var resp = await _http.PostAsJsonAsync(url, new[] { payload });
+            return resp.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Programme conservé localement, synchro Supabase impossible : " + ex.Message);
+            return false;
+        }
     }
 
     public async Task<bool> DeleteProgrammeUnifiedAsync(Guid id, string source)
     {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId)) return false;
+
+        RefreshAuthHeaders();
         var url = source == "manuel"
-            ? $"{_programmesManuelsUrl}?id=eq.{id}"
-            : $"{_programmesUrl}?id=eq.{id}";
+            ? $"{_programmesManuelsUrl}?id=eq.{id}&user_id=eq.{userId}"
+            : $"{_programmesUrl}?id=eq.{id}&user_id=eq.{userId}";
+
+        await _localStorage.RemoveItemAsync($"programme_{id}");
 
         var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
         return res.IsSuccessStatusCode;
@@ -185,12 +243,23 @@ public class SupabaseService2
 
     public async Task<bool> UpdateProgrammeUnifiedAsync(ProgrammeModel programme)
     {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrEmpty(userId)) return false;
+
+        await _localStorage.SetItemAsync($"programme_{programme.Id}", new ProgrammeModelLocal
+        {
+            Id = programme.Id,
+            Nom = programme.Nom,
+            DateDebut = programme.DateDebut,
+            Contenu = programme.Contenu,
+            Source = programme.Source
+        });
+
         RefreshAuthHeaders();
 
         var url = programme.Source == "manuel"
-            ? $"{_programmesManuelsUrl}?id=eq.{programme.Id}"
-            : $"{_programmesUrl}?id=eq.{programme.Id}";
-        Console.WriteLine(programme.Contenu);
+            ? $"{_programmesManuelsUrl}?id=eq.{programme.Id}&user_id=eq.{userId}"
+            : $"{_programmesUrl}?id=eq.{programme.Id}&user_id=eq.{userId}";
         var patch = new Dictionary<string, object>
         {
             ["nom"] = programme.Nom,
@@ -228,39 +297,56 @@ public class SupabaseService2
     public async Task SaveSessionAsync()
     {
         var session = _supabase.Auth.CurrentSession;
-        if (session != null)
+        if (session is null)
         {
-            var json = JsonSerializer.Serialize(session);
-            await _localStorage.SetItemAsync("supabase_session", json);
+            await ClearStoredSessionAsync();
+            return;
         }
-        await _localStorage.SetItemAsync("access_token", session.AccessToken);
-        await _localStorage.SetItemAsync("refresh_token", session.RefreshToken);
+
+        var json = JsonSerializer.Serialize(session);
+        await _localStorage.SetItemAsync(SessionKey, json);
+        await _localStorage.SetItemAsync(AccessTokenKey, session.AccessToken);
+        await _localStorage.SetItemAsync(RefreshTokenKey, session.RefreshToken);
     }
 
     public async Task<bool> LoadSessionAsync()
     {
-        var json = await _localStorage.GetItemAsync<string>("supabase_session");
+        var json = await _localStorage.GetItemAsync<string>(SessionKey);
         if (!string.IsNullOrEmpty(json))
         {
-            var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(json);
+            Supabase.Gotrue.Session? session;
+            try
+            {
+                session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(json);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"❌ Session locale corrompue : {ex.Message}");
+                await ClearStoredSessionAsync();
+                return false;
+            }
+
             if (session != null)
             {
                 try
                 {
-                    var access = await _localStorage.GetItemAsync<string>("access_token");
-                    var refresh = await _localStorage.GetItemAsync<string>("refresh_token");
+                    var access = await _localStorage.GetItemAsync<string>(AccessTokenKey);
+                    var refresh = await _localStorage.GetItemAsync<string>(RefreshTokenKey);
 
-                    if (!string.IsNullOrEmpty(access) && !string.IsNullOrEmpty(refresh))
+                    if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh))
                     {
-                        await _supabase.Auth.SetSession(access, refresh);
+                        await ClearStoredSessionAsync();
+                        return false;
                     }
+
+                    await _supabase.Auth.SetSession(access, refresh);
                     Console.WriteLine("🟢 Session restaurée avec succès");
                     return true;
                 }
                 catch (Supabase.Gotrue.Exceptions.GotrueException ex)
                 {
                     Console.WriteLine($"❌ Session invalide : {ex.Message}");
-                    await _localStorage.RemoveItemAsync("supabase_session");
+                    await ClearStoredSessionAsync();
                     return false;
                 }
             }
@@ -291,11 +377,18 @@ public class SupabaseService2
     }
     public Guid? GetCurrentUserIdAsGuid()
     {
-        var idString = _supabase.Auth.CurrentUser.Id;
+        var idString = _supabase.Auth.CurrentUser?.Id;
 
         if (Guid.TryParse(idString, out var idGuid))
             return idGuid;
         return null;
+    }
+
+    private async Task ClearStoredSessionAsync()
+    {
+        await _localStorage.RemoveItemAsync(SessionKey);
+        await _localStorage.RemoveItemAsync(AccessTokenKey);
+        await _localStorage.RemoveItemAsync(RefreshTokenKey);
     }
 
 
@@ -377,3 +470,6 @@ public class SupabaseService2
 
 
 }
+
+
+

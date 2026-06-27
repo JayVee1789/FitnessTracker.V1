@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@inject Supabase.Client Supabase
+@inject AuthService AuthService
 @inject NavigationManager Nav
 
 <div class="mobile-container d-flex flex-column justify-content-center align-items-center app-main">
@@ -19,7 +19,9 @@
                     <input id="password" placeholder="••••••••" type="password" class="form-control" @bind="password" />
                 </div>
 
-                <button class="duo-btn w-100 mb-3" @onclick="RegisterUser">Créer mon compte</button>
+                <button class="duo-btn w-100 mb-3" @onclick="RegisterUser" disabled="@isSubmitting">
+                    @(isSubmitting ? "Création en cours..." : "Créer mon compte")
+                </button>
 
                 @if (!string.IsNullOrEmpty(error))
                 {
@@ -47,6 +49,7 @@
     private string password = "";
     private string role = "";
     private bool registered = false;
+    private bool isSubmitting = false;
     private string error = "";
 
     private async Task RegisterUser()
@@ -73,30 +76,27 @@
 
         try
         {
-            var session = await Supabase.Auth.SignUp(email, password);
-            if (session?.User is not null)
+            isSubmitting = true;
+            var result = await AuthService.SignUpAsync(email, password);
+
+            if (result.Success)
             {
-                var profile = new SupabaseUserProfile
-                    {
-                        Id = session.User.Id,
-                        Email = email,
-                        Role = "user"
-                    };
-
-                await Supabase.From<SupabaseUserProfile>().Insert(profile);
-
                 registered = true;
                 await Task.Delay(1000);
                 Nav.NavigateTo("/mon-profil");
             }
             else
             {
-                error = "❌ Échec de l'inscription. Veuillez réessayer.";
+                error = $"❌ {result.Message}";
             }
         }
         catch (Exception ex)
         {
             error = $"❌ Erreur : {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
         }
     }
 

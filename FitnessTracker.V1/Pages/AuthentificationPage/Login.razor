@@ -46,8 +46,8 @@
 
     private async Task LoginAsync()
     {
-        var success = await AuthService.SignInAsync(email, password);
-        if (success)
+        var result = await AuthService.SignInWithMessageAsync(email, password);
+        if (result.Success)
         {
             SupabaseService.RefreshAuthHeaders();
             Console.WriteLine("✅ Connexion réussie");
@@ -58,7 +58,7 @@
         }
         else
         {
-            errorMessage = "Échec de la connexion. Vérifie tes identifiants.";
+            errorMessage = result.Message;
             Console.WriteLine("❌ Connexion échouée");
         }
     }

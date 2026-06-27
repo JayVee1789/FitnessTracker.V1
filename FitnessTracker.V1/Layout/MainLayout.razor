@@ -1,4 +1,4 @@
-﻿@using FitnessTracker.V1.Components.PagePrincipal
+@using FitnessTracker.V1.Components.PagePrincipal
 @using FitnessTracker.V1.Services.Data
 @using FitnessTracker.V1.Models.Gamification
 @inherits LayoutComponentBase
@@ -32,16 +32,6 @@
     private bool _updateAvailable = false;
     private string role = "user";
 
-    protected override async Task OnInitializedAsync()
-    {
-        var isReset = await LocalStorage.GetItemAsync<bool>("poids_reset_done");
-        if (!isReset)
-        {
-            await PoidsService.ResetAllPoidsLocalAsync();
-            await LocalStorage.SetItemAsync("poids_reset_done", true);
-        }
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -63,3 +53,4 @@
         await JS.InvokeVoidAsync("pwaUpdate.reload");
     }
 }
+

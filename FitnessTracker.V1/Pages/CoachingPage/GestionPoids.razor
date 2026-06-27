@@ -1,4 +1,4 @@
-﻿@page "/gestion_poids"
+@page "/gestion_poids"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Services.Data
@@ -151,7 +151,6 @@
     string newExercice = "";
     DateTime selectedDate = DateTime.Today;
     double poids;
-    private readonly Supabase.Client _supabase;
     List<PoidsEntry> data = new();
     List<DateTime> allDates = new();
 
@@ -188,13 +187,15 @@
             {
                 Exercice = selectedExercice,
                 Date = selectedDate,
-                Poids = poids
+                Poids = poidsKg,
+                EnLb = selectedUnite == "lb"
             };
         var local = new PoidsEntryLocal
             {
                 Exercice = entry.Exercice,
                 Date = entry.Date,
-                Poids = entry.Poids
+                Poids = entry.Poids,
+                EnLb = entry.EnLb
             };
 
         await PoidsService.AddEntryAsync(entry, local);
@@ -278,13 +279,13 @@
             if (!exists)
             {
                 // injection user_id (optionnel si déjà géré dans SupabaseService)
-                var userGuid = Guid.TryParse(_supabase.Auth.CurrentUser?.Id, out var idGuid) ? idGuid : Guid.Empty;
-                if (userGuid == Guid.Empty)
+                var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
+                if (userGuid is null)
                 {
                     Console.WriteLine("❌ User ID invalide !");
                     return;
                 }
-                entry.UserId = userGuid;
+                entry.UserId = userGuid.Value;
                 await SupabaseService.AddEntryAsync(entry);
                 added++;
             }
@@ -338,3 +339,4 @@
     }
 
 }
+

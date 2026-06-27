@@ -1,4 +1,4 @@
-﻿@page "/view-session"
+@page "/view-session"
 @using System.Text.Json
 @using FitnessTracker.V1.Helper
 @using FitnessTracker.V1.Mapping
@@ -442,17 +442,7 @@
             Console.WriteLine($"🔍 {ex.ExerciseName} | IsDirty = {ex.IsDirty} | Poids = {ex.PoidsUtilisé}");
 
             if (ex.ExerciseName == "Repos") continue;
-            double poidsKg = 0;
-            // ⚠️ Utiliser IsLb (pas AfficherEnLb)
-            if (ex.IsLb)
-            {
-                poidsKg = ex.PoidsAffiche * 0.453592;
-            }
-            else
-            {
-                poidsKg = ex.PoidsAffiche;
-            }
-            // var poidsKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+            double poidsKg = ex.PoidsUtilisé;
 
             var entry = new PoidsEntry
                 {
@@ -513,7 +503,7 @@
         // MarquerSeanceCommeComplete();
         // await JS.InvokeVoidAsync("showToast", "✅ Session enregistrées");
         toastClass = "show";
-        MarquerSeanceCommeComplete();
+        await MarquerSeanceCommeComplete();
         StateHasChanged();
         await Task.Delay(2500);
         toastClass = "";
@@ -790,14 +780,9 @@
         StateHasChanged();
     }
 
-    private void MarquerAtteint(ExerciceJour ex)
+    private async Task MarquerAtteint(ExerciceJour ex)
     {
-        //si le poids en livre
-        //convertir en kg 
-
-
-        // Conversion en kg si saisi en lb
-        double poidsSaisiKg = ex.IsLb ? ex.PoidsAffiche * 0.453592 : ex.PoidsAffiche;
+        double poidsSaisiKg = ex.PoidsUtilisé;
 
         // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
        
@@ -813,8 +798,8 @@
                 EnLb = ex.IsLb,
                 ObjectifAtteint = ex.ObjectifAtteint
             };
-        PoidsService.AddOrUpdateLocal(local);
-        _ = CheckFireworks(); // 🔥 déclenche sans bloquer
+        await PoidsService.AddOrUpdateLocal(local);
+        await CheckFireworks(); // 🔥 déclenche sans bloquer
     }
 
   
@@ -857,7 +842,7 @@
     }
 
     #region MARQUAGE SEANCE SEMAINE COMPLETE
-    private void MarquerSeanceCommeComplete()
+    private async Task MarquerSeanceCommeComplete()
     {
         if (SelectedProgrammeId == Guid.Empty)
             return;
@@ -867,7 +852,7 @@
         if (!SeancesCompletes.Contains(key))
         {
             SeancesCompletes.Add(key);
-            JS.InvokeVoidAsync("localStorage.setItem", "seancesCompletes", string.Join(",", SeancesCompletes));
+            await JS.InvokeVoidAsync("localStorage.setItem", "seancesCompletes", string.Join(",", SeancesCompletes));
         }
     }
 
@@ -936,3 +921,5 @@
     }
    #endregion
 }
+
+

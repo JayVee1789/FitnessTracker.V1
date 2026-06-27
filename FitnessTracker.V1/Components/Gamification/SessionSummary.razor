@@ -1,4 +1,4 @@
-﻿@using FitnessTracker.V1.Models
+@using FitnessTracker.V1.Models
 
 
 @using static FitnessTracker.V1.Models.Model
@@ -21,7 +21,7 @@
             .Where(e => e.ExerciseName != "Repos")
             .Sum(e =>
             {
-                double poidsKg = e.IsLb ? e.PoidsUtilisé * 0.453592 : e.PoidsUtilisé;
+                double poidsKg = e.PoidsUtilisé;
                 return poidsKg * e.Series * e.Repetitions;
             });
 
@@ -34,7 +34,7 @@
     private string FormatPoids(double poids, bool isLb)
     {
         return isLb
-            ? $"{Math.Round(poids, 1)} lb"
+            ? $"{Math.Round(poids / 0.453592, 1)} lb"
             : $"{Math.Round(poids, 1)} kg";
     }
 }
@@ -119,3 +119,4 @@
 
     <button @onclick="OnFermer">Fermer</button>
 </div>
+

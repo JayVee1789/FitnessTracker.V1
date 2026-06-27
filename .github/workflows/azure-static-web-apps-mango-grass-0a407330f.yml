@@ -15,29 +15,38 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Inject Supabase anon key
-      shell: bash
-      run: |
-        FILE="FitnessTracker.V1/wwwroot/appsettings.Production.json"
-        if [ ! -f "$FILE" ]; then
-          cp FitnessTracker.V1/wwwroot/appsettings.json "$FILE"
-        fi
-        tmp=$(mktemp)
-        jq --arg key "$SUPABASE_ANON_KEY" '.Supabase.AnonKey = $key' "$FILE" > "$tmp"
-        mv "$tmp" "$FILE"
-        echo "✅ AnonKey injecté"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-    - name: Build & Deploy
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_GRASS_0A407330F }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        action: upload
-        app_location: "./FitnessTracker.V1"
-        api_location: "Api"
-        output_location: "FitnessTracker.V1/bin/Release/net8.0/publish/wwwroot"
+      - name: Inject Supabase anon key
+        shell: bash
+        run: |
+          FILE="FitnessTracker.V1/wwwroot/appsettings.Production.json"
+          if [ ! -f "$FILE" ]; then
+            cp FitnessTracker.V1/wwwroot/appsettings.json "$FILE"
+          fi
+          tmp=$(mktemp)
+          jq --arg key "$SUPABASE_ANON_KEY" '.Supabase.AnonKey = $key' "$FILE" > "$tmp"
+          mv "$tmp" "$FILE"
+          echo "AnonKey injecte"
+
+      - name: Publish Blazor app
+        run: dotnet publish FitnessTracker.V1/FitnessTracker.V1.csproj -c Release -o publish
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_GRASS_0A407330F }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          app_location: "publish/wwwroot"
+          api_location: ""
+          output_location: ""
+          skip_app_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

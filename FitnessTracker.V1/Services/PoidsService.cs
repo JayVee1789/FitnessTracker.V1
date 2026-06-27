@@ -1,9 +1,7 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using FitnessTracker.V1.Models;
 using FitnessTracker.V1.Services.Data;
 using FitnessTracker.V1.Services.Gamification;
-using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
 
 namespace FitnessTracker.V1.Services
 {
@@ -11,10 +9,10 @@ namespace FitnessTracker.V1.Services
     {
         private const string StorageKey = "poids_entries";
         private const string ExercicesKey = "exercise_list";
+        private const string PoidsKeysListKey = "poids_keys_list";
 
         private readonly ILocalStorageService _localStorage;
         private readonly SupabaseService2 _supabase;
-        private const string PoidsKeysListKey = "poids_keys_list";
 
         public PoidsService(ILocalStorageService localStorage, SupabaseService2 supabase)
         {
@@ -22,209 +20,134 @@ namespace FitnessTracker.V1.Services
             _supabase = supabase;
         }
 
-
-        //public async Task<List<PoidsEntry>> GetEntriesAsync()
-        //{
-        //    var userId = _supabase.GetCurrentUserId();
-        //    if (string.IsNullOrEmpty(userId))
-        //    {
-        //        Console.WriteLine("❌ Aucun utilisateur connecté pour filtrer les poids.");
-        //        return new();
-        //    }
-
-        //    try
-        //    {
-        //        var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
-        //        return local?
-        //            .Where(e => e.UserId == userId)
-        //            .Select(e => new PoidsEntry
-        //            {
-        //                Id = e.Id,
-        //                Date = e.Date,
-        //                Exercice = e.Exercice,
-        //                Poids = e.Poids,
-        //                UserId = e.UserId
-        //            })
-        //            .ToList() ?? new();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("❌ Erreur lecture localStorage, reset...");
-        //        Console.WriteLine(ex);
-        //        await _localStorage.RemoveItemAsync(StorageKey);
-        //        return new();
-        //    }
-        //}
         public async Task<List<PoidsEntry>> GetEntriesAsync()
         {
-            var remoteEntries = await _supabase.GetPoidsEntriesFromSupabaseAsync();
+            if (!_supabase.IsCurrentUserAuthenticated)
+            {
+                Console.WriteLine("Utilisateur non connecté : lecture locale des poids.");
+                return (await GetEntriesFromLocalAsync()).ToList();
+            }
 
+            var remoteEntries = await _supabase.GetPoidsEntriesFromSupabaseAsync();
             if (remoteEntries.Any())
             {
-                Console.WriteLine($"✅ {remoteEntries.Count} entrées synchronisées depuis Supabase.");
-                await OverwriteEntriesAsync(remoteEntries); // ⬅️ met à jour le local
+                Console.WriteLine($"{remoteEntries.Count} entrées synchronisées depuis Supabase.");
+                await OverwriteEntriesAsync(remoteEntries);
                 return remoteEntries;
             }
 
-            Console.WriteLine("⚠️ Supabase vide ➡️ fallback local activé.");
-            return await GetEntriesFromLocalAsync();
+            var localEntries = await GetEntriesFromLocalAsync();
+            if (localEntries.Any())
+            {
+                Console.WriteLine("Aucune entrée Supabase trouvée : conservation des poids locaux filtrés pour l'utilisateur courant.");
+                return localEntries;
+            }
+
+            await OverwriteEntriesAsync(new());
+            return new();
         }
 
-        //private async Task<List<PoidsEntry>> GetEntriesFromLocalAsync()
-        //{
-        //    var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
-        //    var userGuid = _supabase.GetCurrentUserIdAsGuid();
-        //    if (userGuid == null) return new();
-        //    var list = local?
-        //        .Where(e => e.UserId == userGuid)
-        //        .Select(e => new PoidsEntry
-        //        {
-        //            Id = e.Id,
-        //            Date = e.Date,
-        //            Exercice = e.Exercice,
-        //            Poids = e.Poids,
-        //            UserId = e.UserId
-        //        }).ToList() ?? new();
-
-        //    Console.WriteLine($"✅ {list.Count} entrées récupérées en local.");
-        //    return list;
-        //}
         private async Task<List<PoidsEntry>> GetEntriesFromLocalAsync()
         {
-            try
-            {
-                var local = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
-                var userGuid = _supabase.GetCurrentUserIdAsGuid();
-                if (userGuid == null) return new();
+            var locals = await GetAllLocalPoidsAsync();
+            var userGuid = _supabase.GetCurrentUserIdAsGuid();
 
-                var list = local?
-                    .Where(e => e.UserId == userGuid.Value)
-                    .Select(e => new PoidsEntry
-                    {
-                        Id = e.Id,
-                        Date = e.Date,
-                        Exercice = e.Exercice,
-                        Poids = e.Poids,
-                        UserId = e.UserId,
-                        EnLb = e.EnLb,
-                        ObjectifAtteint = e.ObjectifAtteint
-                    }).ToList() ?? new();
+            if (userGuid is not null)
+                locals = locals.Where(e => e.UserId == userGuid.Value).ToList();
 
-                Console.WriteLine($"✅ {list.Count} entrées locales chargées");
-                return list;
-            }
-            catch (System.Text.Json.JsonException ex)
-            {
-                Console.WriteLine("❌ JSON corrompu dans LocalStorage ➡️ reset local.");
-                Console.WriteLine($"Erreur JSON : {ex.Message}");
-                await _localStorage.RemoveItemAsync(StorageKey);
-                Console.WriteLine("✅ LocalStorage poids_entries réinitialisé proprement.");
-                return new();
-            }
+            return locals.Select(ToRemote).ToList();
         }
+
         public async Task ResetAllPoidsLocalAsync()
         {
             var keys = await _localStorage.KeysAsync();
             var entryKeys = keys.Where(k => k.StartsWith("entry_")).ToList();
 
-            // Suppression des entrées individuelles
             foreach (var key in entryKeys)
-            {
                 await _localStorage.RemoveItemAsync(key);
-                Console.WriteLine($"❌ Clé supprimée : {key}");
-            }
 
-            // Suppression des clés globales
-            await _localStorage.RemoveItemAsync("poids_entries");
-            Console.WriteLine("✅ Clé poids_entries supprimée.");
-
-            await _localStorage.RemoveItemAsync("poids_keys_list");
-            Console.WriteLine("✅ Clé poids_keys_list supprimée.");
-
-            Console.WriteLine($"✅ Nettoyage complet terminé : {entryKeys.Count} entrées individuelles + globales supprimées.");
+            await _localStorage.RemoveItemAsync(StorageKey);
+            await _localStorage.RemoveItemAsync(PoidsKeysListKey);
         }
 
         public async Task AddEntryAsync(PoidsEntry entry, PoidsEntryLocal local)
         {
             var userGuid = _supabase.GetCurrentUserIdAsGuid();
-            if (userGuid == null)
+            if (userGuid is not null)
             {
-                Console.WriteLine("❌ User Guid null → Annulation AddEntryAsync");
+                entry.UserId = userGuid.Value;
+                local.UserId = userGuid.Value;
+            }
+
+            local.Id = entry.Id == Guid.Empty ? Guid.NewGuid() : entry.Id;
+            entry.Id = local.Id;
+            local.Exercice = entry.Exercice;
+            local.Date = entry.Date;
+            local.Poids = entry.Poids;
+            local.EnLb = entry.EnLb;
+            local.ObjectifAtteint = entry.ObjectifAtteint;
+
+            await AddOrUpdateLocal(local);
+
+            if (userGuid is null)
+            {
+                Console.WriteLine("Poids sauvegardé localement seulement : utilisateur non connecté.");
                 return;
-            }
-            var validUserGuid = userGuid.Value; // ✅ Guid garanti
-            entry.UserId = validUserGuid;
-            local.UserId = validUserGuid;
-
-
-            if (string.IsNullOrEmpty(userGuid.ToString()))
-            {
-                Console.WriteLine("❌ Utilisateur non connecté. user_id requis pour Supabase.");
-                return;
-            }
-
-            var key = $"entry_{entry.Exercice}_{entry.Date:yyyyMMdd}";
-
-            local = new PoidsEntryLocal
-            {
-                Exercice = entry.Exercice,
-                Date = entry.Date,
-                Poids = entry.Poids,
-                UserId = local.UserId,        // ✅ Ajout
-                EnLb = entry.EnLb       // ✅ Ajout
-            };
-
-            try
-            {
-                await _localStorage.SetItemAsync(key, local);
-                Console.WriteLine($"✅ Local enregistré : {key}");
-
-                var allKeys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
-                if (!allKeys.Contains(key))
-                {
-                    allKeys.Add(key);
-                    await _localStorage.SetItemAsync(PoidsKeysListKey, allKeys);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Erreur localStorage : " + ex.Message);
             }
 
             try
             {
-                entry.UserId = entry.UserId;
                 await _supabase.AddEntryAsync(entry);
-                Console.WriteLine("✅ Synchro Supabase réussie");
+                Console.WriteLine("Synchro Supabase réussie");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Erreur lors de l'ajout dans Supabase : " + ex.Message);
+                Console.WriteLine("Erreur Supabase, poids conservé en local : " + ex.Message);
             }
         }
 
         public async Task<List<PoidsEntryLocal>> GetAllLocalPoidsAsync()
         {
-            var list = new List<PoidsEntryLocal>();
-            var keys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
+            var all = new List<PoidsEntryLocal>();
 
-            foreach (var key in keys)
+            try
+            {
+                var global = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
+                if (global is not null)
+                    all.AddRange(global);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lecture poids_entries impossible, reset de la clé : " + ex.Message);
+                await _localStorage.RemoveItemAsync(StorageKey);
+            }
+
+            var keys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
+            foreach (var key in keys.ToList())
             {
                 try
                 {
                     var entry = await _localStorage.GetItemAsync<PoidsEntryLocal>(key);
-                    if (entry != null)
-                        list.Add(entry);
+                    if (entry is not null)
+                        all.Add(entry);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"❌ Erreur lecture clé {key} : {ex.Message}");
+                    Console.WriteLine($"Lecture impossible pour {key} : {ex.Message}");
                 }
             }
 
-            return list;
-        }
+            var merged = all
+                .Where(e => !string.IsNullOrWhiteSpace(e.Exercice))
+                .GroupBy(e => LocalKey(e.Exercice, e.Date, e.UserId))
+                .Select(g => g.Last())
+                .OrderBy(e => e.Exercice)
+                .ThenBy(e => e.Date)
+                .ToList();
 
+            await SaveAllLocalPoidsAsync(merged);
+            return merged;
+        }
 
         public async Task OverwriteEntriesAsync(List<PoidsEntry> entries)
         {
@@ -234,38 +157,66 @@ namespace FitnessTracker.V1.Services
                 Exercice = e.Exercice,
                 Date = e.Date,
                 Poids = e.Poids,
-                UserId = e.UserId
+                UserId = e.UserId,
+                EnLb = e.EnLb,
+                ObjectifAtteint = e.ObjectifAtteint
             }).ToList();
 
-            await _localStorage.SetItemAsync(StorageKey, locals);
+            await SaveAllLocalPoidsAsync(locals);
         }
 
         public async Task RemoveEntryAsync(string exercice, DateTime date)
         {
-            var entries = await GetEntriesAsync();
-            entries.RemoveAll(e => e.Exercice == exercice && e.Date.Date == date.Date);
-            await OverwriteEntriesAsync(entries);
+            var entries = await GetAllLocalPoidsAsync();
+            entries.RemoveAll(e => e.Exercice == exercice && e.Date.Date == date.Date && BelongsToCurrentUser(e));
+            await SaveAllLocalPoidsAsync(entries);
+
+            if (_supabase.IsCurrentUserAuthenticated)
+            {
+                try { await _supabase.RemoveByExerciceAndDateAsync(exercice, date); }
+                catch (Exception ex) { Console.WriteLine("Suppression Supabase impossible : " + ex.Message); }
+            }
         }
 
         public async Task RemoveDateAsync(DateTime date)
         {
-            var entries = await GetEntriesAsync();
-            entries.RemoveAll(e => e.Date.Date == date.Date);
-            await OverwriteEntriesAsync(entries);
+            var entries = await GetAllLocalPoidsAsync();
+            var toRemove = entries.Where(e => e.Date.Date == date.Date && BelongsToCurrentUser(e)).ToList();
+            entries.RemoveAll(e => toRemove.Any(r => SameEntry(r, e)));
+            await SaveAllLocalPoidsAsync(entries);
+
+            if (_supabase.IsCurrentUserAuthenticated)
+            {
+                foreach (var entry in toRemove)
+                {
+                    try { await _supabase.RemoveByExerciceAndDateAsync(entry.Exercice, entry.Date); }
+                    catch (Exception ex) { Console.WriteLine("Suppression Supabase impossible : " + ex.Message); }
+                }
+            }
         }
 
         public async Task RemoveExerciceAsync(string exercice)
         {
-            var entries = await GetEntriesAsync();
-            entries.RemoveAll(e => e.Exercice == exercice);
-            await OverwriteEntriesAsync(entries);
+            var entries = await GetAllLocalPoidsAsync();
+            var toRemove = entries.Where(e => e.Exercice == exercice && BelongsToCurrentUser(e)).ToList();
+            entries.RemoveAll(e => toRemove.Any(r => SameEntry(r, e)));
+            await SaveAllLocalPoidsAsync(entries);
+
+            if (_supabase.IsCurrentUserAuthenticated)
+            {
+                foreach (var entry in toRemove)
+                {
+                    try { await _supabase.RemoveByExerciceAndDateAsync(entry.Exercice, entry.Date); }
+                    catch (Exception ex) { Console.WriteLine("Suppression Supabase impossible : " + ex.Message); }
+                }
+            }
         }
 
         public async Task RemoveByIdAsync(Guid id)
         {
-            var entries = await GetEntriesAsync();
-            entries.RemoveAll(e => e.Id == id);
-            await OverwriteEntriesAsync(entries);
+            var entries = await GetAllLocalPoidsAsync();
+            entries.RemoveAll(e => e.Id == id && BelongsToCurrentUser(e));
+            await SaveAllLocalPoidsAsync(entries);
         }
 
         public async Task RemoveEntriesForExerciceAsync(string exercice)
@@ -289,7 +240,6 @@ namespace FitnessTracker.V1.Services
         public async Task<double> GetLastPoidsForExerciceAsync(string exercice)
         {
             var entries = await GetEntriesAsync();
-
             var dernier = entries
                 .Where(e => e.Exercice == exercice)
                 .OrderByDescending(e => e.Date)
@@ -301,22 +251,13 @@ namespace FitnessTracker.V1.Services
         public async Task SyncFromSupabaseAsync()
         {
             var remote = await _supabase.GetPoidsEntriesFromSupabaseAsync();
-
             if (remote.Any())
-            {
                 await OverwriteEntriesAsync(remote);
-                Console.WriteLine($"✅ Synchro locale mise à jour avec {remote.Count} entrées Supabase.");
-            }
-            else
-            {
-                Console.WriteLine("⚠️ Pas d’entrées à synchroniser depuis Supabase.");
-            }
         }
 
         public async Task<List<PoidsEntry>> GetEntriesFromSupabaseAsync()
         {
-            var entries = await _supabase.GetPoidsEntriesFromSupabaseAsync();
-            return entries;
+            return await _supabase.GetPoidsEntriesFromSupabaseAsync();
         }
 
         public async Task<double?> GetPoidsForExerciceAtDateAsync(string exercice, DateTime date)
@@ -327,47 +268,40 @@ namespace FitnessTracker.V1.Services
 
         public async Task SavePoidsLocalAsync(PoidsEntry entry)
         {
-            var key = $"entry_{entry.Exercice}_{entry.Date:yyyyMMdd}";
-
-            var local = new PoidsEntryLocal
+            await AddOrUpdateLocal(new PoidsEntryLocal
             {
                 Id = entry.Id,
                 Exercice = entry.Exercice,
                 Date = entry.Date,
                 Poids = entry.Poids,
-                UserId = entry.UserId
-            };
-
-            await _localStorage.SetItemAsync(key, local);
+                UserId = entry.UserId,
+                EnLb = entry.EnLb,
+                ObjectifAtteint = entry.ObjectifAtteint
+            });
         }
+
         public async Task SupprimerDepuisSupabaseAsync(string exercice, DateTime date)
         {
             await _supabase.RemoveByExerciceAndDateAsync(exercice, date);
         }
 
-        //public async Task SaveProgrammeLocallyAsync(ProgrammeModel programme)
-        //{
-        //    try
-        //    {
-        //        var json = JsonSerializer.Serialize(programme);
-        //        await SecureStorage.Default.SetAsync($"programme_{programme.Id}", json);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("❌ Erreur enregistrement local programme : " + ex.Message);
-        //    }
-        //}
         public async Task SaveEntryUnifiedAsync(PoidsEntry remote, PoidsEntryLocal local)
         {
+            await AddOrUpdateLocal(local);
+
+            if (!_supabase.IsCurrentUserAuthenticated)
+                return;
+
             try
             {
                 await SupprimerDepuisSupabaseAsync(remote.Exercice, remote.Date);
-                await AddEntryAsync(remote, local);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Erreur SaveEntryUnifiedAsync : " + ex.Message);
+                Console.WriteLine("Ancienne entrée Supabase non supprimée : " + ex.Message);
             }
+
+            await AddEntryAsync(remote, local);
         }
 
         public async Task AddEntryAndGamifyAsync(PoidsEntry entry, PoidsEntryLocal local, GamificationManager gamification)
@@ -375,34 +309,118 @@ namespace FitnessTracker.V1.Services
             await AddEntryAsync(entry, local);
             await gamification.AddXP(100, "Séance complétée");
         }
+
         public async Task AddOrUpdateLocal(PoidsEntryLocal entry)
         {
-            var all = await GetAllLocalPoidsAsync();
-
-            var existing = all.FirstOrDefault(e =>
-                e.Exercice == entry.Exercice &&
-                e.Date.Date == entry.Date.Date);
+            var all = await GetAllLocalPoidsWithoutPersistAsync();
+            var existing = all.FirstOrDefault(e => SameEntry(e, entry));
 
             if (existing is not null)
             {
-                // Update existant
+                existing.Id = entry.Id == Guid.Empty ? existing.Id : entry.Id;
                 existing.Poids = entry.Poids;
                 existing.EnLb = entry.EnLb;
                 existing.ObjectifAtteint = entry.ObjectifAtteint;
+                existing.UserId = entry.UserId;
             }
             else
             {
+                if (entry.Id == Guid.Empty)
+                    entry.Id = Guid.NewGuid();
                 all.Add(entry);
             }
 
             await SaveAllLocalPoidsAsync(all);
         }
+
         public async Task SaveAllLocalPoidsAsync(List<PoidsEntryLocal> all)
         {
-            await _localStorage.SetItemAsync("poids_entries", all);
+            var merged = all
+                .Where(e => !string.IsNullOrWhiteSpace(e.Exercice))
+                .GroupBy(e => LocalKey(e.Exercice, e.Date, e.UserId))
+                .Select(g => g.Last())
+                .OrderBy(e => e.Exercice)
+                .ThenBy(e => e.Date)
+                .ToList();
+
+            await _localStorage.SetItemAsync(StorageKey, merged);
+
+            var oldKeys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
+            foreach (var key in oldKeys)
+                await _localStorage.RemoveItemAsync(key);
+
+            var newKeys = new List<string>();
+            foreach (var entry in merged)
+            {
+                var key = EntryStorageKey(entry);
+                await _localStorage.SetItemAsync(key, entry);
+                newKeys.Add(key);
+            }
+
+            await _localStorage.SetItemAsync(PoidsKeysListKey, newKeys.Distinct().ToList());
         }
 
-       
+        private async Task<List<PoidsEntryLocal>> GetAllLocalPoidsWithoutPersistAsync()
+        {
+            var all = new List<PoidsEntryLocal>();
 
+            try
+            {
+                var global = await _localStorage.GetItemAsync<List<PoidsEntryLocal>>(StorageKey);
+                if (global is not null)
+                    all.AddRange(global);
+            }
+            catch
+            {
+                await _localStorage.RemoveItemAsync(StorageKey);
+            }
+
+            var keys = await _localStorage.GetItemAsync<List<string>>(PoidsKeysListKey) ?? new();
+            foreach (var key in keys)
+            {
+                try
+                {
+                    var entry = await _localStorage.GetItemAsync<PoidsEntryLocal>(key);
+                    if (entry is not null)
+                        all.Add(entry);
+                }
+                catch { }
+            }
+
+            return all
+                .Where(e => !string.IsNullOrWhiteSpace(e.Exercice))
+                .GroupBy(e => LocalKey(e.Exercice, e.Date, e.UserId))
+                .Select(g => g.Last())
+                .ToList();
+        }
+
+        private bool BelongsToCurrentUser(PoidsEntryLocal entry)
+        {
+            var userGuid = _supabase.GetCurrentUserIdAsGuid();
+            return userGuid is null || entry.UserId == Guid.Empty || entry.UserId == userGuid.Value;
+        }
+
+        private static bool SameEntry(PoidsEntryLocal a, PoidsEntryLocal b) =>
+            a.Exercice == b.Exercice && a.Date.Date == b.Date.Date && a.UserId == b.UserId;
+
+        private static string LocalKey(string exercice, DateTime date, Guid userId) =>
+            $"{userId:N}|{exercice.Trim().ToLowerInvariant()}|{date:yyyyMMdd}";
+
+        private static string EntryStorageKey(PoidsEntryLocal entry)
+        {
+            var safeExercise = Uri.EscapeDataString(entry.Exercice.Trim().ToLowerInvariant());
+            return $"entry_{entry.UserId:N}_{safeExercise}_{entry.Date:yyyyMMdd}";
+        }
+
+        private static PoidsEntry ToRemote(PoidsEntryLocal local) => new()
+        {
+            Id = local.Id,
+            Exercice = local.Exercice,
+            Date = local.Date,
+            Poids = local.Poids,
+            UserId = local.UserId,
+            EnLb = local.EnLb,
+            ObjectifAtteint = local.ObjectifAtteint
+        };
     }
 }

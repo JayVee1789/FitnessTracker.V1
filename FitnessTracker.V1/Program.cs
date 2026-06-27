@@ -35,13 +35,14 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddScoped(sp =>
 {
     var cfg = sp.GetRequiredService<IOptions<FT_SupabaseOptions>>().Value;
+    var supabaseUrl = NormalizeSupabaseUrl(cfg.Url);
     var sdkOpts = new SupabaseOptions
     {
         AutoRefreshToken = true,
         AutoConnectRealtime = false
        
     };
-    return new Client(cfg.Url, cfg.AnonKey, sdkOpts);
+    return new Client(supabaseUrl, cfg.AnonKey, sdkOpts);
 });
 
 // ──────────────── SUPABASESERVICE & AUTRES SERVICES ───────────────
@@ -58,7 +59,8 @@ builder.Services.AddSingleton<AppState>();
 builder.Services.AddHttpClient<SupabaseService2>((sp, http) =>
 {
     var cfg = sp.GetRequiredService<IOptions<FT_SupabaseOptions>>().Value;
-    http.BaseAddress = new Uri($"{cfg.Url}/rest/v1/");
+    var supabaseUrl = NormalizeSupabaseUrl(cfg.Url);
+    http.BaseAddress = new Uri($"{supabaseUrl}/rest/v1/");
     http.DefaultRequestHeaders.Add("apikey", cfg.AnonKey);
 });
 builder.Services.AddScoped<GamificationManager>();
@@ -96,3 +98,11 @@ if (!string.IsNullOrEmpty(refreshToken))
 }
 
 await host.RunAsync();
+
+static string NormalizeSupabaseUrl(string url)
+{
+    return url
+        .Trim()
+        .TrimEnd('/')
+        .Replace("/rest/v1", "", StringComparison.OrdinalIgnoreCase);
+}

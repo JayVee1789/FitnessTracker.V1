@@ -1,4 +1,4 @@
-﻿@page "/view-seance"
+@page "/view-seance"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models.Gamification
@@ -269,7 +269,11 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             Console.WriteLine($"✅ User ID : {userId}");
         }
 
-        Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var supabaseProgrammes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var locaux = await ChargerProgrammesLocauxAutoAsync();
+        var supabaseIds = supabaseProgrammes.Select(p => p.Id).ToHashSet();
+        var locauxFiltres = locaux.Where(l => !supabaseIds.Contains(l.Id)).ToList();
+        Programmes = supabaseProgrammes.Concat(locauxFiltres).ToList();
         var programme = Programmes.FirstOrDefault(p => p.Id == programmeId);
 
         if (programme is null)
@@ -462,7 +466,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         // MarquerSeanceCommeComplete();
         // await JS.InvokeVoidAsync("showToast", "✅ Session enregistrées");
         toastClass = "show";
-        MarquerSeanceCommeComplete();
+        await MarquerSeanceCommeComplete();
         StateHasChanged();
         
     }
@@ -471,14 +475,13 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
 
     private string? userId;
-    private void MarquerAtteint(ExerciceJour ex)
+    private async Task MarquerAtteint(ExerciceJour ex)
     {
         //si le poids en livre
         //convertir en kg
 
 
-        // Conversion en kg si saisi en lb
-        double poidsSaisiKg = ex.IsLb ? ex.PoidsAffiche * 0.453592 : ex.PoidsAffiche;
+        double poidsSaisiKg = ex.PoidsUtilisé;
 
         // Calcul de l’objectif à partir du dernier poids connu (PoidsUtilisé est la référence)
         if (string.IsNullOrEmpty(userId))
@@ -499,8 +502,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
                 EnLb = ex.IsLb,
                 ObjectifAtteint = ex.ObjectifAtteint
             };
-        PoidsService.AddOrUpdateLocal(local);
-        _ = CheckFireworks(); // 🔥 déclenche sans bloquer
+        await PoidsService.AddOrUpdateLocal(local);
+        await CheckFireworks(); // 🔥 déclenche sans bloquer
     }
     private async Task CheckFireworks()
     {
@@ -546,17 +549,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             Console.WriteLine($"🔍 {ex.ExerciseName} | IsDirty = {ex.IsDirty} | Poids = {ex.PoidsUtilisé}");
 
             if (ex.ExerciseName == "Repos") continue;
-            double poidsKg = 0;
-            // ⚠️ Utiliser IsLb (pas AfficherEnLb)
-            if (ex.IsLb)
-            {
-                poidsKg = ex.PoidsAffiche * 0.453592;
-            }
-            else
-            {
-                poidsKg = ex.PoidsAffiche;
-            }
-            // var poidsKg = ex.IsLb ? ex.PoidsUtilisé * 0.453592 : ex.PoidsUtilisé;
+            double poidsKg = ex.PoidsUtilisé;
 
             var entry = new PoidsEntry
                 {
@@ -830,3 +823,6 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         StateHasChanged();
     }
 }
+
+
+
