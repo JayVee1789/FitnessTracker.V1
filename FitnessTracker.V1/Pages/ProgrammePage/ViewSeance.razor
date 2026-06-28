@@ -37,12 +37,12 @@
     {
         <div class="col-6 col-md-4">
             <label class="form-label text-white">Semaine :</label>
-            <select class="form-select rounded-pill" @onchange="OnSemaineChanged">
+            <select class="form-select rounded-pill" value="@SelectedSemaineIndex" @onchange="OnSemaineChanged">
                 @for (int i = 0; i < SelectedPlan?.Weeks.Count; i++)
                 {
-                    @* bool semaineComplete = ExercisesSemaineComplete(i); *@
-                    <option value="@i" class="@(ExercisesSemaineComplete(i, SelectedJourIndex) ? "completed-option" : "")">
-                        @(ExercisesSemaineComplete(i, SelectedJourIndex) ? "✅ " : "") Semaine @(i + 1)
+                    var semaineComplete = ExercisesSemaineComplete(i);
+                    <option value="@i" class="@(semaineComplete ? "completed-option" : "")">
+                        @(semaineComplete ? "✅ " : "") Semaine @(i + 1)
                     </option>
 
                 }
@@ -51,10 +51,10 @@
 
         <div class="col-6 col-md-4">
             <label class="form-label text-white">Jour :</label>
-            <select class="form-select rounded-pill" @onchange="OnJourChanged">
+            <select class="form-select rounded-pill" value="@SelectedJourIndex" @onchange="OnJourChanged">
                 @for (int j = 1; j <= 7; j++)
                 {
-                    bool jourComplete = ExercisesJourComplete(j);
+                    bool jourComplete = IsSessionComplete(SelectedSemaineIndex, j);
                     <option value="@j" class="@(jourComplete ? "completed-option" : "")">
                         @(jourComplete ? "✅ " : "") Jour @j
                     </option>
@@ -380,8 +380,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         SelectedJourIndex = jour;
     }
 
-    private bool SemaineComplete(int semaineIndex) => Enumerable.Range(1, 7).All(j => SeancesCompletes.Contains($"{SelectedProgrammeId}:{semaineIndex}:{j}"));
-    private bool JourComplete(int jourIndex) => SeancesCompletes.Contains($"{SelectedProgrammeId}:{SelectedSemaineIndex}:{jourIndex}");
+    private bool SemaineComplete(int semaineIndex) => ExercisesSemaineComplete(semaineIndex);
+    private bool JourComplete(int jourIndex) => IsSessionComplete(SelectedSemaineIndex, jourIndex);
 
     private async Task OnSessionTerminee()
     {
@@ -651,7 +651,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         if (SelectedProgrammeId == Guid.Empty)
             return false;
 
-        return SeancesCompletes.Contains($"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}");
+        return IsSessionComplete(SelectedSemaineIndex, SelectedJourIndex);
     }
 
     private static int CalculateUpdatedStreak(DateTime? lastSessionDate, int currentStreak)
@@ -721,16 +721,28 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
 
 
-    private bool ExercisesJourComplete(int jourIndex)
+    private bool ExercisesJourComplete(int jourIndex) => IsSessionComplete(SelectedSemaineIndex, jourIndex);
+
+    private bool ExercisesSemaineComplete(int semaineIndex)
     {
-        string key = $"{SelectedProgrammeId}:{SelectedSemaineIndex}:{jourIndex}";
-        return SeancesCompletes.Contains(key);
+        if (SelectedProgrammeId == Guid.Empty || SelectedPlan is null || semaineIndex < 0 || semaineIndex >= SelectedPlan.Weeks.Count)
+            return false;
+
+        var trainingDays = SelectedPlan.Weeks[semaineIndex].Days
+            .Where(day => !day.IsRest)
+            .Select(day => day.DayIndex)
+            .ToList();
+
+        return trainingDays.Count > 0 && trainingDays.All(dayIndex => IsSessionComplete(semaineIndex, dayIndex));
     }
 
-    private bool ExercisesSemaineComplete(int semaineIndex, int _ = 0)
+    private bool IsSessionComplete(int semaineIndex, int jourIndex)
     {
-        return Enumerable.Range(1, 7).All(j =>
-            SeancesCompletes.Contains($"{SelectedProgrammeId}:{semaineIndex}:{j}"));
+        if (SelectedProgrammeId == Guid.Empty)
+            return false;
+
+        var key = $"{SelectedProgrammeId}:{semaineIndex}:{jourIndex}";
+        return SeancesCompletes.Contains(key);
     }
     private string SelectedProgrammeSource = "auto";
     private async Task ConfirmerSuppression()
