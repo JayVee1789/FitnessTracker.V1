@@ -78,6 +78,25 @@
     background: #f8fafc;
 }
 
+.progression-title-block {
+    max-width: 520px;
+    margin: 0 auto 1rem;
+}
+
+.progression-title-block h1 {
+    margin: 0;
+    color: #111827;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.progression-title-block p {
+    margin: 0.2rem 0 0;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
 .progression-header {
     display: flex;
     align-items: center;

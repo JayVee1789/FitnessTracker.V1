@@ -6,10 +6,15 @@
 @inject FitnessTracker.V1.Services.Data.SupabaseService2 SupabaseService
 
 <div class="progression-page">
+    <div class="progression-title-block">
+        <h1>Ta progression</h1>
+        <p>@PageTitle</p>
+    </div>
+
     <div class="progression-header">
         <div>
             <div class="progression-kicker">Carte de progression</div>
-            <h3>@PageTitle</h3>
+            <h3>Avancement du programme</h3>
         </div>
         <div class="progression-score">@CompletedCount / @TotalCount</div>
     </div>
