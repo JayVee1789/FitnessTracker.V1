@@ -29,9 +29,11 @@ public class SupabaseService2
     private readonly string _entriesUrl;
     private readonly string _programmesUrl;
     private readonly string _programmesManuelsUrl;
+    private readonly string _completedSessionsUrl;
     private const string SessionKey = "supabase_session";
     private const string AccessTokenKey = "access_token";
     private const string RefreshTokenKey = "refresh_token";
+    private const string CompletedSessionsLocalKey = "seancesCompletes";
     // ─── constructeur ─────────────────────────────────────────────
     public SupabaseService2(
         HttpClient http,
@@ -53,6 +55,7 @@ public class SupabaseService2
         _entriesUrl = $"{restBase}/{_options.Tables.Entries}";
         _programmesUrl = $"{restBase}/{_options.Tables.Programmes}";
         _programmesManuelsUrl = $"{restBase}/{_options.Tables.ProgrammesManuels}";
+        _completedSessionsUrl = $"{restBase}/{_options.Tables.CompletedSessions}";
     }
 
     // ─── AUTH : Bearer dynamique ──────────────────────────────────
@@ -236,6 +239,7 @@ public class SupabaseService2
             : $"{_programmesUrl}?id=eq.{id}&user_id=eq.{userId}";
 
         await _localStorage.RemoveItemAsync($"programme_{id}");
+        await DeleteCompletedSessionsForProgrammeAsync(id);
 
         var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
         return res.IsSuccessStatusCode;
@@ -294,6 +298,160 @@ public class SupabaseService2
     }
 
     #endregion
+
+    #region Completed sessions
+    public async Task<List<string>> GetCompletedSessionKeysAsync()
+    {
+        var localKeys = await GetCompletedSessionKeysFromLocalAsync();
+        var userId = GetCurrentUserId();
+
+        if (string.IsNullOrWhiteSpace(userId))
+            return localKeys;
+
+        try
+        {
+            RefreshAuthHeaders();
+            var url = $"{_completedSessionsUrl}?user_id=eq.{userId}&select=programme_id,semaine_index,jour_index";
+            var remote = await _http.GetFromJsonAsync<List<SeanceCompletee>>(url) ?? new();
+
+            var remoteKeys = remote
+                .Select(s => BuildCompletedSessionKey(s.ProgrammeId, s.SemaineIndex, s.JourIndex))
+                .ToList();
+
+            var merged = localKeys.Concat(remoteKeys).Distinct().ToList();
+            await SaveCompletedSessionKeysLocalAsync(merged);
+
+            if (localKeys.Except(remoteKeys).Any())
+                await SyncCompletedSessionKeysToSupabaseAsync(localKeys);
+
+            return merged;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Lecture Supabase des séances complétées impossible, fallback local : " + ex.Message);
+            return localKeys;
+        }
+    }
+
+    public async Task MarkSessionCompletedAsync(Guid programmeId, int semaineIndex, int jourIndex)
+    {
+        if (programmeId == Guid.Empty)
+            return;
+
+        var key = BuildCompletedSessionKey(programmeId, semaineIndex, jourIndex);
+        var localKeys = await GetCompletedSessionKeysFromLocalAsync();
+        if (!localKeys.Contains(key))
+        {
+            localKeys.Add(key);
+            await SaveCompletedSessionKeysLocalAsync(localKeys);
+        }
+
+        var userId = GetCurrentUserIdAsGuid();
+        if (userId is null)
+            return;
+
+        try
+        {
+            await DeleteCompletedSessionRemoteAsync(programmeId, semaineIndex, jourIndex, userId.Value);
+            var payload = new[]
+            {
+                new
+                {
+                    id = Guid.NewGuid(),
+                    user_id = userId.Value,
+                    programme_id = programmeId,
+                    semaine_index = semaineIndex,
+                    jour_index = jourIndex,
+                    completed_at = DateTime.UtcNow
+                }
+            };
+
+            RefreshAuthHeaders();
+            var response = await _http.PostAsJsonAsync(_completedSessionsUrl, payload);
+            if (!response.IsSuccessStatusCode)
+                Console.WriteLine("Sauvegarde Supabase séance complétée échouée : " + await response.Content.ReadAsStringAsync());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Séance complétée conservée localement, synchro Supabase impossible : " + ex.Message);
+        }
+    }
+
+    public async Task DeleteCompletedSessionsForProgrammeAsync(Guid programmeId)
+    {
+        if (programmeId == Guid.Empty)
+            return;
+
+        var localKeys = await GetCompletedSessionKeysFromLocalAsync();
+        localKeys.RemoveAll(k => k.StartsWith(programmeId.ToString(), StringComparison.OrdinalIgnoreCase));
+        await SaveCompletedSessionKeysLocalAsync(localKeys);
+
+        var userId = GetCurrentUserIdAsGuid();
+        if (userId is null)
+            return;
+
+        try
+        {
+            RefreshAuthHeaders();
+            var url = $"{_completedSessionsUrl}?user_id=eq.{userId.Value}&programme_id=eq.{programmeId}";
+            var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
+            if (!res.IsSuccessStatusCode)
+                Console.WriteLine("Suppression Supabase séances complétées échouée : " + await res.Content.ReadAsStringAsync());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Suppression Supabase séances complétées impossible : " + ex.Message);
+        }
+    }
+
+    private async Task SyncCompletedSessionKeysToSupabaseAsync(List<string> keys)
+    {
+        foreach (var key in keys.Distinct())
+        {
+            if (TryParseCompletedSessionKey(key, out var programmeId, out var semaineIndex, out var jourIndex))
+                await MarkSessionCompletedAsync(programmeId, semaineIndex, jourIndex);
+        }
+    }
+
+    private async Task<List<string>> GetCompletedSessionKeysFromLocalAsync()
+    {
+        var value = await _localStorage.GetItemAsync<string>(CompletedSessionsLocalKey);
+        return string.IsNullOrWhiteSpace(value)
+            ? new List<string>()
+            : value.Split(',', StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+    }
+
+    private async Task SaveCompletedSessionKeysLocalAsync(List<string> keys)
+    {
+        await _localStorage.SetItemAsync(CompletedSessionsLocalKey, string.Join(",", keys.Distinct()));
+    }
+
+    private async Task DeleteCompletedSessionRemoteAsync(Guid programmeId, int semaineIndex, int jourIndex, Guid userId)
+    {
+        RefreshAuthHeaders();
+        var url = $"{_completedSessionsUrl}?user_id=eq.{userId}&programme_id=eq.{programmeId}&semaine_index=eq.{semaineIndex}&jour_index=eq.{jourIndex}";
+        var res = await _http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
+        if (!res.IsSuccessStatusCode)
+            Console.WriteLine("Ancienne séance complétée non supprimée : " + await res.Content.ReadAsStringAsync());
+    }
+
+    private static string BuildCompletedSessionKey(Guid programmeId, int semaineIndex, int jourIndex) =>
+        $"{programmeId}:{semaineIndex}:{jourIndex}";
+
+    private static bool TryParseCompletedSessionKey(string key, out Guid programmeId, out int semaineIndex, out int jourIndex)
+    {
+        programmeId = Guid.Empty;
+        semaineIndex = 0;
+        jourIndex = 0;
+
+        var parts = key.Split(':', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 3
+            && Guid.TryParse(parts[0], out programmeId)
+            && int.TryParse(parts[1], out semaineIndex)
+            && int.TryParse(parts[2], out jourIndex);
+    }
+    #endregion
+
     public async Task SaveSessionAsync()
     {
         var session = _supabase.Auth.CurrentSession;
@@ -470,6 +628,7 @@ public class SupabaseService2
 
 
 }
+
 
 
 

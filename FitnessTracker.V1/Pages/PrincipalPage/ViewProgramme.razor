@@ -1,4 +1,4 @@
-﻿@page "/view-prog"
+@page "/view-prog"
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models.Gamification
 @using FitnessTracker.V1.Services.Data
@@ -116,9 +116,7 @@ else
 
 
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
-        var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
-        if (!string.IsNullOrEmpty(data))
-            SeancesCompletes = data.Split(',').ToList();
+        SeancesCompletes = await SupabaseService.GetCompletedSessionKeysAsync();
     }
 
     private async Task LancerSeance(Guid programmeId)
@@ -131,6 +129,7 @@ else
     private async Task OnSupprimerProgramme(ProgrammeModel prog)
     {
         await SupabaseService.DeleteProgrammeUnifiedAsync(prog.Id, prog.Source);
+        await SupabaseService.DeleteCompletedSessionsForProgrammeAsync(prog.Id);
         await LocalStorage.RemoveItemAsync($"programme_{prog.Id}");
         Programmes.Remove(prog);
         StateHasChanged();
@@ -150,3 +149,6 @@ else
         return resultat;
     }
 }
+
+
+

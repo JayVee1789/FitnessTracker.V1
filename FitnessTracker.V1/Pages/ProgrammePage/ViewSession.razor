@@ -308,11 +308,7 @@
             var userGuid = SupabaseService.GetCurrentUserIdAsGuid();
            
             Console.WriteLine("🔑 Utilisateur actuel : " + userId);
-            var data = await JS.InvokeAsync<string>("localStorage.getItem", "seancesCompletes");
-            if (!string.IsNullOrEmpty(data))
-            {
-                SeancesCompletes = data.Split(',').ToList();
-            }
+            SeancesCompletes = await SupabaseService.GetCompletedSessionKeysAsync();
             // 🔄 Tente une synchro silencieuse sans casser la suite
             // await PoidsService.SyncFromSupabaseAsync();
             var supabaseEntries = await SupabaseService.GetEntriesAsync();
@@ -850,10 +846,9 @@
         string key = $"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}";
 
         if (!SeancesCompletes.Contains(key))
-        {
             SeancesCompletes.Add(key);
-            await JS.InvokeVoidAsync("localStorage.setItem", "seancesCompletes", string.Join(",", SeancesCompletes));
-        }
+
+        await SupabaseService.MarkSessionCompletedAsync(SelectedProgrammeId, SelectedSemaineIndex, SelectedJourIndex);
     }
 
 
@@ -921,5 +916,8 @@
     }
    #endregion
 }
+
+
+
 
 

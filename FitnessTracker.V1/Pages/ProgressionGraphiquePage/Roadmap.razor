@@ -1,6 +1,7 @@
-﻿@page "/roadmap"
+@page "/roadmap"
 @inject IJSRuntime JS
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject FitnessTracker.V1.Services.Data.SupabaseService2 SupabaseService
 
 <div class="roadmap-background">
     <h1 class="roadmap-title">Ta progression 🏆</h1>
@@ -38,9 +39,8 @@
 
     private async Task ChargerSeances()
     {
-        var done = await LocalStorage.GetItemAsync<string>("seancesCompletes") ?? "";
-        SeancesCompletes = done.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                               .Select(x => int.TryParse(x.Split(':').Last(), out int id) ? id : 0)
+        var done = await SupabaseService.GetCompletedSessionKeysAsync();
+        SeancesCompletes = done.Select(x => int.TryParse(x.Split(':').Last(), out int id) ? id : 0)
                                .Where(x => x > 0).ToHashSet();
     }
 
@@ -64,3 +64,6 @@
         public double Height { get; set; }
     }
 }
+
+
+

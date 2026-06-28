@@ -242,10 +242,7 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             return; // 🔒 Stop ici si pas connecté
         Gamification = await GamificationDbService.GetGamificationAsync();
 
-        var data = await LocalStorage.GetItemAsync<string>("seancesCompletes");
-        SeancesCompletes = !string.IsNullOrEmpty(data)
-            ? data.Split(',').ToList()
-            : new List<string>();
+        SeancesCompletes = await SupabaseService.GetCompletedSessionKeysAsync();
         Console.WriteLine($"✅ Séances complètes récupérées : {SeancesCompletes.Count}");
 
         // 🔄 Charger programme sélectionné
@@ -628,11 +625,10 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         string key = $"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}";
 
         if (!SeancesCompletes.Contains(key))
-        {
             SeancesCompletes.Add(key);
-            await LocalStorage.SetItemAsync("seancesCompletes", string.Join(",", SeancesCompletes));
-            Console.WriteLine($"✅ Séance marquée comme complétée : {key}");
-        }
+
+        await SupabaseService.MarkSessionCompletedAsync(SelectedProgrammeId, SelectedSemaineIndex, SelectedJourIndex);
+        Console.WriteLine($"✅ Séance marquée comme complétée : {key}");
     }
 
     private ExerciceJour? ExerciceCible = null;
@@ -823,6 +819,9 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         StateHasChanged();
     }
 }
+
+
+
 
 
 

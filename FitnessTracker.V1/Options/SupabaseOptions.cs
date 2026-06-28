@@ -1,4 +1,4 @@
-﻿namespace FitnessTracker.V1.Options
+namespace FitnessTracker.V1.Options
 {
     public class SupabaseOptions
     {
@@ -12,6 +12,8 @@
             public string Entries { get; set; } = "entries";
             public string Programmes { get; set; } = "programmes";
             public string ProgrammesManuels { get; set; } = "programmes_manuels";
+            public string CompletedSessions { get; set; } = "seances_completees";
         }
     }
 }
+

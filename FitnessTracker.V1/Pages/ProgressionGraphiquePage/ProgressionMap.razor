@@ -1,5 +1,6 @@
-﻿@page "/progression-map"
+@page "/progression-map"
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject FitnessTracker.V1.Services.Data.SupabaseService2 SupabaseService
 
 <h3 class="text-center text-white mb-4">Ta progression 🏆</h3>
 
@@ -22,8 +23,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var done = await LocalStorage.GetItemAsync<string>("seancesCompletes") ?? "";
-        var seances = done.Split(',').ToList();
+        var seances = await SupabaseService.GetCompletedSessionKeysAsync();
 
         ProgressSteps = Enumerable.Range(1, 10).Select(i => new MapStep
             {
@@ -50,3 +50,6 @@
     }
 
 }
+
+
+
