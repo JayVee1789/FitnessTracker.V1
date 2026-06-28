@@ -2,31 +2,38 @@
 @using FitnessTracker.V1.Models
 @using FitnessTracker.V1.Models.Gamification
 @using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Services.Gamification
+@using static FitnessTracker.V1.Models.Model
 @inject NavigationManager Nav
 @inject SupabaseService2 SupabaseService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject FitnessTracker.V1.Models.AppState appState
-
-
 @inject GamificationDbService GamificationDbService
-@* <div class="mobile-container"> *@
-@* 
-    <div class="greeting-section">
-        <div class="greeting-text">Salut 👋</div>
-        <div class="greeting-subtext">Prêt pour ton entraînement ?</div>
-    </div> *@
+
 <FitnessTracker.V1.Components.PagePrincipal.HeaderDuolingo />
+
+<div class="progress-overview">
+    <div>
+        <div class="progress-overview-label">Progression totale</div>
+        <div class="progress-overview-title">@CompletedSessionsCount / @TotalSessionsCount séances</div>
+        <div class="progress-overview-note">@GamificationRules.GetMotivation(Gamification)</div>
+    </div>
+    <div class="progress-ring" style="--value:@OverallProgressPercent.ToString("0")">
+        <span>@OverallProgressPercent.ToString("0")%</span>
+    </div>
+</div>
+
 <div class="section-container">
-    <div class="section-title">📚 Mes Programmes</div>
+    <div class="section-title">Mes programmes</div>
 </div>
 
 @if (Programmes.Count == 0)
 {
     <div class="empty-state">
-        <div class="empty-icon">😕</div>
+        <div class="empty-icon">+</div>
         <div class="empty-title">Aucun programme</div>
         <div class="empty-text">
-            Crée ton premier programme pour commencer ta progression !
+            Crée ton premier programme pour commencer ta progression.
         </div>
     </div>
 }
@@ -35,39 +42,43 @@ else
     <div class="programs-grid">
         @foreach (var prog in Programmes)
         {
-            var plan = JsonSerializer.Deserialize<FitnessTracker.V1.Models.Model.WorkoutPlan>(prog.Contenu);
-            var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString())).ToList();
-            int totalSeances = (plan?.TotalWeeks ?? 0) * 7;
-            double progressPercent = totalSeances > 0 ? (double)seancesCompletes.Count / totalSeances * 100 : 0;
-            var datedebutformate = prog.DateDebut.ToString("d");
-
-
-
+            var plan = DeserializePlan(prog);
+            var totalSeances = CountTrainingSessions(plan);
+            var seancesCompletes = SeancesCompletes.Where(s => s.StartsWith(prog.Id.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+            var completed = Math.Min(seancesCompletes.Count, totalSeances);
+            var progressPercent = GetProgressPercent(totalSeances, completed);
+            var nextSession = GetNextSessionLabel(prog.Id, plan);
 
             <div class="program-card" @onclick="@(() => LancerSeance(prog.Id))">
                 <button class="delete-btn"
-                @onclick="@(() => OnSupprimerProgramme(prog))"
-                @onclick:stopPropagation>
-                    🗑️
+                        @onclick="@(() => OnSupprimerProgramme(prog))"
+                        @onclick:stopPropagation
+                        title="Supprimer">
+                    <i class="bi bi-trash3"></i>
                 </button>
 
-                <div class="card-header strength">💪</div>
+                <div class="program-card-top">
+                    <div class="card-header strength"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div class="program-percent">@progressPercent.ToString("0")%</div>
+                </div>
+
                 <div class="card-title">@prog.Nom</div>
 
                 <div class="card-stats">
+                    <span class="stat-bubble"><i class="bi bi-calendar3"></i> @prog.DateDebut.ToString("d")</span>
+                    <span class="stat-bubble"><i class="bi bi-layers"></i> @(plan?.TotalWeeks ?? 0) sem.</span>
+                    <span class="stat-bubble"><i class="bi bi-check2-circle"></i> @completed/@totalSeances</span>
+                </div>
 
-
-
-
-                    <span class="stat-bubble">📅 @datedebutformate</span>
-                    <span class="stat-bubble">📆 @(plan?.TotalWeeks ?? 0) sem.</span>
-                    <span class="stat-bubble">🎯 @totalSeances séances</span>
+                <div class="next-session">
+                    <span>Prochaine</span>
+                    <strong>@nextSession</strong>
                 </div>
 
                 <div class="progress-section">
-                    <div class="progress-text">@seancesCompletes.Count/@totalSeances terminées</div>
+                    <div class="progress-text">@completed séance@(completed > 1 ? "s" : "") terminée@(completed > 1 ? "s" : "")</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width:@RemplirBarre(totalSeances,seancesCompletes.Count)%"></div>
+                        <div class="progress-bar-fill" style="width:@progressPercent.ToString("0")%"></div>
                     </div>
                 </div>
             </div>
@@ -75,22 +86,25 @@ else
     </div>
 }
 
-<button class="floating-add" @onclick="@(() => Nav.NavigateTo("/choix-programme"))">+</button>
-
+<button class="floating-add" @onclick="@(() => Nav.NavigateTo("/choix-programme"))" title="Créer un programme">
+    <i class="bi bi-plus-lg"></i>
+</button>
 
 @code {
     private List<ProgrammeModel> Programmes = new();
     private List<string> SeancesCompletes = new();
     private GamificationDbModel? Gamification;
 
+    private int TotalSessionsCount => Programmes.Sum(p => CountTrainingSessions(DeserializePlan(p)));
+    private int CompletedSessionsCount => Math.Min(SeancesCompletes.Count, TotalSessionsCount);
+    private double OverallProgressPercent => GetProgressPercent(TotalSessionsCount, CompletedSessionsCount);
+
     protected override async Task OnInitializedAsync()
     {
-
         var restored = await SupabaseService.LoadSessionAsync();
-        Console.WriteLine($"🟢 Session restaurée : {restored}");
+        Console.WriteLine($"Session restauree : {restored}");
         if (!restored)
         {
-            Console.WriteLine("❌ Session non restaurée ➡️ Redirection vers connexion");
             Nav.NavigateTo("/login");
             return;
         }
@@ -98,11 +112,9 @@ else
         var userId = SupabaseService.GetCurrentUserId();
         if (string.IsNullOrEmpty(userId))
         {
-            Console.WriteLine("❌ Aucun userId ➡️ redirection");
             Nav.NavigateTo("/login");
             return;
         }
-        Console.WriteLine($"🟣 UserID récupéré : {userId}");
 
         Gamification = appState.Gamification;
 
@@ -112,9 +124,6 @@ else
             appState.Gamification = Gamification;
         }
 
-
-
-
         Programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
         SeancesCompletes = await SupabaseService.GetCompletedSessionKeysAsync();
     }
@@ -122,7 +131,6 @@ else
     private async Task LancerSeance(Guid programmeId)
     {
         await LocalStorage.SetItemAsync("selectedProgrammeId", programmeId);
-
         Nav.NavigateTo("/view-seance");
     }
 
@@ -132,23 +140,52 @@ else
         await SupabaseService.DeleteCompletedSessionsForProgrammeAsync(prog.Id);
         await LocalStorage.RemoveItemAsync($"programme_{prog.Id}");
         Programmes.Remove(prog);
+        SeancesCompletes.RemoveAll(s => s.StartsWith(prog.Id.ToString(), StringComparison.OrdinalIgnoreCase));
         StateHasChanged();
     }
 
-    private string RemplirBarre(int TotalDone, int Completed)
+    private static WorkoutPlan? DeserializePlan(ProgrammeModel programme)
     {
-        string resultat = "";
-        if(TotalDone > 0)
+        if (string.IsNullOrWhiteSpace(programme.Contenu))
+            return null;
+
+        try
         {
-            resultat = Math.Min(100, Math.Round((double)Completed * 100 / TotalDone)) + "%";
+            return JsonSerializer.Deserialize<WorkoutPlan>(programme.Contenu, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
-        else
+        catch (JsonException)
         {
-            resultat = "0%";
+            return null;
         }
-        return resultat;
+    }
+
+    private static int CountTrainingSessions(WorkoutPlan? plan) =>
+        plan?.Weeks.Sum(w => w.Days.Count(d => !d.IsRest)) ?? 0;
+
+    private static double GetProgressPercent(int total, int completed) =>
+        total > 0 ? Math.Clamp(completed * 100d / total, 0, 100) : 0;
+
+    private string GetNextSessionLabel(Guid programmeId, WorkoutPlan? plan)
+    {
+        if (plan is null)
+            return "Programme à vérifier";
+
+        for (var weekIndex = 0; weekIndex < plan.Weeks.Count; weekIndex++)
+        {
+            foreach (var day in plan.Weeks[weekIndex].Days.OrderBy(d => d.DayIndex))
+            {
+                if (day.IsRest)
+                    continue;
+
+                var key = $"{programmeId}:{weekIndex}:{day.DayIndex}";
+                if (!SeancesCompletes.Contains(key))
+                    return $"S{weekIndex + 1} - Jour {day.DayIndex}";
+            }
+        }
+
+        return "Programme complété";
     }
 }
-
-
-

@@ -140,3 +140,51 @@
 }
 */
 
+
+.progress-container,
+.session-progress {
+    background: #ffffff;
+    border: 1px solid #e6edf5;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    color: #111827;
+    font-weight: 800;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 8px 22px rgba(43, 45, 66, 0.1);
+}
+
+.progress-bar,
+.session-progress-bar {
+    flex: 1;
+    height: 10px;
+    background-color: #e6edf5;
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill,
+.session-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #14a44d 0%, #1cb0f6 100%);
+    border-radius: inherit;
+    transition: width 0.35s ease-in-out;
+}
+
+.session-progress-main {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+.session-progress-count {
+    font-size: 1rem;
+}
+
+.session-progress-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    text-align: right;
+}

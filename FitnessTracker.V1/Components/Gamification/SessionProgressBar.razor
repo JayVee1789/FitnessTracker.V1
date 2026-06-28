@@ -1,17 +1,28 @@
-﻿<div class="progress-container">
-    <span>🔥 @Completed / @TotalDone exercices</span>
-    <div class="progress-bar">
-        <div class="progress-fill" style="width:@Progress"></div>
+<div class="session-progress">
+    <div class="session-progress-main">
+        <span class="session-progress-count">@Completed / @TotalDone</span>
+        <span class="session-progress-label">@StatusLabel</span>
+    </div>
+    <div class="session-progress-bar" role="progressbar" aria-valuenow="@ProgressValue" aria-valuemin="0" aria-valuemax="100">
+        <div class="session-progress-fill" style="width:@Progress"></div>
     </div>
 </div>
 
 @code {
-    [Parameter] public int Completed { get; set; }      // Nombre d’exercices cochés
-    [Parameter] public int TotalDone { get; set; }      // Nombre total d’exercices (hors repos)
+    [Parameter] public int Completed { get; set; }
+    [Parameter] public int TotalDone { get; set; }
 
-    private string Progress => TotalDone > 0
-        ? Math.Min(100, Math.Round((double)Completed * 100 / TotalDone)) + "%"
-        : "0%";
-    
-   
+    private int ProgressValue => TotalDone > 0
+        ? (int)Math.Min(100, Math.Round((double)Completed * 100 / TotalDone))
+        : 0;
+
+    private string Progress => $"{ProgressValue}%";
+
+    private string StatusLabel => ProgressValue switch
+    {
+        0 => "Prêt pour la séance",
+        < 50 => "En route",
+        < 100 => "Presque fini",
+        _ => "Séance prête à valider"
+    };
 }

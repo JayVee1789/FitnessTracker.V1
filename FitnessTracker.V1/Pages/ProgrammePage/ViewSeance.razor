@@ -4,6 +4,7 @@
 @using FitnessTracker.V1.Models.Gamification
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Services.Gamification
 @using FitnessTracker.V1.Helper
 @using FitnessTracker.V1.Services.ProgrammeGeneration
 @using System.Text.Json
@@ -394,6 +395,8 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
         }
         var tempsTotal = chronoRef?.ElapsedTime ?? TimeSpan.Zero;
         int minutes = (int)Math.Round(tempsTotal.TotalMinutes);
+        var wasAlreadyCompleted = IsCurrentSessionCompleted();
+        var allExercisesDone = ExercicesTotales() == 0 || ExercicesCompletes() == ExercicesTotales();
 
         await SaveEverything();
         if (ActiviteRepos is not null && !string.IsNullOrWhiteSpace(ActiviteRepos.Activite))
@@ -423,15 +426,27 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
             if (Gamification is null) return;
         }
 
+        if (wasAlreadyCompleted)
+        {
+            toastMessage = "Seance deja validee : aucun point ajoute.";
+            toastClass = "show";
+            StateHasChanged();
+            return;
+        }
+
+        var xpGained = GamificationRules.GetSessionXp(allExercisesDone, ActiviteRepos is not null);
         Gamification.TotalSeances++;
-        Gamification.TotalXP += 100;
-        Gamification.StreakDays++;
+        Gamification.TotalXP += xpGained;
+        Gamification.StreakDays = CalculateUpdatedStreak(Gamification.LastSessionDate, Gamification.StreakDays);
         Gamification.LastSessionDate = DateTime.UtcNow;
         Gamification.TotalTrainingTimeMinutes += minutes;
         Console.WriteLine($"👤 UserID utilisé pour Upsert : {userId}");
 
         await GamificationDbService.UpdateGamificationAsync(Gamification);
         Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
+        appState.Gamification = Gamification;
+        toastMessage = $"+{xpGained} XP ajoute.";
+        toastClass = "show";
 
         Console.WriteLine($"✅ Session sauvegardée - durée : {minutes} min");
         StateHasChanged();
@@ -629,6 +644,28 @@ SECTION 4 : Modales (confirmation suppression + remplacement)
 
         await SupabaseService.MarkSessionCompletedAsync(SelectedProgrammeId, SelectedSemaineIndex, SelectedJourIndex);
         Console.WriteLine($"✅ Séance marquée comme complétée : {key}");
+    }
+
+    private bool IsCurrentSessionCompleted()
+    {
+        if (SelectedProgrammeId == Guid.Empty)
+            return false;
+
+        return SeancesCompletes.Contains($"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}");
+    }
+
+    private static int CalculateUpdatedStreak(DateTime? lastSessionDate, int currentStreak)
+    {
+        if (lastSessionDate is null)
+            return 1;
+
+        var days = (DateTime.UtcNow.Date - lastSessionDate.Value.Date).Days;
+        return days switch
+        {
+            <= 0 => Math.Max(1, currentStreak),
+            1 => currentStreak + 1,
+            _ => 1
+        };
     }
 
     private ExerciceJour? ExerciceCible = null;

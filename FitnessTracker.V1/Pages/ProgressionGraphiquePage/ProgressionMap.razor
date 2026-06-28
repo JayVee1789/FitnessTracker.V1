@@ -1,55 +1,122 @@
 @page "/progression-map"
+@using FitnessTracker.V1.Models
+@using System.Text.Json
+@using static FitnessTracker.V1.Models.Model
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject FitnessTracker.V1.Services.Data.SupabaseService2 SupabaseService
 
-<h3 class="text-center text-white mb-4">Ta progression 🏆</h3>
+<div class="progression-page">
+    <div class="progression-header">
+        <div>
+            <div class="progression-kicker">Carte de progression</div>
+            <h3>@PageTitle</h3>
+        </div>
+        <div class="progression-score">@CompletedCount / @TotalCount</div>
+    </div>
 
-<div class="map-container">
-    @for (var i = 0; i < ProgressSteps.Count; i++)
+    @if (ProgressSteps.Count == 0)
     {
-        <div class="step-wrapper @(i % 2 == 0 ? "left" : "right")">
-            <div class="connector"></div>
-            <div class="map-step @(ProgressSteps[i].Completed ? "completed" : "")">
-                <span class="step-icon">@GetIcon(ProgressSteps[i])</span>
-                <div class="step-label">@ProgressSteps[i].Label</div>
-            </div>
+        <div class="progression-empty">Aucun programme actif trouvé.</div>
+    }
+    else
+    {
+        <div class="map-container">
+            @for (var i = 0; i < ProgressSteps.Count; i++)
+            {
+                var step = ProgressSteps[i];
+                <div class="step-wrapper @(i % 2 == 0 ? "left" : "right")">
+                    @if (i > 0)
+                    {
+                        <div class="connector @(step.Completed ? "completed" : "")"></div>
+                    }
+                    <div class="map-step @(step.Completed ? "completed" : step.IsNext ? "next" : "")">
+                        <span class="step-icon">@GetIcon(step)</span>
+                        <div class="step-label">@step.Label</div>
+                        <div class="step-subtitle">@step.Subtitle</div>
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
 
-
 @code {
     private List<MapStep> ProgressSteps = new();
+    private string PageTitle = "Ta progression";
+    private int CompletedCount => ProgressSteps.Count(s => s.Completed);
+    private int TotalCount => ProgressSteps.Count;
 
     protected override async Task OnInitializedAsync()
     {
         var seances = await SupabaseService.GetCompletedSessionKeysAsync();
+        var programmes = await SupabaseService.GetAllProgrammesForCurrentUserAsync();
+        var selectedProgrammeId = await LocalStorage.GetItemAsync<Guid>("selectedProgrammeId");
+        var programme = programmes.FirstOrDefault(p => p.Id == selectedProgrammeId) ?? programmes.FirstOrDefault();
 
-        ProgressSteps = Enumerable.Range(1, 10).Select(i => new MapStep
+        if (programme is null)
+            return;
+
+        PageTitle = programme.Nom;
+        var plan = DeserializePlan(programme);
+        if (plan is null)
+            return;
+
+        var steps = new List<MapStep>();
+        for (var weekIndex = 0; weekIndex < plan.Weeks.Count; weekIndex++)
+        {
+            foreach (var day in plan.Weeks[weekIndex].Days.OrderBy(d => d.DayIndex))
             {
-                Label = $"Séance {i}",
-                Completed = seances.Any(x => x.EndsWith($":{i}")),
-                Type = i % 5 == 0 ? "chest" : "normal"
-            }).ToList();
+                if (day.IsRest)
+                    continue;
+
+                var key = $"{programme.Id}:{weekIndex}:{day.DayIndex}";
+                steps.Add(new MapStep
+                {
+                    Label = $"S{weekIndex + 1} J{day.DayIndex}",
+                    Subtitle = $"{day.Exercises.Count} exercice{(day.Exercises.Count > 1 ? "s" : "")}",
+                    Completed = seances.Contains(key)
+                });
+            }
+        }
+
+        var next = steps.FirstOrDefault(s => !s.Completed);
+        if (next is not null)
+            next.IsNext = true;
+
+        ProgressSteps = steps;
+    }
+
+    private static WorkoutPlan? DeserializePlan(ProgrammeModel programme)
+    {
+        if (string.IsNullOrWhiteSpace(programme.Contenu))
+            return null;
+
+        try
+        {
+            return JsonSerializer.Deserialize<WorkoutPlan>(programme.Contenu, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     public class MapStep
     {
         public string Label { get; set; } = "";
+        public string Subtitle { get; set; } = "";
         public bool Completed { get; set; }
-        public string Type { get; set; } = "normal";
+        public bool IsNext { get; set; }
     }
-    private string GetIcon(MapStep step)
+
+    private static string GetIcon(MapStep step)
     {
-        return step.Type switch
-        {
-            "chest" => "🎁",
-            "goal" => "🎯",
-            _ => step.Completed ? "✅" : "🔒"
-        };
+        if (step.Completed)
+            return "✓";
+
+        return step.IsNext ? "→" : "·";
     }
-
 }
-
-
-

@@ -1,5 +1,6 @@
-﻿@using FitnessTracker.V1.Models.Gamification
+@using FitnessTracker.V1.Models.Gamification
 @using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Services.Gamification
 @inject AuthService AuthService
 @inject GamificationDbService GamificationDbService
 @inject SupabaseService2 SupabaseService
@@ -9,20 +10,29 @@
     @if (AuthService.IsAuthenticated)
     {
         <div class="profile-section">
-            <div class="profile-avatar">👤</div>
+            <div class="profile-avatar" title="Profil">👤</div>
         </div>
 
         @if (Gamification != null)
         {
-            <div class="level-badge">Niv. @Gamification.TotalXP XP</div>
+            var level = GamificationRules.GetLevel(Gamification.TotalXP);
+            var progress = GamificationRules.GetLevelProgressPercent(Gamification.TotalXP);
+            var streak = GetActiveStreak(Gamification);
 
-           
-            <div class="streak-badge">
-                🔥 @(EstDansLesDeuxDerniersJours(Gamification.CreatedAt)
-                 ? $"{Gamification.StreakDays} jours"
-                 : "0 jours")
+            <div class="xp-summary">
+                <div class="xp-summary-top">
+                    <span>Niv. @level</span>
+                    <span>@Gamification.TotalXP XP</span>
+                </div>
+                <div class="xp-meter" title="@GamificationRules.GetMotivation(Gamification)">
+                    <div class="xp-meter-fill" style="width:@progress.ToString("0")%"></div>
+                </div>
+                <div class="xp-summary-bottom">@GamificationRules.GetLevelTitle(level)</div>
             </div>
 
+            <div class="streak-badge" title="Série active">
+                🔥 @streak jour@(streak > 1 ? "s" : "")
+            </div>
         }
 
         <a class="btn btn-light btn-sm" href="/logout" title="Se déconnecter">
@@ -51,31 +61,23 @@
 
         if (AuthService.IsAuthenticated && ShowGamification)
         {
-            // ✅ Reprend de AppState si dispo
             Gamification = appState.Gamification;
 
             if (Gamification == null)
             {
                 Gamification = await GamificationDbService.GetOrCreateGamificationAsync();
                 appState.Gamification = Gamification;
-                Console.WriteLine("✅ Gamification chargée et stockée dans AppState.");
+                Console.WriteLine("Gamification chargee et stockee dans AppState.");
             }
         }
-
     }
 
-
-
-    public static bool EstDansLesDeuxDerniersJours(DateTime? date)
+    private static int GetActiveStreak(GamificationDbModel gamification)
     {
-        // On compare avec la date actuelle en UTC pour cohérence
-        DateTime? maintenant = DateTime.UtcNow;
+        if (gamification.LastSessionDate is null)
+            return 0;
 
-        // Calcule la différence
-        TimeSpan? diff = maintenant - date;
-
-        // Vérifie si la date est dans les deux derniers jours
-        return diff.Value.Days <= 2 ;
+        var daysSinceLastSession = (DateTime.UtcNow.Date - gamification.LastSessionDate.Value.Date).Days;
+        return daysSinceLastSession <= 1 ? gamification.StreakDays : 0;
     }
-
 }

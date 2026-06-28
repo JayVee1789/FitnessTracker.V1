@@ -6,6 +6,7 @@
 
 @using FitnessTracker.V1.Services
 @using FitnessTracker.V1.Services.Data
+@using FitnessTracker.V1.Services.Gamification
 @using FitnessTracker.V1.Services.ProgrammeGeneration
 @using static FitnessTracker.V1.Models.Model
 
@@ -767,10 +768,15 @@
 
     private async Task OnSessionTerminee()
     {
+        var wasAlreadyCompleted = SeancesCompletes.Contains($"{SelectedProgrammeId}:{SelectedSemaineIndex}:{SelectedJourIndex}");
         await SaveEverything();
-        if (Exercises.All(e => e.ObjectifAtteint))
+
+        if (!wasAlreadyCompleted)
         {
-            await Gamification.AddXP(100, "Objectif atteint sur tous les exercices");
+            var allExercisesDone = Exercises.All(e => e.ExerciseName == "Repos" || e.ObjectifAtteint);
+            var isRestDay = Exercises.All(e => e.ExerciseName == "Repos");
+            var xp = GamificationRules.GetSessionXp(allExercisesDone, isRestDay);
+            await Gamification.AddXP(xp, "Séance complétée");
         }
 
         StateHasChanged();
