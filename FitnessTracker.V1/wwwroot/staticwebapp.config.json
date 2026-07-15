@@ -1,0 +1,26 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/_framework/*",
+      "/css/*",
+      "/data/*",
+      "/images/*",
+      "/js/*",
+      "/*.js",
+      "/*.css",
+      "/*.json",
+      "/*.png",
+      "/*.ico",
+      "/*.webmanifest",
+      "/*.html"
+    ]
+  },
+  "mimeTypes": {
+    ".webmanifest": "application/manifest+json",
+    ".wasm": "application/wasm"
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff"
+  }
+}
