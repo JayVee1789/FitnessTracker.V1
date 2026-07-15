@@ -1,23 +1,70 @@
 {
-  "name": "FitnessTracker.V1",
-  "short_name": "FitnessTracker",
+  "name": "FitnessTracker",
+  "short_name": "Fitness",
+  "description": "Suivi de programmes, séances, charges et progression fitness.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "display_override": [ "standalone", "minimal-ui", "browser" ],
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#14a44d",
+  "categories": [ "health", "fitness", "sports", "productivity" ],
   "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Mes programmes",
+      "short_name": "Programmes",
+      "description": "Voir les programmes actifs.",
+      "url": "/view-prog",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Séance du jour",
+      "short_name": "Séance",
+      "description": "Continuer la séance sélectionnée.",
+      "url": "/view-seance",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Progression",
+      "short_name": "Progression",
+      "description": "Afficher la carte de progression.",
+      "url": "/progression-map",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
   "icons": [
     {
       "src": "icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     }
   ]
 }

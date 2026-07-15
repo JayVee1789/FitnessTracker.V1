@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#14a44d" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content="Suivi de programmes, séances, charges et progression fitness." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Fitness" />
     <title>FitnessTracker</title>
     <base href="/" />
 
@@ -36,6 +42,7 @@
     <link href="css/statsPageStyle.css" rel="stylesheet" />
     <link href="css/monprofil.css" rel="stylesheet" />
     <link href="css/duo-theme.css" rel="stylesheet" />
+    <link href="css/pwa.css" rel="stylesheet" />
     <!--<link href="css/choix-programme.css" rel="stylesheet" />-->
     <link href="css/choixprog.css" rel="stylesheet" />
 
@@ -81,13 +88,8 @@
         });
     </script>
 
-    <!-- 7. Service‐worker utils + enregistrement -->
+    <!-- 7. Service-worker utils -->
     <script src="sw-utils.js"></script>
-    <script>
-        if ('serviceWorker' in navigator && !['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
-                navigator.serviceWorker.register('service-worker.js');
-        }
-    </script>
 
     <!-- 8. Helpers custom -->
     <script>
